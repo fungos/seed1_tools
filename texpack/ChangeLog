@@ -1,0 +1,25 @@
+2006-09-17 - bsa
+ * Fixed some stupid mistakes in output
+
+2006-09-01 - bsa
+ * Added English man page
+
+2006-08-06 - bsa
+ * Fixed some warnings
+ * Result texture sizes can be not rounded to powers of 2 (--native-size)
+ * Added possibility to separate images with alpha channel and without one by different textures (--separate-by-alpha)
+ * Added possibility to ratate images when packing (--use-rotations)
+ * Added possibility to use border around each packed image (--border)
+ * Added possibility to show source image width and height
+ * Added Russian man page
+
+2006-04-21 - bsa
+ * Now texpack can operate with all image formats supported by DevIL
+ * Added three tests
+ * Sources separated to subdirectories: lib, src, test
+
+2006-04-06 - bsa
+ * Now program write all info to stdout or file if specified
+
+2006-04-06 - bsa
+ * Alpha release

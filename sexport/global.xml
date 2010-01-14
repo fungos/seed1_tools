@@ -1,0 +1,12 @@
+<root>
+	<resources>
+		<resource type='image' filename='global/global0' name='global/Font_25_18x35' x='0' y='0' width='288' height='210' />
+		<resource type='image' filename='global/global0' name='global/Font_20_14x28' x='288' y='0' width='224' height='168' />
+		<resource type='image' filename='global/global0' name='global/Font_16_14x24' x='288' y='168' width='224' height='144' />	
+	</resources>
+	<objects>
+		<object type="font" name="global/Font_25_18x35" spacing="0" tracking="1" space="3" resource="global/Font_25_18x35" atlas="true" />
+		<object type="font" name="global/Font_20_14x28" spacing="0" tracking="1" space="3" resource="global/Font_20_14x28" atlas="true" />
+		<object type="font" name="global/Font_16_14x24" spacing="0" tracking="1" space="3" resource="global/Font_16_14x24" atlas="true" />
+	</objects>
+</root>

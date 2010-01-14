@@ -1,0 +1,7 @@
+How to install.
+1. If you receive these sources from CVS repository then run `bootstrap.sh' first.
+2. To compile this program you need DevIL (http://openil.sf.net) library installed.
+3. run `configure'
+4. run `make'
+5. run `make install'
+Now you can use this program as you need. ;-)

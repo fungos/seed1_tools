@@ -1,0 +1,10 @@
+<root>
+	<resources>
+		<resource type='sound' filename='music' name='music' />
+		<resource type='sound' filename='sound' name='sound' />
+	</resources>
+	<objects>
+		<object type="sound" name="sound_rename" resource="sound" loop="true" volume="100" group="demo" />
+		<object type="music" name="music_rename" resource="music" volume="20" group="demo" />
+	</objects>
+</root>

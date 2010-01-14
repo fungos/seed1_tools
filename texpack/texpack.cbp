@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="texpack" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\texpack" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\..\Dracula\dra_w32\principal\art\source\texpack" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters='-l input/hiddenobj.txt -o ../../export/data/hiddenobj/hiddenobj -H 1024 -w 1024 -n -f ../../export/data/hiddenobj/hiddenobj.txt --format=&quot;&lt;resource type=&apos;image&apos; filename=&apos;%s&apos; name=&apos;%s&apos; x=&apos;%u&apos; y=&apos;%u&apos; width=&apos;%u&apos; height=&apos;%u&apos; /&gt;&quot; -d D:/techfront/DRACULA/dra_w32/principal/art/source/data/' />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\texpack" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin\Release" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="$(#devil.include)" />
+			<Add directory="src" />
+		</Compiler>
+		<Linker>
+			<Add library="DevIL" />
+			<Add library="ILU" />
+			<Add library="ILUT" />
+			<Add directory="$(#devil.lib)" />
+		</Linker>
+		<Unit filename="src\ierror.cpp" />
+		<Unit filename="src\ierror.hpp" />
+		<Unit filename="src\iimage.cpp" />
+		<Unit filename="src\iimage.hpp" />
+		<Unit filename="src\rectpack.cpp" />
+		<Unit filename="src\rectpack.h" />
+		<Unit filename="src\texpack.cpp" />
+		<Unit filename="src\texpack.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,14 @@
+<root>
+	<strings>
+	</strings>
+	<resources>
+		<resource type='image' filename='newfittex0' name='res' />
+	</resources>
+	<objects>
+		<object type='sprite' name='sprite'>
+			<animation name='default'>
+				<frame name='frame_name' resource='res' />
+			</animation>
+		</object>
+	</objects>
+</root>

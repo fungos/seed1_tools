@@ -1,0 +1,89 @@
+﻿<root>
+	<strings>
+		<dictionary language='en_US'>
+			<string name='pos' text='Emitter Position: ({x},{y})' />
+			<string name='x' text='{x}' />
+			<string name='y' text='{y}' />
+		</dictionary>
+	</strings>
+	<resources>
+		<resource type='image' filename='bg' name='bg' />
+		<resource type='image' filename='particle/particle_00' name='particle_00' />
+		<resource type='image' filename='particle/particle_01' name='particle_01' />
+		<resource type='image' filename='particle/particle_02' name='particle_02' />
+		<resource type='image' filename='particle/particle_03' name='particle_03' />
+		<resource type='image' filename='particle/particle_04' name='particle_04' />
+		<resource type='image' filename='particle/particle_05' name='particle_05' />
+		<resource type='image' filename='particle/particle_06' name='particle_06' />
+		<resource type='image' filename='particle/particle_07' name='particle_07' />
+		<resource type='image' filename='particle/particle_08' name='particle_08' />
+		<resource type='image' filename='particle/particle_09' name='particle_09' />
+		<resource type='image' filename='particle/particle_10' name='particle_10' />
+		<resource type='image' filename='particle/particle_11' name='particle_11' />
+		<resource type='image' filename='particle/particle_12' name='particle_12' />
+		<resource type='image' filename='particle/particle_13' name='particle_13' />
+		<resource type='image' filename='particle/particle_14' name='particle_14' />
+		<resource type='image' filename='particle/particle_15' name='particle_15' />
+		
+		<resource type='image' filename='particle/font25' name='font25' />
+	</resources>
+	<objects>
+		<object type='sprite' name='bg' group='bg'>
+			<animation name='bg'>
+				<frame resource='bg' />
+			</animation>
+		</object>
+		<object type='sprite' name='particle/particle' group='demo'>
+			<animation name='particle_00'>
+				<frame resource='particle_00' />
+			</animation>
+			<animation name='particle_01'>
+				<frame resource='particle_01' />
+			</animation>
+			<animation name='particle_02'>
+				<frame resource='particle_02' />
+			</animation>
+			<animation name='particle_03'>
+				<frame resource='particle_03' />
+			</animation>
+			<animation name='particle_04'>
+				<frame resource='particle_04' />
+			</animation>
+			<animation name='particle_05'>
+				<frame resource='particle_05' />
+			</animation>
+			<animation name='particle_06'>
+				<frame resource='particle_06' />
+			</animation>
+			<animation name='particle_07'>
+				<frame resource='particle_07' />
+			</animation>
+			<animation name='particle_08'>
+				<frame resource='particle_08' />
+			</animation>
+			<animation name='particle_09'>
+				<frame resource='particle_09' />
+			</animation>
+			<animation name='particle_10'>
+				<frame resource='particle_10' />
+			</animation>
+			<animation name='particle_11'>
+				<frame resource='particle_11' />
+			</animation>
+			<animation name='particle_12'>
+				<frame resource='particle_12' />
+			</animation>
+			<animation name='particle_13'>
+				<frame resource='particle_13' />
+			</animation>
+			<animation name='particle_14'>
+				<frame resource='particle_14' />
+			</animation>
+			<animation name='particle_15'>
+				<frame resource='particle_15' />
+			</animation>
+		</object>
+		
+		<object type='font' name='particle/font25' spacing='0' tracking='0.01' space='0.03' resource='font25' group='common' />
+	</objects>
+</root>

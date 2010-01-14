@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<refentry id="texpack.1">
+  <!--  $Id: texpack.1.xml 35 2006-09-01 19:53:16Z b-s-a $ -->
+
+  <refmeta>
+    <refentrytitle>texpack</refentrytitle>
+
+    <manvolnum>1</manvolnum>
+
+    <refmiscinfo class="sectdesc">Developer tools</refmiscinfo>
+  </refmeta>
+
+  <refnamediv id="name">
+    <refname>texpack</refname>
+
+    <refpurpose>объединение большого количества маленьких картинок в несколько
+    крупных</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv id="synopsis">
+    <cmdsynopsis>
+      <command>texpack</command>
+
+      <arg choice="opt"><replaceable>options</replaceable></arg>
+
+      <arg choice="plain"><replaceable>--source-dir=&lt;path to directory&gt;
+      --output=&lt;file template&gt;</replaceable></arg>
+    </cmdsynopsis>
+
+    <cmdsynopsis>
+      <command>texpack</command>
+
+      <arg choice="opt"><replaceable>options</replaceable></arg>
+
+      <arg choice="plain"><replaceable>--list=&lt;file&gt;
+      --output=&lt;file template&gt;</replaceable></arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+
+    <para>Программа texpack предназначена для объединения большого количества
+    мелких текстур в несколько больших. Это необходимо для программ активно
+    использующих трехмерную графику. Так как в противном случае количество
+    данных передаваемых на графический ускоритель может быть просто огромным,
+    что повлечет за собой снижение производительности.</para>
+
+    <para>Данная программа представляет собой утилиту коммандной строки. На
+    входе она получает список графических файлов (директорию или файл со
+    списком). Затем эти файлы упаковываются в большую текстуру (ограниченную
+    заданными размерами). Если все файлы в нее не помещаются, то создается
+    следующая текстура и т.д. На экран (или в файл) выводится информация о
+    степени упаковки (качестве), а так же служебная информация, необходимая
+    для последующего востановления исходных файлов (смещения по горизонтали и
+    вертикали до левого верхнего и правого нижнего углов и был ли
+    поворот).</para>
+  </refsect1>
+
+  <refsect1 id="parameters">
+    <title>ОБЯЗАТЕЛЬНЫЕ ПАРАМЕТРЫ</title>
+
+    <para>Программе<command> texpack</command> необходимы следующие
+    параметры:</para>
+
+    <variablelist remap="IP">
+      <varlistentry>
+        <term><option>-l</option>, <option>--list</option>
+        <replaceable>FILE</replaceable></term>
+
+        <listitem>
+          <para>задает файл, который содержит список исходных файлов
+          (альтернатива <option>-s</option>).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-s</option>, <option>--source-dir</option>
+        <replaceable>DIR</replaceable></term>
+
+        <listitem>
+          <para>задает путь к директории с исходными файлами (альтернатива
+          <option>-l</option>). Программа попытается открыть все, находящиеся
+          там файлы. Если хоть один файл будет иметь неподдерживаемый формат,
+          то программа аварийно завершится.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-o</option>, <option>--output</option>
+        <replaceable>FILE_TEMPLATE</replaceable></term>
+
+        <listitem>
+          <para>задает шаблон выходных файлов. Все полученные в ходе работы
+          текстуры будут сохраняться под именами
+          <emphasis>FILE_TEMPLATE</emphasis>#.png, где # - это целое число (0,
+          1, 2...).</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1 id="options">
+    <title>ОПЦИИ</title>
+
+    <para><command>texpack</command> использует следующие опции:</para>
+
+    <variablelist remap="IP">
+      <varlistentry>
+        <term><option>-r</option>, <option>--</option>relative</term>
+
+        <listitem>
+          <para>задает вывод координат исходной картинки в относительных
+          координатах (например, xr = x / result_width).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-f</option>, <option>--file</option>
+        <replaceable>FILE</replaceable></term>
+
+        <listitem>
+          <para>задает вывод информации для востановления в указанный файл.
+          Без этой опции вывод производится в stdout (на консоль).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-w</option>, <option>--width</option>
+        <replaceable>WIDTH</replaceable></term>
+
+        <listitem>
+          <para>задает ширину получаемых текстур. Ширина полученных текстур
+          будет равна . Если не указана опция <option>-n</option>, то
+          <emphasis>WIDTH</emphasis> будет округлен к ближайшей большей
+          степени двойки (512, 1024 и т.п.). По умолчанию не задана.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-W</option>, <option>--max-width</option>
+        <replaceable>WIDTH</replaceable></term>
+
+        <listitem>
+          <para>задает максимальную ширину получаемых текстур. Данная опция
+          более гибкая, нежели <option>-w</option>, так как позволяет
+          программе выбирать оптимальную ширину для результирующей картинки.
+          По умолчанию 2048.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-h</option>, <option>--height</option>
+        <replaceable>INACTIVE</replaceable></term>
+
+        <listitem>
+          <para>задает высоту получаемых текстур. Аналог <option>-w</option>.
+          По умолчанию, не задана.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-H</option>, <option>--max-height</option>
+        <replaceable>HEIGHT</replaceable></term>
+
+        <listitem>
+          <para>задает максимальную высоту получаемых текстур. По умолчанию,
+          2048.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-F</option>, <option>--format</option>
+        <replaceable>FORMAT</replaceable></term>
+
+        <listitem>
+          <para>задает пользовательский формат вывода информации для
+          востановления (см. ниже).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-b</option>, <option>--border
+        <replaceable>WIDTH</replaceable></option></term>
+
+        <listitem>
+          <para>задает ширину бордюра в пикселях, который следует оставлять
+          между упакованными картинками. По умолчанияю, 0.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-n</option>, <option>--native-size</option></term>
+
+        <listitem>
+          <para>запрещает округление размеров текстур до степени двойки. При
+          этом качество работы программы сильно возрастает.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-a</option>, <option>--separate-by-alpha</option></term>
+
+        <listitem>
+          <para>заставляет программу отделить исходные картинки, которые
+          используют альфа-канал, и упаковать их отдельно от остальных. При
+          большом количестве картинок без альфа-канала (или где он не
+          используется) позволяет сэкономить место.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-R</option>, <option>--use-rotations</option></term>
+
+        <listitem>
+          <para>заставляет программу использовать вращение исходных текстур на
+          90 градусов против часовой стрелки для улучшения упаковки.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1 id="std_parameters">
+    <title>СТАНДАРТНЫЕ ПАРАМЕТРЫ</title>
+
+    <variablelist remap="IP">
+      <varlistentry>
+        <term><option>--help</option></term>
+
+        <listitem>
+          <para>вывод справки на стандартный вывод и успешное
+          завершение.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-v</option>, <option>--version</option></term>
+
+        <listitem>
+          <para>вывод версии на стандартный вывод и успешное
+          завершение.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1 id="comments">
+    <title>КОММЕНТАРИИ</title>
+
+    <para>Опция <option>--format</option> задает формат вывода информации для
+    востановления. Ее значение используется в функции
+    <olink>fprintf(3)</olink>. Есть два встроенных формата: один используется,
+    когда программа запущена с опцией <option>--relative</option>, а второй –
+    без. Формат может соделжать любые символы (только символ процента надо
+    экранировать еще одним: `%%'), а так же макросы:</para>
+
+    <para><token>%1$s</token> – название получаемой текстуры</para>
+
+    <para><token>%2$s</token> – название исходной картинки</para>
+
+    <para><token>%3$u</token> – смещение в пикселях по горизонтали до левого
+    края картинки</para>
+
+    <para><token>%4$u</token> – смещение в пикселях по вертикали до верхнего
+    края картинки</para>
+
+    <para><token>%5$u</token> – смещение в пикселях по горизонтали до правого
+    края картинки</para>
+
+    <para><token>%6$u</token> – смещение в пикселях по вертикали до нижнего
+    края картинки</para>
+
+    <para><token>%7$f</token> – относительное смещение по горизонтали до
+    левого края картинки</para>
+
+    <para><token>%8$f</token> – относительное смещение по вертикали до
+    верхнего края картинки</para>
+
+    <para><token>%9$f</token> – относительное смещение по горизонтали до
+    правого края картинки</para>
+
+    <para><token>%10$f</token> – относительное смещение по вертикали до
+    нижнего края картинки</para>
+
+    <para><token>%11$s</token> – если картинка подвергалась вращению, то
+    принимает значение «rotated». В противном случае – ничего</para>
+
+    <para><token>%12$u</token> – ширина картинки в пикселях</para>
+
+    <para><token>%13$u</token> – высота картинки в пикселях</para>
+
+    <para><token>%14$f</token> – относительная ширина картинки</para>
+
+    <para><token>%15$f</token> – относительная высота картинки</para>
+  </refsect1>
+
+  <refsect1 id="examples">
+    <title>ПРИМЕРЫ</title>
+
+    <para>Предположим, что в директории
+    <parameter>/home/user/pictures</parameter> находится много мелких картинок
+    (меньше 1024x1024) в формате <abbrev>PNG</abbrev>, некоторые из которых
+    имеют альфа-канал...</para>
+
+    <para><command>texpack</command> <option>-s</option>
+    <parameter>/home/user/pictures</parameter> <option>-o</option>
+    <parameter>/home/user/texture</parameter></para>
+
+    <para>Создаст несколько файлов с именами /home/user/texture#.png, где #
+    целое число. А на консоль будут выведены в виде таблицы название
+    полученного файла, название исходного файла и четыре числа.</para>
+
+    <para><command>find</command> <parameter>/home/user/pictures</parameter>
+    <option>-iname</option> <parameter>`*.png'</parameter>
+    <option>-type</option> <parameter>f</parameter> &gt;
+    <parameter>/home/user/pictures/list.txt</parameter> &amp;&amp; \
+    <command>texpack</command> <option>-l</option>
+    <parameter>/home/user/pictures/list.txt</parameter> <option>-o</option>
+    <parameter>/home/user/pictures/texture</parameter></para>
+
+    <para>Данные комманды аналогичны по своему действию предыдущему примеру за
+    тем исключением, что если в директории
+    <parameter>/home/user/pictures</parameter> были файлы с расширением
+    отличным от <parameter>`png'</parameter>, то они обработаны не
+    будут.</para>
+
+    <para><command>texpack</command>
+    <parameter><option>-s</option></parameter>
+    <parameter>/home/user/pictures</parameter> <option>-o</option>
+    <parameter>/home/user/texture</parameter> <option>-W</option>
+    <parameter>1024</parameter> <option>-H</option>
+    <parameter>1024</parameter></para>
+
+    <para>Аналогична первому примеру, только полученные файлы будут иметь
+    размеры не более 1024x1024.</para>
+
+    <para><command>texpack</command> <option>-s</option>
+    <parameter>/home/user/pictures</parameter> <option>-o</option>
+    <parameter>/home/user/texture</parameter> <option>-W</option>
+    <parameter>1024</parameter> <option>-H</option>
+    <parameter>1024</parameter> <option>-a</option> <option>-R</option>
+    <option>-r</option></para>
+
+    <para>Все картинки разобьются на два набора – с альфа-каналом и без него.
+    Оба набора будут упаковываться раздельно (сначала без альфа-канала).
+    Некоторые исходные картинки будут повернуты против часовой стрелки на 90º.
+    Максимальный размер полученных текстур не будет превышать 1024x1024. На
+    консоль будут выводиться относительные смещения, а так же слова «rotated»
+    в крайнем правом столбце для повернутых картинок.</para>
+  </refsect1>
+
+  <refsect1 id="notes">
+    <title>ЗАМЕЧАНИЯ</title>
+
+    <para>Все относительные размеры указываются относительно соответствующего
+    размера результирующей текстуры. Например, относительное смещения по
+    горизонтали (<varname>oox</varname>) и вертикали (<varname>ooy</varname>)
+    считаются так: <code>oox = ox / tex_width</code>, <code>ooy = oy /
+    tex_height</code>. Здесь <varname>ox</varname> и <varname>oy</varname> –
+    смещения по горизонтали и вертикали в пикселях, а
+    <varname>tex_width</varname> и <varname>tex_height</varname> – размеры
+    результирующей текстуры.</para>
+
+    <para>Правый и нижний край выходят за пределы картинки. Причем, справедливы
+    правила: <code>right = left + width</code> и <code>bottom = top +
+    height</code></para>
+  </refsect1>
+
+  <refsect1 id="exit_values">
+    <title>EXIT VALUES</title>
+
+    <para>Комманда <command>texpack</command> при выходе возвращает 0 в случае
+    успешного завершения. </para>
+  </refsect1>
+
+  <refsect1 id="see_also">
+    <title>СМОТРИ ТАКЖЕ</title>
+
+    <para><citerefentry>
+        <refentrytitle>fprintf</refentrytitle><manvolnum>3</manvolnum>
+      </citerefentry>.</para>
+  </refsect1>
+</refentry>

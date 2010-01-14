@@ -1,0 +1,20 @@
+<root>
+	<strings>
+		<dictionary language='en_US'>
+			<string name='helloworld' text='Hello World!' />
+		</dictionary>
+		<dictionary language='pt_BR'>
+			<string name='helloworld' text='Olá mundo!' />
+		</dictionary>
+		<dictionary language='de_DE'>
+			<string name='helloworld' text='hi!' />
+		</dictionary>		
+	</strings>
+	<resources>
+		<resource type='image' filename='fonts/Font_16_14x24' name='fonts/Font_16_14x24' />
+		<resource type='image' filename='fonts/Font_16_14x24' name='fonts/Font_16_14x24' language='pt_BR' />
+	</resources>
+	<objects>
+		<object type='font' name='fonts/Font_16_14x24' spacing='0' tracking='0.01' space='0.03' resource='fonts/Font_16_14x24' group='common' />
+	</objects>
+</root>

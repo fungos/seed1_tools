@@ -1,0 +1,1 @@
+-l files.txt -o teste -H 1024 -w 1024 -n -f map.txt --format="<resource filename='%s' name='%s' x='%u' y='%u' width='%u' height='%u' />" -d base_path_terminado_em_barra

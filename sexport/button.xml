@@ -1,0 +1,37 @@
+<root>
+	<strings>
+	</strings>
+	<resources>
+		<resource type='image' filename='btn/btn_disabled' name='btn_disabled' />
+		<resource type='image' filename='btn/btn_out' name='btn_out' />
+		<resource type='image' filename='btn/btn_over' name='btn_over' />
+		<resource type='image' filename='btn/btn_pressed' name='btn_pressed' />
+		<resource type='mask' filename='btn/btn_mask' name='btn_mask' />
+	</resources>
+	<objects>
+		<object type='sprite' name='btn/btn_sprite'>
+			<animation name='idle'>
+				<frame resource='btn_out' />
+			</animation>
+			<animation name='rollout'>
+				<frame resource='btn_out' />
+			</animation>
+			<animation name='rollover'>
+				<frame resource='btn_over' />
+			</animation>
+			<animation name='disabled'>
+				<frame resource='btn_disabled' />
+			</animation>
+			<animation name='selected'>
+				<frame resource='btn_pressed' />
+			</animation>
+			<animation name='press'>
+				<frame resource='btn_pressed' />
+			</animation>
+			<animation name='release'>
+				<frame resource='btn_over' />
+			</animation>
+		</object>
+		<object type='button' name='btn/btn' id='1' object_sprite='btn/btn_sprite' x='0' y='0' priority='0' label='botao' collision='mask' resource_mask='btn_mask' />
+	</objects>
+</root>

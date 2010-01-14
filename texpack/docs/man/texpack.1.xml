@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<refentry id="texpack.1">
+  <!--  $Id: texpack.1.xml 40 2006-09-18 12:47:11Z b-s-a $ -->
+
+  <refmeta>
+    <refentrytitle>texpack</refentrytitle>
+
+    <manvolnum>1</manvolnum>
+
+    <refmiscinfo class="sectdesc">Developer tools</refmiscinfo>
+  </refmeta>
+
+  <refnamediv id="name">
+    <refname>texpack</refname>
+
+    <refpurpose>integration of a large number of small pictures into several
+    large ones</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv id="synopsis">
+    <cmdsynopsis>
+      <command>texpack</command>
+
+      <arg choice="opt"><replaceable>options</replaceable></arg>
+
+      <arg choice="plain"><option>--source-dir</option>=<replaceable>&lt;path
+      to directory&gt;</replaceable></arg>
+
+      <arg choice="plain"><option>--output</option>=<replaceable>&lt;file
+      template&gt;</replaceable></arg>
+    </cmdsynopsis>
+
+    <cmdsynopsis>
+      <command>texpack</command>
+
+      <arg choice="opt"><replaceable>options</replaceable></arg>
+
+      <arg
+      choice="plain"><option>--list</option>=<replaceable>&lt;file&gt;</replaceable>
+      <option>--output</option>=<replaceable>&lt;file
+      template&gt;</replaceable></arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+
+    <para>The program texpack is used for integration of a large number of
+    small textures into several large ones. It is necessary for the programs
+    which actively use 3D graphics. Because otherwise the number of data
+    transmitted to the graphic accelerator can be so huge that it will lead to
+    the productivity slowdown.</para>
+
+    <para>The given program represents a command line utility. It receives a
+    list of graphic files (directory or a file with a list) on entry. Then
+    these files are packed into a large texture (limited by the specified
+    dimensions). If all files can be placed in it, the next texture is created
+    etc. Information about the extent (quality) of packing, as well as
+    overhead information needed for the subsequent restoration of the initial
+    files (horizontal and vertical displacements and possible rotation) are
+    displayed on the screen (or stored in the file).</para>
+  </refsect1>
+
+  <refsect1 id="parameters">
+    <title>NECESARY PARAMETERS</title>
+
+    <para>The following parameters are necessary for the
+    <command>texpack</command>:</para>
+
+    <variablelist remap="IP">
+      <varlistentry>
+        <term><option>-l</option>, <option>--list</option>
+        <replaceable>FILE</replaceable></term>
+
+        <listitem>
+          <para>sets file which contains a list of the initial files
+          (alternative to <option>-s</option>).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-s</option>, <option>--source-dir</option>
+        <replaceable>DIR</replaceable></term>
+
+        <listitem>
+          <para>sets route to the directory with the initial files
+          (alternative to <option>-l</option>). The program tries to open all
+          files found there. If at least one file has an unsupported format,
+          the program will be aborted.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-o</option>, <option>--output</option>
+        <replaceable>FILE_TEMPLATE</replaceable></term>
+
+        <listitem>
+          <para>sets pattern of output files. All textures generated during
+          operation will be saved under the names FILE_TEMPLATE#.png, where #
+          is a whole number (0, 1, 2...).</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+
+    <para><command>texpack</command> uses the following options:</para>
+
+    <variablelist remap="IP">
+      <varlistentry>
+        <term><option>-r</option>, <option>--relative</option></term>
+
+        <listitem>
+          <para>sets ouput of coordinates of the initial picture in relative
+          coordinates (for example, xr = x / result_width).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-f</option>, <option>--file</option>
+        <replaceable>FILE</replaceable></term>
+
+        <listitem>
+          <para>sets output of information for restoration to the indicated
+          file. Without this option the output will be made in stdout (to the
+          console).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-w</option>, <option>--width</option>
+        <replaceable>WIDTH</replaceable></term>
+
+        <listitem>
+          <para>sets width of the generated textures. The width of the
+          generated textures will be equal. If option <option>-n</option>
+          isn't stated, then WIDTH will be rounded up to the nearest larger
+          powers of two (256, 512, 1024, etc). It isn't set by default.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-W</option>, <option>--max-width</option>
+        <replaceable>WIDTH</replaceable></term>
+
+        <listitem>
+          <para>sets maximal width of the generated textures. The given option
+          is more flexible than <option>-w</option>, as it allows the program
+          to choose the optimal width for the result picture. By default, it
+          is 2048.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-h</option>, <option>--height</option>
+        <replaceable>HEIGHT</replaceable></term>
+
+        <listitem>
+          <para>sets height of the generated textures. Is similar to
+          <option>-w</option>. It isn't set by default.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-H</option>, <option>--max-height</option>
+        <replaceable>HEIGHT</replaceable></term>
+
+        <listitem>
+          <para>sets maximal height of the generated textures. By default, it
+          is 2048.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-F</option>, <option>--format</option>
+        <replaceable>FORMAT</replaceable></term>
+
+        <listitem>
+          <para>sets user format for information output for restoration (see
+          below).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-b</option>, <option>--border
+        <replaceable>WIDTH</replaceable></option></term>
+
+        <listitem>
+          <para>sets border width in pixels which should be left between the
+          packed pictures. By default, it is 0.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-n</option>, <option>--native-size</option></term>
+
+        <listitem>
+          <para>prohibits round-up of texture sizes to the power of two. At
+          that the quality of work rises steeply.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-a</option>, <option>--separate-by-alpha</option></term>
+
+        <listitem>
+          <para>makes the program separate the initial pictures which use
+          alpha channel and pack them separately from the others. It helps to
+          save the room when there is a large amount of pictures without alpha
+          channel (or when it is not used).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-R</option>, <option>--use-rotations</option></term>
+
+        <listitem>
+          <para>makes the program use rotation of the initial textures at 90
+          degrees angle counter-clockwise to improve packing.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1 id="std_parameters">
+    <title>STANDARD PARAMETERS</title>
+
+    <variablelist remap="IP">
+      <varlistentry>
+        <term><option>--help</option></term>
+
+        <listitem>
+          <para>output of information for the standard output and successful
+          termination.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>-v</option>, <option>--version</option></term>
+
+        <listitem>
+          <para>output of version for the standard output and successful
+          termination.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1 id="comments">
+    <title>COMMENTS</title>
+
+    <para>The option <option>--format</option> formats information output for
+    restoration. Its notion is used in the function <olink>fprintf(3)</olink>.
+    There are two built-in formats: one is used when the program is launched
+    with the option <option>--relative</option>, and the second - without it.
+    The format can contain any symbols (only the precentage symbol should be
+    doubled: `%%'), as well as macros:</para>
+
+    <para><token>%1$s</token> – name of the obtained texture</para>
+
+    <para><token>%2$s</token> – name of the initial picture</para>
+
+    <para><token>%3$u</token> – horizontal displacement in pixels up to the
+    left edge of the picture</para>
+
+    <para><token>%4$u</token> – vertical displacement in pixels up to the
+    upper edge of the picture</para>
+
+    <para><token>%5$u</token> – horizontal displacement in pixels up to the
+    right edge of the picture</para>
+
+    <para><token>%6$u</token> – vertical displacement in pixels up to the
+    lower edge of the picture</para>
+
+    <para><token>%7$f</token> – relative horizontal displacement up to the
+    left edge of the picture</para>
+
+    <para><token>%8$f</token> – relative vertical displacement up to the upper
+    edge of the picture</para>
+
+    <para><token>%9$f</token> – relative horizontal displacement up to the
+    right edge og the picture</para>
+
+    <para><token>%10$f</token> – relative vertical displacement up to the
+    lower edge of the picture</para>
+
+    <para><token>%11$s</token> – if the picture was rotated, it gets the
+    notion "rotated". Otherwise - nothing.</para>
+
+    <para><token>%12$u</token> – picture width in pixels</para>
+
+    <para><token>%13$u</token> – picture height in pixels</para>
+
+    <para><token>%14$f</token> – relative picture width</para>
+
+    <para><token>%15$f</token> – relative picture height</para>
+  </refsect1>
+
+  <refsect1 id="examples">
+    <title>EXAMPLES</title>
+
+    <para>Let's presume that the directory /home/user/pictures contains a lot
+    of small pictures (smaller than 1024x1024) in <emphasis
+    role="bold">PNG</emphasis> format, some of which have alpha
+    channel...</para>
+
+    <para><command>texpack</command> <option>-s</option>
+    <parameter>/home/user/pictures</parameter> <option>-o</option>
+    <parameter>/home/user/texture</parameter></para>
+
+    <para>Creates several files with names /home/user/texture#.png, where # is
+    a whole number. And the name of the generated file, the name of the
+    initial file and four numbers will be shown at the console.</para>
+
+    <para><command>find</command> <parameter>/home/user/pictures</parameter>
+    <option>-iname</option> <parameter>'*.png'</parameter>
+    <option>-type</option> <parameter>f</parameter> &gt;
+    <parameter>/home/user/pictures/list.txt</parameter> &amp;&amp; \</para>
+
+    <para><command>texpack</command> <option>-l</option>
+    <parameter>/home/user/pictures/list.txt</parameter> <option>-o</option>
+    <parameter>/home/user/pictures/texture</parameter></para>
+
+    <para>The given commands are similar in their action to the previous
+    example except for the fact that if the directory /home/user/pictures
+    contains files with the extension other than 'png', they won't be
+    handled.</para>
+
+    <para><command>texpack</command>
+    <parameter><option>-s</option></parameter>
+    <parameter>/home/user/pictures</parameter> <option>-o</option>
+    <parameter>/home/user/texture</parameter> <option>-W</option>
+    <parameter>1024</parameter> <option>-H</option>
+    <parameter>1024</parameter></para>
+
+    <para>Is similar to the first example but the generated files will have
+    sizes no more than 1024x1024.</para>
+
+    <para><command>texpack</command> <option>-s</option>
+    <parameter>/home/user/pictures</parameter> <option>-o</option>
+    <parameter>/home/user/texture</parameter> <option>-W</option>
+    <parameter>1024</parameter> <option>-H</option>
+    <parameter>1024</parameter> <option>-a</option> <option>-R</option>
+    <option>-r</option></para>
+
+    <para>All pictures will be divided into two sets: the ones with alpha
+    channel and the ones without it. Both sets will be packed separately (at
+    first ones with alpha channel). Some initial pictures will be rotated
+    counter-clockwise at 90 degrees angle. The maximal size of the generated
+    textures won't exceed 1024x1024. Relative displacements will be shown at
+    the console as well as the word "rotated" in the rightmost column for the
+    rotated pictures.</para>
+  </refsect1>
+
+  <refsect1 id="notes">
+    <title>NOTES</title>
+
+    <para>All relative sizes are stated according to the corresponding size of
+    the result texture. For example, relative displacements across
+    (<varname>oox</varname>) and down (<varname>ooy</varname>) are counted
+    this way: <code>oox = ox / tex_width</code>, <code>ooy = oy /
+    tex_height</code>. <varname>ox</varname> and <varname>oy</varname> here
+    are the horizontal and vertical displacements in pixels and
+    <varname>tex_width</varname> and <varname>tex_height</varname> - sizes of
+    the result texture.</para>
+
+    <para>The right and the left sides exceed the bounds of the picture. The
+    following rules are true: <code>right = left + width</code>, <code>bottom
+    = top + height</code></para>
+  </refsect1>
+
+  <refsect1 id="exit_values">
+    <title>EXIT VALUES</title>
+
+    <para>In case of successful termination <command>texpack</command> returns
+    0 on exit.</para>
+  </refsect1>
+
+  <refsect1 id="see_also">
+    <title>SEE ALSO</title>
+
+    <para><citerefentry>
+        <refentrytitle>fprintf</refentrytitle>
+
+        <manvolnum>3</manvolnum>
+      </citerefentry>.</para>
+  </refsect1>
+</refentry>

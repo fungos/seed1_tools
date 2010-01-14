@@ -1,0 +1,38 @@
+/***************************************************************************
+ *   Copyright (C) 2006 by Sergey Belyashov                                *
+ *   b-s-a at narod dot ru                                                 *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#ifndef IERROR_HPP
+#define IERROR_HPP
+
+#include <string>
+#include <exception>
+
+/**
+ * @author Sergey Belyashov
+*/
+class IError : public std::exception {
+	private:
+	protected:
+		const char * data;
+	public:
+		inline IError( const char * text ) : data( text ) {}
+		virtual const char * what(void) const throw();
+
+};
+
+#endif	//IERROR_HPP

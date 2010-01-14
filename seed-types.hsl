@@ -1,0 +1,201 @@
+/*****************************************************************************
+ * seed-types.hsl - Type definitions for Seed SDK
+ *  
+ * Copyright (c) 2009 Bitcrafters Inc. All Rights Reserved
+ * Copyright (c) 2009 Danny Angelo Carminati Grein. All Rights Reserved
+ *
+ *****************************************************************************
+ * To avoid problems with future structure libraries and samples, please do 
+ * not modify this file.  Instead, please add or redefine any data types in 
+ * your local libraries or #include an additional .hsl file.
+ *
+ * You may also sprinkly #pragmas through out your own structure definitions
+ * to change the size of enumerations, max array lengths, etc.  The #pragma
+ * statements must be outside a definition.
+ *
+ ***************************************************************************** 
+ * Revision History:
+ *  2009/06/04 - Danny - Initial test
+ *  2009/12/22 - Danny - FileId support added. Reviewed some structures.
+ */
+ 
+#pragma displayname("Seed Asset") ;
+#pragma fileextensions(".font;.sprite;.package;.button,.music,.sound,.particle,.dict,filelist.data,strlist.data") ;
+ 
+// Default enumeration size (4 bytes / 32 bits).  You may set this to 1, 2, 4,
+// or 8 bytes.
+#pragma enumsize(4)
+
+// Default structure Packing (1 byte).
+#pragma pack(1)   // NOT YET IMPLEMENTED
+
+#pragma hide()
+
+// Default to show all structures.  All structure defined after a 
+// "#pragma hide()" and before the next "#pragma show()" are hidden from 
+// the Add Structure window.  We use to this to hide intermediate definitions.
+#pragma show()
+
+// Default to editor's environment for byte order.  Options include:
+//   environment   - Use whatever the editor has set
+//   little_endian - Little Endian Byte Order (e.g. Intel)
+//   big_endian    - Big Endian Byte Order (e.g. Motorola)
+#pragma byteorder(environment)
+
+// Default max array length.  The maximum array size can range between 1 and 
+// 16384 entries, inclusively.  This limit helps guard against run-away arrays
+// when the data does not match expectations.
+#pragma maxarray(1024)
+
+// Standard Types
+typedef unsigned double		 	u64 ;
+typedef unsigned int 			u32 ;
+typedef unsigned short  		u16 ;
+typedef unsigned char 			u8 ;
+typedef signed double 			s64 ;
+typedef signed int 				s32 ;
+typedef signed short 	 		s16 ;
+typedef signed char 			s8 ;
+typedef float 					f32 ;
+
+typedef float 					fixed32 ;
+typedef int 					PIXEL ;
+
+typedef enum tagPLATFORM
+{
+    NintendoDS      = 0,
+    NintendoWii     = 1,
+    iPhone          = 2,
+    SDL             = 3,
+    Win32           = 4,
+    MacOSX          = 5,
+    Linux           = 6,
+    SonyPSP         = 7
+} PLATFORM ;
+
+typedef enum tagLANGUAGE
+{
+    en_US = 0,
+    de_DE = 1,
+    pt_BR = 2
+} LANGUAGE ;
+
+struct ObjectHeader
+{
+	u32 magic;
+	u32 version;
+	PLATFORM platform;
+} ;
+
+struct ImageObjectHeader
+{
+	u32 width;
+	u32 height;
+	u32 colorkey;
+	u32 padding01;
+	u32 padding02;
+} ;
+
+struct FrameObjectHeader
+{
+	struct ObjectHeader block;
+	u32 index;
+	u32 time;
+	u32 x;
+	u32 y;
+	u32 w;
+	u32 h;
+	u32 res_w;
+	u32 res_h;
+	u32 pack_id;
+	u32 frame_id;
+	u32 file_id;
+} ;
+
+struct AnimationObjectHeader
+{
+	struct ObjectHeader block;
+	u32 index;
+	u32 frame_amount;
+	u32 flags;
+	u32 animation_id;
+	struct FrameObjectHeader frames[frame_amount];
+} ;
+
+struct SpriteObjectHeader
+{
+	struct ObjectHeader block;
+	u32 animation_amount;
+	u32 flags;
+	struct AnimationObjectHeader animations[animation_amount];
+} ;
+
+struct MusicObjectHeader
+{
+	struct ObjectHeader block;
+	u32 volume;
+} ;
+
+struct SoundObjectHeader
+{
+	struct ObjectHeader block;
+	u32 volume;
+	u32 flags;
+} ;
+
+struct FontObjectHeader
+{
+	struct ObjectHeader block;
+	u32 tracking;
+	u32 spacing;
+	u32 space;
+	u32 sprite_id;
+	u32 extension_id;
+} ;
+
+struct ButtonObjectHeader
+{
+	struct ObjectHeader block;
+	u32		button_id;
+	u32		priority;
+	f32		x;
+	f32		y;
+	u32		masktype; // 0 = rect, 1 = mask, 2 = pixel
+	u32		label_id;
+	u32		sprite_file_id; //const char *sprite;
+	u32		mask_file_id; //const char *mask;
+} ;
+
+struct PackageEntry
+{
+	u32 offset;
+	u32 filesize;
+	zstring filename;
+} ;
+
+struct PackageObjectHeader
+{
+	struct ObjectHeader block;
+	u32 files_amount;
+	struct PackageEntry entries[files_amount];
+} ;
+
+struct FileListObjectHeader
+{
+	struct ObjectHeader block;
+	u32 lang_count;
+	u32 file_count;
+	
+	struct FileListLanguageEntry
+	{
+		LANGUAGE language;
+		zstring filename[file_count];
+	} ;
+} ;
+
+struct StringListObjectHeader
+{
+	struct ObjectHeader block;
+	u32 str_count;
+	zstring str[str_count];
+} ;

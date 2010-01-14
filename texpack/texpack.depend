@@ -1,0 +1,129 @@
+# depslib dependency file v1.0
+1229448060 source:f:\sdk\tools\texpack\src\iimage.cpp
+	"iimage.hpp"
+	"ierror.hpp"
+	<cstdio>
+
+1229448060 f:\sdk\tools\texpack\src\iimage.hpp
+	<string>
+	<IL/il.h>
+
+1236488606 c:\dev\external libs\devil-sdk-x86-1.7.8\include\il\il.h
+	<stdio.h>
+	<limits.h>
+	<wchar.h>
+
+1229448060 f:\sdk\tools\texpack\src\ierror.hpp
+	<string>
+	<exception>
+
+1229448060 source:f:\sdk\tools\texpack\src\rectpack.cpp
+	"rectpack.h"
+	<vector>
+
+1229448060 f:\sdk\tools\texpack\src\rectpack.h
+	<list>
+	<cstring>
+
+1229448060 source:f:\sdk\tools\texpack\src\ierror.cpp
+	"ierror.hpp"
+
+1243960836 source:f:\sdk\tools\texpack\src\texpack.cpp
+	<getopt.h>
+	<cstring>
+	<dirent.h>
+	<sys/stat.h>
+	<unistd.h>
+	<sys/types.h>
+	<math.h>
+	<errno.h>
+	<iostream>
+	<cstdlib>
+	<cstdio>
+	<vector>
+	<list>
+	<fstream>
+	<string>
+	<IL/il.h>
+	<IL/ilu.h>
+	<config.h>
+	"iimage.hpp"
+	"texpack.h"
+	"rectpack.h"
+	"ierror.hpp"
+
+1236488606 c:\dev\external libs\devil-sdk-x86-1.7.8\include\il\ilu.h
+	<IL/il.h>
+
+1243958778 f:\sdk\tools\texpack\src\texpack.h
+	<string>
+	<rectpack.h>
+	<vector>
+	<list>
+	<IL/il.h>
+	<cstdio>
+
+1244220452 source:c:\techfront\sdk\tools\texpack\src\iimage.cpp
+	"iimage.hpp"
+	"ierror.hpp"
+	<cstdio>
+
+1244220452 c:\techfront\sdk\tools\texpack\src\iimage.hpp
+	<string>
+	<IL/il.h>
+
+1244220452 c:\techfront\sdk\tools\texpack\src\ierror.hpp
+	<string>
+	<exception>
+
+1244220452 source:c:\techfront\sdk\tools\texpack\src\rectpack.cpp
+	"rectpack.h"
+	<vector>
+
+1244220452 c:\techfront\sdk\tools\texpack\src\rectpack.h
+	<list>
+	<cstring>
+
+1244220452 source:c:\techfront\sdk\tools\texpack\src\ierror.cpp
+	"ierror.hpp"
+
+1236488606 c:\techfront\sdk\dependency\mingw\include\il\il.h
+	<stdio.h>
+	<limits.h>
+	<wchar.h>
+
+1254858260 source:c:\techfront\sdk\tools\texpack\src\texpack.cpp
+	<getopt.h>
+	<cstring>
+	<dirent.h>
+	<sys/stat.h>
+	<unistd.h>
+	<sys/types.h>
+	<math.h>
+	<errno.h>
+	<iostream>
+	<cstdlib>
+	<cstdio>
+	<vector>
+	<list>
+	<fstream>
+	<string>
+	<IL/il.h>
+	<IL/ilu.h>
+	<config.h>
+	"iimage.hpp"
+	"texpack.h"
+	"rectpack.h"
+	"ierror.hpp"
+
+1236488606 c:\techfront\sdk\dependency\mingw\include\il\ilu.h
+	<IL/il.h>
+
+1254858276 c:\techfront\sdk\tools\texpack\src\texpack.h
+	<string>
+	<rectpack.h>
+	<vector>
+	<list>
+	<IL/il.h>
+	<cstdio>
+

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="sexport" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\sexport" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\..\Dracula\dra_w32\principal\prog\tools" />
+				<Option object_output="bin\obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-i assets_global.xml -p sdl -c -k -d" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="boost_filesystem-mgw34-mt-d-1_37" />
+					<Add library="boost_system-mgw34-mt-d-1_37" />
+					<Add directory="$(#boost.lib_debug_static)" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\sexport" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\demos\exporter" />
+				<Option object_output="bin\obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-i sdl.xml -p sdl -v" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="boost_filesystem-mgw34-mt-1_37" />
+					<Add library="boost_system-mgw34-mt-1_37" />
+					<Add directory="$(#boost.lib_release_static)" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="$(#sdl.include)" />
+			<Add directory="$(#boost.include)" />
+		</Compiler>
+		<Linker>
+			<Add library="libSDL" />
+			<Add library="libSDLmain" />
+			<Add library="SDL_image" />
+			<Add directory="$(#sdl.lib)" />
+		</Linker>
+		<Unit filename="src\args.cpp" />
+		<Unit filename="src\args.h" />
+		<Unit filename="src\cache.cpp" />
+		<Unit filename="src\cache.h" />
+		<Unit filename="src\cmdlineparser.cpp" />
+		<Unit filename="src\cmdlineparser.h" />
+		<Unit filename="src\config.cpp" />
+		<Unit filename="src\config.h" />
+		<Unit filename="src\defines.h" />
+		<Unit filename="src\dictionary.cpp" />
+		<Unit filename="src\dictionary.h" />
+		<Unit filename="src\exporter.cpp" />
+		<Unit filename="src\exporter.h" />
+		<Unit filename="src\filesystem.cpp" />
+		<Unit filename="src\filesystem.h" />
+		<Unit filename="src\group.cpp" />
+		<Unit filename="src\group.h" />
+		<Unit filename="src\groupmanager.cpp" />
+		<Unit filename="src\groupmanager.h" />
+		<Unit filename="src\iobject.h" />
+		<Unit filename="src\iplatform.h" />
+		<Unit filename="src\iresource.h" />
+		<Unit filename="src\log.cpp" />
+		<Unit filename="src\log.h" />
+		<Unit filename="src\main.cpp" />
+		<Unit filename="src\object\button.cpp" />
+		<Unit filename="src\object\button.h" />
+		<Unit filename="src\object\font.cpp" />
+		<Unit filename="src\object\font.h" />
+		<Unit filename="src\object\sprite.cpp" />
+		<Unit filename="src\object\sprite.h" />
+		<Unit filename="src\package.cpp" />
+		<Unit filename="src\package.h" />
+		<Unit filename="src\platform.h" />
+		<Unit filename="src\platform\iphplatform.cpp" />
+		<Unit filename="src\platform\iphplatform.h" />
+		<Unit filename="src\platform\sdlplatform.cpp" />
+		<Unit filename="src\platform\sdlplatform.h" />
+		<Unit filename="src\platform\wiiplatform.cpp" />
+		<Unit filename="src\platform\wiiplatform.h" />
+		<Unit filename="src\platform\wiiswizzle.cpp" />
+		<Unit filename="src\platform\wiiswizzle.h" />
+		<Unit filename="src\resource\image.cpp" />
+		<Unit filename="src\resource\image.h" />
+		<Unit filename="src\resource\mask.cpp" />
+		<Unit filename="src\resource\mask.h" />
+		<Unit filename="src\resource\music.cpp" />
+		<Unit filename="src\resource\music.h" />
+		<Unit filename="src\resource\sound.cpp" />
+		<Unit filename="src\resource\sound.h" />
+		<Unit filename="src\strcache.cpp" />
+		<Unit filename="src\strcache.h" />
+		<Unit filename="src\string.cpp" />
+		<Unit filename="src\string.h" />
+		<Unit filename="src\tsf.h" />
+		<Unit filename="src\utils.cpp" />
+		<Unit filename="src\utils.h" />
+		<Unit filename="src\xml\tinystr.cpp" />
+		<Unit filename="src\xml\tinystr.h" />
+		<Unit filename="src\xml\tinyxml.cpp" />
+		<Unit filename="src\xml\tinyxml.h" />
+		<Unit filename="src\xml\tinyxmlerror.cpp" />
+		<Unit filename="src\xml\tinyxmlparser.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

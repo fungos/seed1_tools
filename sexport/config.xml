@@ -1,0 +1,20 @@
+<sexport>
+	<wii>
+		<output path='C:\Techfront\SDK\Tools\sexport\data\output' />
+		<image input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' res_width='800' res_height='600' />
+		<music input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
+		<sound input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
+	</wii>
+	<iph>
+		<output path='C:\Techfront\SDK\Tools\sexport\data\output' />
+		<image input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' res_width='640' res_height='480' />
+		<music input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
+		<sound input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
+	</iph>
+	<sdl>
+		<output path='C:\Techfront\SDK\Tools\sexport\data\output' />
+		<image input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' res_width='800' res_height='600' />
+		<music input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
+		<sound input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
+	</sdl>
+</sexport>

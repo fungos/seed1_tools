@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="project" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="..\bin\debug\basic1" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\..\data\sdl\workdir" />
+				<Option object_output="..\bin\obj\debug\" />
+				<Option additional_output="..\..\..\Seed\bin\debug\sdl\libSeed.a;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-pedantic" />
+					<Add option="-W" />
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+					<Add option="-D_SDL_" />
+				</Compiler>
+				<Linker>
+					<Add directory="$(#Seed.lib)\debug\gcc" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="..\bin\release\basic1" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\..\..\data\sdl\workdir" />
+				<Option object_output="..\bin\obj\release\" />
+				<Option additional_output="..\..\..\Seed\bin\release\sdl\libSeed.a;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-O2" />
+					<Add option="-O1" />
+					<Add option="-O" />
+					<Add option="-W" />
+					<Add option="-Wall" />
+					<Add option="-DRELEASE" />
+					<Add option="-D_SDL_" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add directory="$(#Seed.lib)\release\gcc" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-Wno-long-long" />
+			<Add directory="$(#SDL.include)" />
+			<Add directory="$(#OpenAL.include)" />
+			<Add directory="$(#Seed.include)" />
+		</Compiler>
+		<Linker>
+			<Add library="mingw32" />
+			<Add library="libSeed" />
+			<Add library="openal32" />
+			<Add library="libSDLmain" />
+			<Add library="libSDL" />
+			<Add library="SDL_image" />
+			<Add library="opengl32" />
+			<Add library="vorbisfile" />
+			<Add library="vorbis" />
+			<Add library="ogg" />
+			<Add library="vorbisenc" />
+			<Add directory="$(#SDL.lib)" />
+			<Add directory="$(#OpenAL.lib)" />
+		</Linker>
+		<Unit filename="..\main.cpp" />
+		<Unit filename="..\mygame.cpp" />
+		<Unit filename="..\mygame.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

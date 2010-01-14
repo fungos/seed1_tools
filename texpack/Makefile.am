@@ -1,0 +1,7 @@
+EXTRA_DIST = NEWS README TODO
+
+AUTOMAKE_OPTIONS = dist-bzip2
+
+METASOURCES = auto
+
+SUBDIRS = src docs
