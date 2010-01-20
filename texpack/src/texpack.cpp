@@ -244,7 +244,6 @@ int main(int argc, char *argv[]) {
 		current_rects = getRects(images_alpha);
 	}
 	do {
-
 		int n = get_max_rect_width( current_rects );
 		if (use_rotations) {
 			int h = get_max_rect_height( current_rects );
@@ -268,8 +267,10 @@ int main(int argc, char *argv[]) {
 		IArrayRects result;
 		ILuint img = makeTexture( width, max_height, current_rects, result );
 		square = get_rects_square( result );
+
 		if ( img ) {
 			ilBindImage( img );
+
 			int width = ilGetInteger( IL_IMAGE_WIDTH );
 			int height = ilGetInteger( IL_IMAGE_HEIGHT );
 
@@ -521,9 +522,11 @@ IArrayRects getRects( const IImageList & images ) {
 
 	for( IImageList::const_iterator i = images.begin(); i != images.end(); ++i ) {
 		const IImageList::value_type &img = *i;
-		rects.push_back( IRect( 0, 0,
-			(int)img->w < max_width ? img->w + 2*border : max_width,
-			(int)img->h < max_height ? img->h + 2*border : max_height, img ) );
+
+		int w = (int)img->w + 2*border <= max_width ? img->w + 2*border : max_width;
+		int h = (int)img->h + 2*border <= max_height ? img->h + 2*border : max_height;
+
+		rects.push_back( IRect( 0, 0, w, h, img ) );
 	}
 
 	return rects;
@@ -545,7 +548,9 @@ ILuint makeTexture( int width, int max_height, IArrayRects & src_rects, IArrayRe
 	} else
 		min_h = get_max_rect_height( src_rects );
 	IRect dst( 0, 0, width, width); //min_h ); // Define o tamanho final da imagem
+
 	ready = packRectangles( dst, src_rects, max_height, use_rotations );
+
 	int height = convert_size ? convertSize( dst.h ) : dst.h;
 	if ( height <= max_height ) {
 		result = genForm( width, height, ((IImage*)ready.front().id)->alpha );

@@ -19,6 +19,8 @@
 #include "rectpack.h"
 #include <vector>
 
+#include <iostream>
+using namespace std;
 //-----------------------------------------------------------------------------
 /**
  * This class is needed for determine where is free space on form
@@ -297,6 +299,10 @@ IArrayRects find_rects_with_min_width( const IArrayRects & rects ) {
 IRect * get_best_rect_for( const IRect & rect, IArrayRects & rects, bool rotate = false) {
 	IRect * x = 0;
 	for( IArrayRects::iterator i = rects.begin(); i != rects.end(); ++i ) {
+
+		/*cout << "w rect:" << rect.w << "image:" << i->w << endl;
+		cout << "h rect:" << rect.h << "image:" << i->h << endl;*/
+
 		if ( ( rect.h >= i->h ) && ( rect.w >= i->w ) ) {	//if both dimensions are less or equal to rect sizes
 			if ( (!x) || ( i->w > x->w ) || ( ( i->w == x->w ) && ( i->h > x->h ) ) )	//if new width is greater than previous or equal but height is greater
 				x = &*i;
@@ -393,7 +399,9 @@ IArrayRects packRectangles( IRect & dest_rect, IArrayRects & source_rects, int m
 				matrix.set_height( h );
 			}
 			else
+			{
 				throw 0;	// it is impossible //matrix.set_height( matrix.get_height() + 1 );
+			}
 		}
 		matrix.fill_small_rects( get_min_rect_width(source_rects) );
 	}

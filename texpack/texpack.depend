@@ -87,7 +87,7 @@
 1244220452 source:c:\techfront\sdk\tools\texpack\src\ierror.cpp
 	"ierror.hpp"
 
-1236488606 c:\techfront\sdk\dependency\mingw\include\il\il.h
+1259154986 c:\techfront\sdk\dependency\mingw\include\il\il.h
 	<stdio.h>
 	<limits.h>
 	<wchar.h>
@@ -116,7 +116,7 @@
 	"rectpack.h"
 	"ierror.hpp"
 
-1236488606 c:\techfront\sdk\dependency\mingw\include\il\ilu.h
+1259154986 c:\techfront\sdk\dependency\mingw\include\il\ilu.h
 	<IL/il.h>
 
 1254858276 c:\techfront\sdk\tools\texpack\src\texpack.h
@@ -126,4 +126,61 @@
 	<list>
 	<IL/il.h>
 	<cstdio>
+
+1263835488 source:c:\techfront\sdk\seedtools\texpack\src\iimage.cpp
+	"iimage.hpp"
+	"ierror.hpp"
+	<cstdio>
+
+1263835488 c:\techfront\sdk\seedtools\texpack\src\iimage.hpp
+	<string>
+	<IL/il.h>
+
+1263835488 c:\techfront\sdk\seedtools\texpack\src\ierror.hpp
+	<string>
+	<exception>
+
+1263939704 source:c:\techfront\sdk\seedtools\texpack\src\rectpack.cpp
+	"rectpack.h"
+	<vector>
+	<iostream>
+
+1263835488 c:\techfront\sdk\seedtools\texpack\src\rectpack.h
+	<list>
+	<cstring>
+
+1263940503 source:c:\techfront\sdk\seedtools\texpack\src\texpack.cpp
+	<getopt.h>
+	<cstring>
+	<dirent.h>
+	<sys/stat.h>
+	<unistd.h>
+	<sys/types.h>
+	<math.h>
+	<errno.h>
+	<iostream>
+	<cstdlib>
+	<cstdio>
+	<vector>
+	<list>
+	<fstream>
+	<string>
+	<IL/il.h>
+	<IL/ilu.h>
+	<config.h>
+	"iimage.hpp"
+	"texpack.h"
+	"rectpack.h"
+	"ierror.hpp"
+
+1263835488 c:\techfront\sdk\seedtools\texpack\src\texpack.h
+	<string>
+	<rectpack.h>
+	<vector>
+	<list>
+	<IL/il.h>
+	<cstdio>
+
+1263835488 source:c:\techfront\sdk\seedtools\texpack\src\ierror.cpp
+	"ierror.hpp"
 
