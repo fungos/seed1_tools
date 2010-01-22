@@ -1,5 +1,6 @@
 #include "cache.h"
 #include "platform.h"
+#include <stdio.h>
 
 Cache Cache::instance;
 
