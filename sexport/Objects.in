@@ -1,0 +1,30 @@
+OBJECTS = ./src/args.o \
+./src/cache.o \
+./src/cmdlineparser.o \
+./src/config.o \
+./src/dictionary.o \
+./src/exporter.o \
+./src/filesystem.o \
+./src/group.o \
+./src/groupmanager.o \
+./src/log.o \
+./src/main.o \
+./src/object/button.o \
+./src/object/font.o \
+./src/object/sprite.o \
+./src/package.o \
+./src/platform/iphplatform.o \
+./src/platform/sdlplatform.o \
+./src/platform/wiiplatform.o \
+./src/platform/wiiswizzle.o \
+./src/resource/image.o \
+./src/resource/mask.o \
+./src/resource/music.o \
+./src/resource/sound.o \
+./src/strcache.o \
+./src/string.o \
+./src/utils.o \
+./src/xml/tinystr.o \
+./src/xml/tinyxml.o \
+./src/xml/tinyxmlerror.o \
+./src/xml/tinyxmlparser.o
