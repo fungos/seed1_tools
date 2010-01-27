@@ -300,9 +300,6 @@ IRect * get_best_rect_for( const IRect & rect, IArrayRects & rects, bool rotate 
 	IRect * x = 0;
 	for( IArrayRects::iterator i = rects.begin(); i != rects.end(); ++i ) {
 
-		/*cout << "w rect:" << rect.w << "image:" << i->w << endl;
-		cout << "h rect:" << rect.h << "image:" << i->h << endl;*/
-
 		if ( ( rect.h >= i->h ) && ( rect.w >= i->w ) ) {	//if both dimensions are less or equal to rect sizes
 			if ( (!x) || ( i->w > x->w ) || ( ( i->w == x->w ) && ( i->h > x->h ) ) )	//if new width is greater than previous or equal but height is greater
 				x = &*i;

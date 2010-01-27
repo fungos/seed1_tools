@@ -388,8 +388,10 @@ void putRectsToResultFile(FILE * res_file, int width, int height, const IArrayRe
 	for( IArrayRects::const_iterator i = rects.begin(); i != rects.end(); i++ ) {
 		int x_border = ( i->w < max_width ) ? border : 0;
 		int y_border = ( i->h < max_height ) ? border : 0;
+
 		const IRect rect( i->x + x_border, i->y + y_border,
 			i->w - 2 * x_border, i->h - 2 * y_border, i->id );
+
 		IImage * const &image = (IImage*)rect.id;
 		std::string texname = remove_extension(get_base_name(image->filename));
 		std::string holdername = remove_extension(get_base_name(holder));
@@ -475,10 +477,11 @@ void putImagesToForm(ILuint form, const IArrayRects & rects ) {
 		ilBindImage( form );
 		int x_border = border;
 		int y_border = border;
-		if ( i->w == max_width )
+		if ( i->w + 2*border >= max_width )
 			x_border = 0;
-		if ( i->h == max_height )
+		if ( i->h + 2*border >= max_height )
 			y_border = 0;
+
 		ilSetPixels( rect.x + x_border, rect.y + y_border, 0,
 			rect.w - 2 * x_border, rect.h - 2 * y_border, 1, format, type, buf );
 	}
@@ -523,8 +526,8 @@ IArrayRects getRects( const IImageList & images ) {
 	for( IImageList::const_iterator i = images.begin(); i != images.end(); ++i ) {
 		const IImageList::value_type &img = *i;
 
-		int w = (int)img->w + 2*border <= max_width ? img->w + 2*border : max_width;
-		int h = (int)img->h + 2*border <= max_height ? img->h + 2*border : max_height;
+		int w = (int)img->w + 2*border <= max_width ? img->w + 2*border : img->w/*max_width*/;
+		int h = (int)img->h + 2*border <= max_height ? img->h + 2*border : img->h/*max_height*/;
 
 		rects.push_back( IRect( 0, 0, w, h, img ) );
 	}
