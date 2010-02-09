@@ -290,7 +290,13 @@ bfs::path Package::SubtractPath(bfs::path p1, bfs::path p2)
 void Package::RemovePackagedFiles()
 {
 	for (u32 i = 0; i < vPackageEntry.size(); i++)
+	{
 		bfs::remove(vPackageEntry[i]->bfsPath);
+		if (bfs::is_directory(vPackageEntry[i]->bfsPath.branch_path()) && bfs::is_empty(vPackageEntry[i]->bfsPath.branch_path()))
+		{
+			bfs::remove(vPackageEntry[i]->bfsPath.branch_path());
+		}
+	}
 }
 
 bool Package::CanBeAdded(std::string filename)

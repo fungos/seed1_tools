@@ -142,6 +142,7 @@ class Exporter
 		/* packages */
 		void CreatePackages();
 		void WritePackages();
+		void RemovePackagedFiles();
 
 		void WriteHeaderFile(const char *f);
 		void WriteFileList();

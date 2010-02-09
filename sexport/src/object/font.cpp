@@ -16,8 +16,10 @@
 
 Font::Font(const char *name, IResource *res)
 	: space(3)
-	, spacing(0)
-	, tracking(0)
+	, spacing(0.0f)
+	, tracking(0.0f)
+	, glyphWidth(0.0f)
+	, glyphHeight(0.0f)
 	, characters(90)
 	/*, language(en_US)*/
 	, usingAtlas(false)

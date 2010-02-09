@@ -266,6 +266,8 @@ bool Exporter::Process(const char *xmlfile, const char *platformString, const bo
 	this->WriteFileList();
 	this->WriteStringList();
 
+	this->RemovePackagedFiles();
+
 	// Dump caches
 	pCache->Dump();
 	pStringCache->Dump();
@@ -734,13 +736,18 @@ void Exporter::CreateStrings(TiXmlDocument *doc)
 
 		obj = new Dictionary(lang);
 
+		const char *last = "<first_string>";
 		BEGIN_ITERATE_XML_NODES2(string, (*node)("string"))
 
 			const char *name = (*string)["name"];
 			const char *text = (*string)["text"];
 
-			if (!name || !text)
-				Error(ERROR_STRING_MISSING_ATTRIBUTE, "A string from dictionary '%s' has a missing attribute.", lang);
+			if (!name)
+				Error(ERROR_STRING_MISSING_ATTRIBUTE, "A string from dictionary '%s' has no NAME. Last one: '%s'.", lang, last);
+			if (!text)
+				Log("A string from dictionary '%s' has no TEXT, using empty string. Last one: '%s'.", lang, last);
+
+			last = name;
 
 			if (!first && GetStringId(name) == -1)
 				Error(ERROR_STRING_MISSING, "String '%s' from '%s' was not created in the first dictionary.", name, lang);
@@ -975,6 +982,8 @@ IObject *Exporter::CreateObjectFont(TiXmlNode *object)
 	f32 tracking = 0.0f;
 	f32 spacing = 0.0f;
 	f32 space = 0.03f;
+	u32 glyph_width = 0.0f;
+	u32 glyph_height = 0.0f;
 	u32 characters = 90; // FIXME: Avisar os artistas!!!
 	const char *language = "en_US";
 	bool atlas = false;
@@ -1003,12 +1012,27 @@ IObject *Exporter::CreateObjectFont(TiXmlNode *object)
 	if (value)
 		atlas = (strcasecmp(value, "true") == 0);
 
+	value = (*object)["glyph_width"];
+	if (value)
+		glyph_width = atoi(value);
+
+	value = (*object)["glyph_height"];
+	if (value)
+		glyph_height = atoi(value);
+
+	if (glyph_width == 0.0f || glyph_height == 0.0f)
+	{
+		Error(ERROR_EXPORT_FONT_MISSING_ATTRIB, TAG "Font GLYPH_WIDTH and/or GLYPH_HEIGHT is empty or has invalid value.");
+	}
+
 	fnt->SetTracking(tracking);
 	fnt->SetSpacing(spacing);
 	fnt->SetSpace(space);
 	fnt->SetCharacters(characters);
 	//fnt->SetLanguage(language);
 	fnt->SetUsingAtlas(atlas);
+	fnt->SetGlyphWidth(glyph_width);
+	fnt->SetGlyphHeight(glyph_height);
 	fnt->AddResource(const_cast<IResource *>(fnt->GetResource()));
 
 	vecObjects.push_back(fnt);
@@ -1366,8 +1390,21 @@ void Exporter::WritePackages()
 	}
 	Log(TAG "Finished writing packages...");
 
-	Log(TAG "Removing already packaged files.");
+	/*Log(TAG "Removing already packaged files.");
 	it = vecPackages.begin();
+	for (; it != vecPackages.end(); ++it)
+	{
+		Package *p = *it;
+		p->RemovePackagedFiles();
+	}
+	Log(TAG "Finished removing packaged files...");*/
+}
+
+
+void Exporter::RemovePackagedFiles()
+{
+	Log(TAG "Removing already packaged files.");
+	PackageVectorIterator it = vecPackages.begin();
 	for (; it != vecPackages.end(); ++it)
 	{
 		Package *p = *it;
@@ -1375,6 +1412,7 @@ void Exporter::WritePackages()
 	}
 	Log(TAG "Finished removing packaged files...");
 }
+
 
 void Exporter::WriteObjects()
 {

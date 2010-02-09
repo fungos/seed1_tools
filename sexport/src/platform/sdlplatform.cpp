@@ -155,7 +155,8 @@ void SdlPlatform::Compile(Font *obj)
 
 	cmd << toolPath.file_string() << " \"";
 	cmd << obj->GetInputPath() << "\"";
-	cmd << " \"" << obj->GetName() << "\" " << obj->GetCharacters();
+	cmd << " \"" << obj->GetName() << "\" " << obj->GetCharacters() << " ";
+	cmd << obj->GetGlyphWidth() << " " << obj->GetGlyphHeight();
 
 	if (obj->IsUsingAtlas())
 	{
@@ -195,7 +196,7 @@ void SdlPlatform::Compile(Font *obj)
 		{
 			//std::ostringstream extname;
 			//extname << "l10n/" << dict->pcGetLanguage() << "/" << obj->GetFilename() << "_ext";
-			//IResource *ext = e->GetResource(extname.str().c_str());
+			//extname << res->GetName() << "_ext";
 
 			std::string extname(res->GetName());
 			extname += "_ext";
@@ -204,28 +205,37 @@ void SdlPlatform::Compile(Font *obj)
 			//IResource *ext = e->GetResource(res->GetName(), dict->pcGetLanguage());
 			if (ext)
 			{
-				std::string x(res->GetFilename());
-				x += "_ext.tga";
+				//std::string x(res->GetFilename());
+				std::ostringstream x;
+				//x << "l10n/" << dict->pcGetLanguage() << "/" << res->GetName() << "_ext.tga";
+				x << res->GetName() << "_ext.tga";
 				bfs::path xx(e->GetOutputPath());
-				xx /= x;
-				pCache->AddFilename(xx.string().c_str());
+				xx /= x.str();
+				//pCache->AddFilename(xx.string().c_str());
 				obj->SetExtId(pCache->GetFilenameId(xx.string().c_str()));
 
-				x = res->GetFilename();
-				x += "_ext.sprite";
+				std::ostringstream x2;
+				//x2 << "l10n/" << dict->pcGetLanguage() << "/" << res->GetName() << "_ext.sprite";
+				x2 << res->GetName() << "_ext.sprite";
 				xx = e->GetOutputPath();
-				xx /= x;
+				xx /= x2.str();
 				pCache->AddFilename(xx.string().c_str());
 				obj->SetExtId(pCache->GetFilenameId(xx.string().c_str()));
 
 
-				bfs::path sprite = this->ProcessFont(obj, ext, size);
-				obj->AddFilePath(sprite);
+				//bfs::path sprite = this->ProcessFont(obj, ext, size);
+				//obj->AddFilePath(sprite);
+				this->ProcessFont(obj, ext, size);
+				std::ostringstream x3;
+				x3 << "l10n/" << dict->pcGetLanguage() << "/" << res->GetName() << "_ext.sprite";
+				xx = e->GetOutputPath();
+				xx /= x3.str();
+				obj->AddFilePath(xx.string().c_str());
 			}
 			else
 			{
 				//Error(ERROR_UNKNOWN, TAG "Needed language '%s' resource extension table %s for font %s not found.", dict->pcGetLanguage(), extname.c_str(), obj->GetName());
-				Error(ERROR_UNKNOWN, TAG "Needed language '%s' specific resource for font %s not found.", dict->pcGetLanguage(), obj->GetName());
+				//Error(ERROR_UNKNOWN, TAG "Needed language '%s' specific resource for font %s not found.", dict->pcGetLanguage(), obj->GetName());
 			}
 		}
 	}
@@ -242,19 +252,20 @@ bfs::path SdlPlatform::ProcessFont(Font *obj, IResource *res, u32 totalChars)
 	toolPath /= PLATFORM_SDL_FONTGEN_COMMAND;
 
 	cmd << toolPath.file_string() << " \"";
-	cmd << res->GetInputPath() << "\"";
-
+	//cmd << res->GetInputPath() << "\"";
 	const char *lang = res->GetLanguage();
-	cmd << " \"l10n/" << lang << "/" << obj->GetName() << "_ext\" " << totalChars;
+	cmd << e->GetInputPath(RESOURCE_IMAGE).string() << "/l10n/" << lang << "/" << obj->GetName() << "_ext.tga\" ";
+
+	cmd << " \"l10n/" << lang << "/" << obj->GetName() << "_ext\" " << totalChars << " ";
 	//cmd << " \"" << res->GetName() << "\" " << totalChars;
 	//cmd << " \"" << name << "\" " << totalChars;
-
+	cmd << obj->GetGlyphWidth() << " " << obj->GetGlyphHeight();
 	if (obj->IsUsingAtlas())
 	{
 		cmd << " \"" << res->GetFilename() << "\" " << img->GetX() << " " << img->GetY();
 	}
-
 	RUN_COMMAND(cmd);
+
 
 	bfs::path fontXML("tmp/font.xml");
 
@@ -263,7 +274,8 @@ bfs::path SdlPlatform::ProcessFont(Font *obj, IResource *res, u32 totalChars)
 	RUN_COMMAND(cmd);
 
 	bfs::path fontSprite;
-	fontSprite = res->GetOutputPath();
+	//fontSprite = res->GetOutputPath();
+	fontSprite = res->GetInputPath();
 	fontSprite.replace_extension(".sprite");
 	//bfs::remove(fontXML);
 

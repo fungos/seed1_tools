@@ -16,7 +16,11 @@ Dictionary::Dictionary(const char *language)
 	, iCounter(0)
 	, cOutputPath()
 {
-	if (!strcasecmp(language, "de_DE"))
+	if (!strcasecmp(language, "en_US"))
+	{
+		iLang = en_US;
+	}
+	else if (!strcasecmp(language, "de_DE"))
 	{
 		iLang = de_DE;
 	}
@@ -35,6 +39,18 @@ Dictionary::Dictionary(const char *language)
 	else if (!strcasecmp(language, "es_ES"))
 	{
 		iLang = es_ES;
+	}
+	else if (!strcasecmp(language, "fr_FR"))
+	{
+		iLang = fr_FR;
+	}
+	else if (!strcasecmp(language, "jp_JP"))
+	{
+		iLang = jp_JP;
+	}
+	else
+	{
+		Error(ERRROR_LANGUAGE_ABBREV_UNKNOWN, "Unknown language code.");
 	}
 
 	bfs::path output(e->GetOutputPath());
@@ -63,7 +79,69 @@ void Dictionary::Process()
 
 	if (mapStrings.size() != size)
 	{
-		Error(ERROR_EXPORT_PROJECT_OPENING_ERROR, TAG "Some language has missing some string, good luck finding it.");
+		//Error(ERROR_EXPORT_PROJECT_OPENING_ERROR, TAG "Some language has missing some string, good luck finding it.");
+		StringVector missingStrings;
+
+		BOOL found;
+		if (mapStrings.size() > size)
+		{
+			StringMapIterator it = mapStrings.begin();
+			StringMapIterator end = mapStrings.end();
+			for (; it != end; ++it)
+			{
+				found = FALSE;
+				const char *itemName1 = (*it).first;
+
+				for (u32 j = 0; j < size; j++)
+				{
+					const char *itemName2 = vstr[j];
+					if (!strcmp(itemName1, itemName2))
+					{
+						found = TRUE;
+						break;
+					}
+				}
+
+				if (!found)
+				{
+					//Error (ERROR_EXPORT_PROJECT_OPENING_ERROR, TAG "String %s is not present in all languages.", itemName1);
+					missingStrings.push_back(itemName1);
+				}
+			}
+		}
+		else
+		{
+			for (u32 i = 0; i < size; i++)
+			{
+				found = FALSE;
+				const char *itemName1 = vstr[i];
+
+				StringMapIterator it = mapStrings.begin();
+				StringMapIterator end = mapStrings.end();
+				for (; it != end; ++it)
+				{
+					const char *itemName2 = (*it).first;
+					if (!strcmp(itemName1, itemName2))
+					{
+						found = TRUE;
+						break;
+					}
+				}
+
+				if (!found)
+				{
+					//Error (ERROR_EXPORT_PROJECT_OPENING_ERROR, TAG "String %s is not present in all languages.", itemName1);
+					missingStrings.push_back(itemName1);
+				}
+			}
+		}
+
+		fprintf(stderr, TAG "The following strings are not present in all languages:\n");
+		for (u32 i = 0; i < missingStrings.size(); i++)
+		{
+			fprintf(stderr, TAG "\t%s\n", missingStrings[i]);
+		}
+		Error (ERROR_EXPORT_PROJECT_OPENING_ERROR, TAG "\n");
 	}
 
 	for (u32 i = 0; i < size; i++)

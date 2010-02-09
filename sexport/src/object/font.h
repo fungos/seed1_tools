@@ -31,6 +31,8 @@ class Font : public IObject
 		f32 space;
 		f32 spacing;
 		f32 tracking;
+		f32 glyphWidth;
+		f32 glyphHeight;
 		u32 characters;
 		//u32 language;
 		bool usingAtlas;
@@ -83,6 +85,26 @@ class Font : public IObject
 		inline void SetCharacters(u32 t)
 		{
 			this->characters = t;
+		}
+
+		inline void SetGlyphWidth(u32 t)
+		{
+			this->glyphWidth = t;
+		}
+
+		inline void SetGlyphHeight(u32 t)
+		{
+			this->glyphHeight = t;
+		}
+
+		inline u32 GetGlyphWidth() const
+		{
+			return glyphWidth;
+		}
+
+		inline u32 GetGlyphHeight() const
+		{
+			return glyphHeight;
 		}
 
 		inline IResource *GetResource() const

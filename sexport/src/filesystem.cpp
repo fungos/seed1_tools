@@ -1,6 +1,5 @@
 #include "filesystem.h"
 #include "log.h"
-#include <stdio.h>
 
 #define TAG	"[FileSystem] "
 

@@ -6,12 +6,19 @@ http://www.loc.gov/standards/iso639-2/php/code_list.php
 http://www.iso.org/iso/iso-3166-1_decoding_table
 */
 
-#define en_US	0x00
-#define pt_BR	0x01
-#define es_ES	0x02
-#define de_DE	0x03
-#define ja_JA	0x10
-#define cn_CN	0x11
+
+enum
+{
+	en_US,
+	pt_BR,
+	es_ES,
+	de_DE,
+	ja_JA,
+	cn_CN,
+	fr_FR,
+	jp_JP,
+	MaximumLanguage
+};
 
 #define DIC_MAGIC		0x00434944
 #define DIC_VERSION		0x00000001
