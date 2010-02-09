@@ -14,7 +14,12 @@
 #endif
 
 #define DEFAULT_FONT_NUM_CHARS 		90
-#define FONT_COLUMNS 				16
+//#define FONT_COLUMNS 				16
+
+#define ERROR_RTCODE_INVALID_ARGS	1
+#define ERROR_RTCODE_SDLFAILURE		2
+#define ERROR_RTCODE_SDLIMAGE		3
+#define ERROR_RTCODE_TMPFILE		4
 
 
 typedef struct _rect
@@ -32,25 +37,25 @@ int main(int argc, char *argv[])
 
 	if (argc < 2)
 	{
-		fprintf(stderr, "%s <filename.TGA!> <sprite object name> [<glyphs amount>=90] [<atlas resource name> <atlas x> <atlas y>]\n", argv[0]);
-		return EXIT_FAILURE;
+		fprintf(stderr, "%s <filename.TGA!> <sprite object name> [<glyphs amount>=90] <glyph_width> <glyph_height> [<atlas resource name> <atlas x> <atlas y>]\n", argv[0]);
+		exit(ERROR_RTCODE_INVALID_ARGS);
 	}
-	else if (argc > 4)
+	/*else if (argc > 4)
 	{
 		fprintf(stderr, "Wrong parameter count/sequence. If using atlas, you MUST pass glyphs amount, atlas name, x and y in the correct order.\n");
-	}
+	}*/
 
 	if ( SDL_Init(initflags) < 0 )
 	{
 		fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
-		exit(1);
+		exit(ERROR_RTCODE_SDLFAILURE);
 	}
 
 	SDL_Surface *img = IMG_Load(argv[1]);
 	if (!img)
 	{
 		fprintf(stderr, "Image %s not found or invalid format.\n", argv[1]);
-		return EXIT_FAILURE;
+		exit(ERROR_RTCODE_SDLIMAGE);
 	}
 
 	int c = 0;
@@ -61,19 +66,24 @@ int main(int argc, char *argv[])
 	int atlasX = 0;
 	int atlasY = 0;
 
+	int glyph_width = atoi(argv[4]);
+	int glyph_height = atoi(argv[5]);
+	int font_columns = img->w / glyph_width;
+
 	int fontNumChars = DEFAULT_FONT_NUM_CHARS;
 	int amountOfLineChars = 6; // DEFAULT_FONT_NUM_CHARS
 	if (argc > 2)
 	{
 		fontNumChars = atoi(argv[3]);
-		amountOfLineChars = (fontNumChars / FONT_COLUMNS) + ((fontNumChars % FONT_COLUMNS) ? 1 : 0);
+		//amountOfLineChars = (fontNumChars / FONT_COLUMNS) + ((fontNumChars % FONT_COLUMNS) ? 1 : 0);
+		amountOfLineChars = img->h / glyph_height;
 	}
 
-	if (argc == 7)
+	if (argc == 9)
 	{
-		atlasName = argv[4];
-		atlasX = atoi(argv[5]);
-		atlasY = atoi(argv[6]);
+		atlasName = argv[6];
+		atlasX = atoi(argv[7]);
+		atlasY = atoi(argv[8]);
 	}
 
 	fprintf(stdout, "* Generating font xml usign resource %s (%s.tga, sprite %s) with %d glyphs\n", atlasName, argv[1], argv[2], fontNumChars);
@@ -81,30 +91,39 @@ int main(int argc, char *argv[])
 	rect chars[fontNumChars];
 	memset(chars, '\0', fontNumChars * sizeof(rect));
 
-	int glyphMaxHeight = img->h / amountOfLineChars;
-	int glyphMaxWidth = img->w / FONT_COLUMNS;
+	//int glyphMaxHeight = img->h / amountOfLineChars;
+	//int glyphMaxWidth = img->w / FONT_COLUMNS;
 
 	int i = 0;
 	for (i = 0; i < fontNumChars; i++)
 	{
-		int row = i / FONT_COLUMNS;
-		int col = i % FONT_COLUMNS;
+		//int row = i / FONT_COLUMNS;
+		int row = i / font_columns;
+		//int col = i % FONT_COLUMNS;
+		int col = i % font_columns;
 
-		chars[i].h = glyphMaxHeight;
-		chars[i].x = (col * glyphMaxWidth);// / (float)width;
-		chars[i].y = (row * glyphMaxHeight);// / (float)height;
+		//chars[i].h = glyphMaxHeight;
+		chars[i].h = glyph_height;
+		//chars[i].x = (col * glyphMaxWidth);// / (float)width;
+		chars[i].x = (col * glyph_width);// / (float)width;
+		//chars[i].y = (row * glyphMaxHeight);// / (float)height;
+		chars[i].y = (row * glyph_height);// / (float)height;
 
 		int found = 0;
 
 		int j = 0;
-		for (j = glyphMaxWidth-1; j >= 0 && !found; j--)
+		//for (j = glyphMaxWidth-1; j >= 0 && !found; j--)
+		for (j = glyph_width-1; j >= 0 && !found; j--)
 		{
-			Uint32 x = (col * glyphMaxWidth) + j;
+			//Uint32 x = (col * glyphMaxWidth) + j;
+			Uint32 x = (col * glyph_width) + j;
 
 			int k = 0;
-			for (k = glyphMaxHeight-1; k >= 0; k--)
+			//for (k = glyphMaxHeight-1; k >= 0; k--)
+			for (k = glyph_height-1; k >= 0; k--)
 			{
-				Uint32 y = (row * glyphMaxHeight) + k;
+				//Uint32 y = (row * glyphMaxHeight) + k;
+				Uint32 y = (row * glyph_height) + k;
 				Uint32 *buffer = (Uint32 *)img->pixels;
 				Uint32 px = buffer[y * img->w + x];
 
@@ -121,6 +140,11 @@ int main(int argc, char *argv[])
 	}
 
 	FILE *fp = fopen(TMP_FILE, "wt");
+	if (!fp)
+	{
+		fprintf(stderr, "[FONTGEN] Unable to open temporary file: " TMP_FILE ".\n");
+		exit(ERROR_RTCODE_TMPFILE);
+	}
 
 	const char *tganame = argv[1];
 	int x = strlen(tganame) - 1;
