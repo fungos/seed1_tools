@@ -25,6 +25,7 @@ Font::Font(const char *name, IResource *res)
 	, usingAtlas(false)
 	, pResource(NULL)
 	, cSprite()
+	, iExtId(0xFFFFFFFF)
 {
 	this->iType = OBJECT_FONT;
 
