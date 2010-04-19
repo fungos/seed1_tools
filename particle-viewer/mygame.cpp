@@ -52,8 +52,8 @@ BOOL MyGame::Initialize()
 	sptLogo.SetVisible(TRUE);
 	pRenderer->Add(&sptLogo);
 
-	strPos.Initialize(DIC_POS);
-	strPos.Set(DIC_X, 0.0f).Set(DIC_Y, 0.0f);
+	//strPos.Set(DIC_POS);
+	strPos.Set(DIC_POS).Set(DIC_X, 0.0f).Set(DIC_Y, 0.0f);
 	glStringPool.OverRunReport();
 	glStringPool.PrintSnapshot();
 
@@ -142,12 +142,12 @@ void MyGame::OnInputPointerPress(const EventInputPointer *ev)
 {
 	bFollow = TRUE;
 	cEmitter.SetPosition(ev->GetX(), ev->GetY());
-	strPos.Set().Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
+	strPos.Set(DIC_POS).Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
 }
 
 void MyGame::OnInputPointerRelease(const EventInputPointer *ev)
 {
-	strPos.Set().Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
+	strPos.Set(DIC_POS).Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
 	bFollow = FALSE;
 }
 
@@ -155,7 +155,7 @@ void MyGame::OnInputPointerMove(const EventInputPointer *ev)
 {
 	if (bFollow)
 	{
-		strPos.Set().Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
+		strPos.Set(DIC_POS).Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
 		//lblPos.SetText(strPos);
 		cEmitter.SetPosition(ev->GetX(), ev->GetY());
 	}

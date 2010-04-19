@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\includes;&quot;$(TF_BASE)\SDK\Seed\include&quot;;&quot;$(SEEDSDK)\dependency\common\include&quot;;&quot;$(TF_BASE)\SDK\dependency\vc8\include&quot;"
+				AdditionalIncludeDirectories="..\includes;&quot;$(SEEDSDK)\Seed\include&quot;;&quot;$(SEEDSDK)\dependency\common\include&quot;;&quot;$(SEEDSDK)\dependency\vc8\include&quot;"
 				PreprocessorDefinitions="WIN32;_CONSOLE;_SDL_;YMEM_DEBUG;DEBUG;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,7 +64,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib sdl.lib sdlmain.lib openal32.lib sdl_image.lib seed.lib vorbis_static.lib vorbisfile_static.lib ogg_static.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(TF_BASE)\SDK\Seed\bin\debug\vs8&quot;;&quot;$(TF_BASE)\SDK\dependency\vc8\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SEEDSDK)\Seed\bin\debug\vs8&quot;;&quot;$(SEEDSDK)\dependency\vc8\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				EntryPointSymbol="mainCRTStartup"
