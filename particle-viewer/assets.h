@@ -1,5 +1,5 @@
-#ifndef __SDL_H__
-#define __SDL_H__
+#ifndef __PROJECT_H__
+#define __PROJECT_H__
 
 
 #define DIC_POS		_(0)
@@ -12,8 +12,8 @@
 #define SPT_BG_ID		19
 #define SPT_PARTICLE		_F(20)
 #define SPT_PARTICLE_ID		20
-#define FNT_FONT25		_F(21)
-#define FNT_FONT25_ID		21
+#define FNT_FONT		_F(24)
+#define FNT_FONT_ID		24
 
 
-#endif // __SDL_H__
+#endif // __PROJECT_H__

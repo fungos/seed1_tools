@@ -57,7 +57,7 @@ BOOL MyGame::Initialize()
 	glStringPool.OverRunReport();
 	glStringPool.PrintSnapshot();
 
-	fntFont.Load(FNT_FONT25, &glMyResources);
+	fntFont.Load(FNT_FONT, &glMyResources);
 	lblPos.SetFont(&fntFont);
 	lblPos.SetText(strPos);
 	lblPos.SetPriority(1);
