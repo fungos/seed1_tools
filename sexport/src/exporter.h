@@ -148,7 +148,7 @@ class Exporter
 		void WriteFileList();
 		void WriteStringList();
 
-		bool Process(const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources);
+		bool Process(const char *configfile, const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources);
 
 		bool CreateOutputPath();
 		bool IsModified(TiXmlNode *node, eResourceType type, const char *outputName);
