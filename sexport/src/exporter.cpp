@@ -213,7 +213,7 @@ bool Exporter::Process(const char *configfile, const char *xmlfile, const char *
 
 	if (!Setup(config, platformString))
 	{
-		Error(ERROR_EXPORT_CONFIG_PARAM, TAG "Error reading config.xml - check your parameters.");
+		Error(ERROR_EXPORT_CONFIG_PARAM, TAG "Error reading configuration file - check your parameters.");
 	}
 
 	fprintf(stdout, "Input: ");
@@ -1455,6 +1455,12 @@ void Exporter::WriteHeaderFile(const char *xmlfile)
 	std::string name(fileTmp.str());
 	std::transform(name.begin(), name.end(), name.begin(), ::toupper);
 	fileTmp << ".h";
+
+	name.erase(std::remove(name.begin(), name.end(), ' '), name.end());
+	name.erase(std::remove(name.begin(), name.end(), ':'), name.end());
+	name.erase(std::remove(name.begin(), name.end(), '/'), name.end());
+	name.erase(std::remove(name.begin(), name.end(), '\\'), name.end());
+	name.erase(std::remove(name.begin(), name.end(), '?'), name.end());
 
 	FILE *fp = fopen(fileTmp.str().c_str(), "wt+");
 	if (!fp)

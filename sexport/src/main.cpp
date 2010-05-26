@@ -50,7 +50,7 @@ int main(int argc, const char **argv)
 	parser->Add("t", "tree", true, false, true, RebuildDirectoryTree, &dirs);
 	parser->Add("v", "verbose", true, false, false, EnableVerboseMode, &gVerbose);
 	parser->Add("q", "quiet", true, false, false, EnableQuietMode, &gQuiet);
-	parser->Add("f", "config", false, false, true, SetConfigFile, &configfile);
+	parser->Add("f", "config", true, false, true, SetConfigFile, &configfile);
 
 	fprintf(stdout, "Seed Exporter (c) Danny Angelo Carminati Grein 2008\n");
 	if (!parser->Parse(argc, argv, true))
