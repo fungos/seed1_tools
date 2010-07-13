@@ -17,7 +17,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
+			Name="Debug LGPL|Win32"
 			OutputDirectory="..\bin\debug"
 			IntermediateDirectory="..\bin\debug\obj"
 			ConfigurationType="1"
@@ -28,6 +28,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Copying Seed.dll to SDL workdir"
+				CommandLine="copy %SEEDSDK%\seed\bin\debug\dynamic\vs8\Seed.dll %SEEDSDK%\seedtools\particle-viewer\workdir"
+				Outputs="."
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -41,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\includes;&quot;$(TF_BASE)\SDK\Seed\include&quot;;&quot;$(SEEDSDK)\dependency\common\include&quot;;&quot;$(TF_BASE)\SDK\dependency\vc8\include&quot;"
+				AdditionalIncludeDirectories="..\includes;&quot;$(SEEDSDK)\Seed\include&quot;;&quot;$(SEEDSDK)\dependency\common\include&quot;;&quot;$(SEEDSDK)\dependency\vc8\include&quot;"
 				PreprocessorDefinitions="WIN32;_CONSOLE;_SDL_;YMEM_DEBUG;DEBUG;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,7 +67,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib sdl.lib sdlmain.lib openal32.lib sdl_image.lib seed.lib vorbis_static.lib vorbisfile_static.lib ogg_static.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(TF_BASE)\SDK\Seed\bin\debug\vs8&quot;;&quot;$(TF_BASE)\SDK\dependency\vc8\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SEEDSDK)\Seed\bin\debug\dynamic\vs8&quot;;&quot;$(SEEDSDK)\dependency\vc8\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				EntryPointSymbol="mainCRTStartup"
@@ -95,7 +98,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
+			Name="Release LPGL|Win32"
 			OutputDirectory="..\bin\release\"
 			IntermediateDirectory="..\bin\release\obj\"
 			ConfigurationType="1"
@@ -107,6 +110,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Copying Seed.dll to SDL workdir"
+				CommandLine="copy %SEEDSDK%\seed\bin\release\dynamic\vs8\Seed.dll %SEEDSDK%\seedtools\particle-viewer\workdir"
+				Outputs="."
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -141,7 +147,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib sdl.lib sdlmain.lib SDL_image.lib openal32.lib vorbis_static.lib vorbisfile_static.lib ogg_static.lib seed.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(TF_BASE)\SDK\Seed\bin\debug\vs8&quot;;&quot;$(TF_BASE)\SDK\dependency\vc8\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SEEDSDK)\Seed\bin\release\dynamic\vs8&quot;;&quot;$(TF_BASE)\SDK\dependency\vc8\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

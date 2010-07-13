@@ -41,7 +41,9 @@ class MyGame : public IGameApp, public IEventInputKeyboardListener, public IEven
 		SEED_DISABLE_COPY(MyGame);
 
 	private:
-		Renderer2D 	*pRenderer;
+		SceneNode<128> cScene;
+		Viewport	cViewport;
+		Renderer	cRenderer;
 		Sprite		sptLogo;
 		Label		lblPos;
 		Font		fntFont;

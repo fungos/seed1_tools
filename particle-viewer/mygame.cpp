@@ -21,9 +21,14 @@ ResourceManager glMyResources("mine");
 
 
 MyGame::MyGame()
-	: pRenderer(NULL)
-	, bFollow(FALSE)
+	: bFollow(FALSE)
 {
+	cConfig.SetRendererDeviceType(Seed::RendererDeviceOpenGL14);
+	//cConfig.SetRendererDeviceType(Seed::RendererDeviceDirectX8);
+	cConfig.SetVideoMode(Seed::Video_800x600);
+	cConfig.SetFrameRate(Seed::FrameRateLockAt60);
+	cConfig.SetApplicationTitle(VERSION);
+	cConfig.SetApplicationDescription(VERSION);
 }
 
 MyGame::~MyGame()
@@ -32,44 +37,50 @@ MyGame::~MyGame()
 
 void MyGame::Setup(int argc, char **argv)
 {
-	//pScreen->Setup(Screen::SCREEN_800X600X32W_OPENGL);
-	pScreen->Setup(Screen::SCREEN_1024X768X32W_OPENGL);
-	pSystem->SetFrameRate(ISystem::RATE_60FPS);
-	pSystem->SetApplicationTitle(VERSION);
-	pSystem->SetApplicationDescription(VERSION);
 	pFileSystem->SetWorkDirectory("");
 }
 
 BOOL MyGame::Initialize()
 {
-	this->pRenderer = new Renderer2D();
+	IGameApp::Initialize();
 
-	Seed::SetRenderer(this->pRenderer);
-	pScreen->SetRenderer(this->pRenderer);
+	/* ------- Rendering Initialization ------- */
+	cScene.SetPriority(0);
+	cRenderer.Add(&cScene);
+	cViewport.SetRenderer(&cRenderer);
+
+	pViewManager->Add(&cViewport);
+	pRendererManager->Add(&cRenderer);
+	pSceneManager->Add(&cScene);
+	/* ------- Rendering Initialization ------- */
 
 	sptLogo.Load(SPT_BG, &glMyResources);
 	sptLogo.SetPosition(0.0f, 0.0f);
 	sptLogo.SetVisible(TRUE);
-	pRenderer->Add(&sptLogo);
+	sptLogo.GetTexture()->SetFilter(Seed::TextureFilterTypeMin, Seed::TextureFilterNearest);
+	sptLogo.GetTexture()->SetFilter(Seed::TextureFilterTypeMag, Seed::TextureFilterNearest);
+	cScene.Add(&sptLogo);
 
-	strPos.Initialize(DIC_POS);
-	strPos.Set(DIC_X, 0.0f).Set(DIC_Y, 0.0f);
+	//strPos.Set(DIC_POS);
+	strPos.Set(DIC_POS).Set(DIC_X, 0.0f).Set(DIC_Y, 0.0f);
 	glStringPool.OverRunReport();
 	glStringPool.PrintSnapshot();
 
-	fntFont.Load(FNT_FONT25, &glMyResources);
+	fntFont.Load(FNT_FONT, &glMyResources);
+	fntFont.SetFilter(Seed::TextureFilterTypeMin, Seed::TextureFilterNearest);
+	fntFont.SetFilter(Seed::TextureFilterTypeMag, Seed::TextureFilterNearest);
 	lblPos.SetFont(&fntFont);
 	lblPos.SetText(strPos);
 	lblPos.SetPriority(1);
 	pGuiManager->Add(&lblPos);
-	pRenderer->Add(&lblPos);
+	cScene.Add(&lblPos);
 
 	cEmitter.Load(table[0], &glMyResources);
 	cEmitter.SetSprite(SPT_PARTICLE);
 	cEmitter.SetPriority(10);
 	cEmitter.SetPosition(0.5f, 0.5f);
 	cEmitter.Stop();
-	pRenderer->Add(&cEmitter);
+	cScene.Add(&cEmitter);
 	pParticleManager->Add(&cEmitter);
 
 	pInput->AddKeyboardListener(this);
@@ -85,10 +96,7 @@ BOOL MyGame::Update()
 
 BOOL MyGame::Shutdown()
 {
-	glMyResources.Reset();
-	delete pRenderer;
-
-	return TRUE;
+	return IGameApp::Shutdown();
 }
 
 BOOL MyGame::Reset()
@@ -142,12 +150,12 @@ void MyGame::OnInputPointerPress(const EventInputPointer *ev)
 {
 	bFollow = TRUE;
 	cEmitter.SetPosition(ev->GetX(), ev->GetY());
-	strPos.Set().Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
+	strPos.Set(DIC_POS).Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
 }
 
 void MyGame::OnInputPointerRelease(const EventInputPointer *ev)
 {
-	strPos.Set().Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
+	strPos.Set(DIC_POS).Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
 	bFollow = FALSE;
 }
 
@@ -155,7 +163,7 @@ void MyGame::OnInputPointerMove(const EventInputPointer *ev)
 {
 	if (bFollow)
 	{
-		strPos.Set().Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
+		strPos.Set(DIC_POS).Set(DIC_X, ev->GetX()).Set(DIC_Y, ev->GetY());
 		//lblPos.SetText(strPos);
 		cEmitter.SetPosition(ev->GetX(), ev->GetY());
 	}

@@ -152,6 +152,7 @@ void Dictionary::Process()
 
 		u32 length = 0;
 
+		bool escape = false;
 		while (1)
 		//for (u32 j = 0; j < total; j++)
 		{
@@ -160,6 +161,34 @@ void Dictionary::Process()
 			wchar_t glyph = (this->GetUTF8Char(str, &skip) & 0xFFFF);
 			if (glyph == 0)
 				break;
+
+			if (escape)
+			{
+				if (glyph == 'n')
+				{
+					glyph = '\n';
+				}
+				else if (glyph == 'r')
+				{
+					// eat
+					str += skip;
+					escape = false;
+					continue;
+				}
+				else if (glyph == 't')
+				{
+					glyph = '\t';
+				}
+
+				escape = false;
+			}
+			else if (glyph == '\\')
+			{
+				str += skip;
+				escape = true;
+				continue;
+			}
+
 
 			if (glyph > '~')
 			{
@@ -270,10 +299,39 @@ void Dictionary::WriteU16Strings(FILE *fp)
 		u32 len = pPlatform->Swap32(s->GetLength());
 		fwrite(&len, sizeof(u32), 1, fp);
 
+		bool escape = false;
 		while (1)
 		{
 			u32 skip = 0;
 			wchar_t glyph = (this->GetUTF8Char(str, &skip) & 0xFFFF);
+
+			if (escape)
+			{
+				if (glyph == 'n')
+				{
+					glyph = '\n';
+				}
+				else if (glyph == 'r')
+				{
+					// eat
+					str += skip;
+					escape = false;
+					continue;
+				}
+				else if (glyph == 't')
+				{
+					glyph = '\t';
+				}
+
+				escape = false;
+			}
+			else if (glyph == '\\')
+			{
+				str += skip;
+				escape = true;
+				continue;
+			}
+
 			if (glyph == 0)
 			{
 				fwrite(&glyph, sizeof(u16), 1, fp);

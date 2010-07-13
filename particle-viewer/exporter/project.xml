@@ -25,7 +25,7 @@
 		<resource type='image' filename='particle/particle_14' name='particle_14' />
 		<resource type='image' filename='particle/particle_15' name='particle_15' />
 		
-		<resource type='image' filename='particle/font25' name='font25' />
+		<resource type='image' filename='font' name='font' />
 	</resources>
 	<objects>
 		<object type='sprite' name='bg' group='bg'>
@@ -84,6 +84,6 @@
 			</animation>
 		</object>
 		
-		<object type='font' name='particle/font25' spacing='0' tracking='0.01' space='0.03' resource='font25' group='common' />
+		<object type='font' name='font' spacing='0' tracking='0.0' space='0.009' resource='font' group='common' glyph_width='17' glyph_height='22' />
 	</objects>
 </root>

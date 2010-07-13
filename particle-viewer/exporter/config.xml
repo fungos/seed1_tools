@@ -1,20 +1,20 @@
 <sexport>
 	<wii>
-		<output path="C:\Techfront\SDK\tools\particle-viewer\workdir" />
-		<image input="C:\Techfront\SDK\tools\particle-viewer\exporter\data" header-type="int" res_height="768" res_width="1024" />
-		<music input="C:\Techfront\SDK\tools\particle-viewer\exporter\data" header-type="int" />
-		<sound input="C:\Techfront\SDK\tools\particle-viewer\exporter\data" header-type="int" />
+		<output path="C:\Techfront\SDK\seedtools\particle-viewer\workdir" />
+		<image input="C:\Techfront\SDK\seedtools\particle-viewer\exporter\data" header-type="int" res_height="768" res_width="1024" />
+		<music input="C:\Techfront\SDK\seedtools\particle-viewer\exporter\data" header-type="int" />
+		<sound input="C:\Techfront\SDK\seedtools\particle-viewer\exporter\data" header-type="int" />
 	</wii>
 	<iph>
-		<output path="C:\Techfront\SDK\tools\particle-viewer\workdir" />
-		<image input="C:\Techfront\SDK\tools\particle-viewer\exporter\data" header-type="int" res_height="768" res_width="1024" />
-		<music input="C:\Techfront\SDK\tools\particle-viewer\exporter\data" header-type="int" />
-		<sound input="C:\Techfront\SDK\tools\particle-viewer\exporter\data" header-type="int" />
+		<output path="C:\Techfront\SDK\seedtools\particle-viewer\workdir" />
+		<image input="C:\Techfront\SDK\seedtools\particle-viewer\exporter\data" header-type="int" res_height="768" res_width="1024" />
+		<music input="C:\Techfront\SDK\seedtools\particle-viewer\exporter\data" header-type="int" />
+		<sound input="C:\Techfront\SDK\seedtools\particle-viewer\exporter\data" header-type="int" />
 	</iph>
 	<sdl>
-		<output path="C:\Techfront\SDK\tools\particle-viewer\workdir" />
-		<image input="C:\Techfront\SDK\tools\particle-viewer\exporter\data" header-type="int" res_height="768" res_width="1024" />
-		<music input="C:\Techfront\SDK\tools\particle-viewer\exporter\data" header-type="int" />
-		<sound input="C:\Techfront\SDK\tools\particle-viewer\exporter\data" header-type="int" />
+		<output path="C:\Techfront\SDK\seedtools\particle-viewer\workdir" />
+		<image input="C:\Techfront\SDK\seedtools\particle-viewer\exporter\data" header-type="int" res_height="768" res_width="1024" />
+		<music input="C:\Techfront\SDK\seedtools\particle-viewer\exporter\data" header-type="int" />
+		<sound input="C:\Techfront\SDK\seedtools\particle-viewer\exporter\data" header-type="int" />
 	</sdl>
 </sexport>

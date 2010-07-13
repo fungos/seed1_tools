@@ -187,7 +187,7 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 	return true;
 }
 
-bool Exporter::Process(const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources)
+bool Exporter::Process(const char *configfile, const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources)
 {
 	this->bRebuild 		= rebuild;
 	this->bPackages 	= packages;
@@ -198,7 +198,7 @@ bool Exporter::Process(const char *xmlfile, const char *platformString, const bo
 	if (!packages)
 		this->bPackageResources = false;
 
-	bfs::path configPath("config.xml");
+	bfs::path configPath(configfile);
 	if (!bfs::exists(configPath) || !bfs::is_regular_file(configPath))
 	{
 		Error(ERROR_EXPORT_CONFIG_NOT_FOUND, TAG "Error opening config file: config.xml.");
@@ -213,7 +213,7 @@ bool Exporter::Process(const char *xmlfile, const char *platformString, const bo
 
 	if (!Setup(config, platformString))
 	{
-		Error(ERROR_EXPORT_CONFIG_PARAM, TAG "Error reading config.xml - check your parameters.");
+		Error(ERROR_EXPORT_CONFIG_PARAM, TAG "Error reading configuration file - check your parameters.");
 	}
 
 	fprintf(stdout, "Input: ");
@@ -1455,6 +1455,12 @@ void Exporter::WriteHeaderFile(const char *xmlfile)
 	std::string name(fileTmp.str());
 	std::transform(name.begin(), name.end(), name.begin(), ::toupper);
 	fileTmp << ".h";
+
+	name.erase(std::remove(name.begin(), name.end(), ' '), name.end());
+	name.erase(std::remove(name.begin(), name.end(), ':'), name.end());
+	name.erase(std::remove(name.begin(), name.end(), '/'), name.end());
+	name.erase(std::remove(name.begin(), name.end(), '\\'), name.end());
+	name.erase(std::remove(name.begin(), name.end(), '?'), name.end());
 
 	FILE *fp = fopen(fileTmp.str().c_str(), "wt+");
 	if (!fp)

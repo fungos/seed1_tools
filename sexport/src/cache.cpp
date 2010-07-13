@@ -1,8 +1,9 @@
 #include "cache.h"
 #include "platform.h"
 
-Cache Cache::instance;
+#include <algorithm>
 
+Cache Cache::instance;
 
 Cache::Cache()
 	: vecFilename()
@@ -24,12 +25,10 @@ Cache::~Cache()
 	this->Reset();
 }
 
-
 void Cache::Reset()
 {
 	vecFilename.clear();
 }
-
 
 s32 Cache::AddFilename(const char *filename)
 {
@@ -40,7 +39,13 @@ s32 Cache::AddFilename(const char *filename)
 	if (id < 0)
 	{
 		bfs::path pname(filename);
-		vecFilename.push_back(pname.string());
+		std::string str = pname.string();
+
+#if defined(WIN32)
+		transform(str.begin(), str.end(), str.begin(), tolower);
+#endif
+
+		vecFilename.push_back(str);
 		id = vecFilename.size() - 1;
 	}
 	return id;
@@ -50,6 +55,10 @@ s32 Cache::GetFilenameId(const char *filename)
 {
 	bfs::path pname(filename);
 	std::string str = pname.string();
+
+#if defined(WIN32)
+	transform(str.begin(), str.end(), str.begin(), tolower);
+#endif
 
 	s32 s = (s32)vecFilename.size();
 	for (s32 i = 0; i < s; i++)

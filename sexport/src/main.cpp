@@ -22,10 +22,12 @@ void EnablePackageResources(const char *value, void *data);
 void RebuildDirectoryTree(const char *value, void *data);
 void EnableVerboseMode(const char *value, void *data);
 void EnableQuietMode(const char *value, void *data);
+void SetConfigFile(const char *value, void *data);
 
 int main(int argc, const char **argv)
 {
-	char xmlfile[256];
+	char xmlfile[1024];
+	char configfile[1024];
 	char platform[128];
 	bool rebuild = false;
 	bool packages = false;
@@ -34,7 +36,10 @@ int main(int argc, const char **argv)
 	bool dirs = false;
 	u8	 alignment = ALIGN_32;
 
-	CmdLineParser *parser = new CmdLineParser(10);
+	memset(configfile, '\0', 1024);
+	memcpy(configfile, "config.xml", strlen("config.xml"));
+
+	CmdLineParser *parser = new CmdLineParser(11);
 	parser->Add("i", "input", false, false, true, SetXmlFile, xmlfile);
 	parser->Add("p", "platform", false, false, true, SetPlatformString, platform);
 	parser->Add("r", "rebuild", true, false, false, Rebuild, &rebuild);
@@ -45,12 +50,14 @@ int main(int argc, const char **argv)
 	parser->Add("t", "tree", true, false, true, RebuildDirectoryTree, &dirs);
 	parser->Add("v", "verbose", true, false, false, EnableVerboseMode, &gVerbose);
 	parser->Add("q", "quiet", true, false, false, EnableQuietMode, &gQuiet);
+	parser->Add("f", "config", true, false, true, SetConfigFile, &configfile);
 
 	fprintf(stdout, "Seed Exporter (c) Danny Angelo Carminati Grein 2008\n");
 	if (!parser->Parse(argc, argv, true))
 	{
 		fprintf(stdout, "\nusage: %s -i [input xml] -p [platform] [params]\n\n", argv[0]);
 		fprintf(stdout, "PARAMS\n");
+		fprintf(stdout, "\t\t-f, --config\tUse this config file as config.xml\n");
 		fprintf(stdout, "\t\t-r, --rebuild\tRebuild all files.\n");
 		fprintf(stdout, "\t\t-k, --packages\tCreate group packages.\n");
 		fprintf(stdout, "\t\t-a [value], --alignment [value]\tOutput data alignment.\n");
@@ -64,7 +71,7 @@ int main(int argc, const char **argv)
 	}
 
 	e->bfsExeName = bfs::path(argv[0]);
-	e->Process(xmlfile, platform, rebuild, packages, alignment, compression, resources);
+	e->Process(configfile, xmlfile, platform, rebuild, packages, alignment, compression, resources);
 
 	return EXIT_SUCCESS;
 }
@@ -77,6 +84,16 @@ void SetXmlFile(const char *value, void *data)
 	char *xmlfile = static_cast<char*>(data);
 	strncpy(xmlfile, value, strlen(value));
 	xmlfile[strlen(value)] = '\0';
+}
+
+void SetConfigFile(const char *value, void *data)
+{
+	if (!value)
+		return;
+
+	char *configfile = static_cast<char*>(data);
+	strncpy(configfile, value, strlen(value));
+	configfile[strlen(value)] = '\0';
 }
 
 void SetPlatformString(const char *value, void *data)
