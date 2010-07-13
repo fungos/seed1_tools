@@ -497,9 +497,9 @@ bfs::path SdlPlatform::GetOutputPath(const IObject *obj) const
 		}
 		break;
 
-		case OBJECT_BUTTON:
+		case OBJECT_SOUND:
 		{
-			out = out + PLATFORM_SDL_OUTPUT_BUTTON_EXT;
+			out = out + PLATFORM_SDL_OUTPUT_SOUND_EXT;
 		}
 		break;
 
@@ -509,15 +509,15 @@ bfs::path SdlPlatform::GetOutputPath(const IObject *obj) const
 		}
 		break;
 
-		case OBJECT_SOUND:
-		{
-			out = out + PLATFORM_SDL_OUTPUT_SOUND_EXT;
-		}
-		break;
-
 		case OBJECT_SPRITE:
 		{
 			out = out + PLATFORM_SDL_OUTPUT_SPRITE_EXT;
+		}
+		break;
+
+		case OBJECT_BUTTON:
+		{
+			out = out + PLATFORM_SDL_OUTPUT_BUTTON_EXT;
 		}
 		break;
 

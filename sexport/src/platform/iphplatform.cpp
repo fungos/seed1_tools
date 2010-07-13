@@ -3,6 +3,9 @@
 #include "../exporter.h"
 #include "../object/sprite.h"
 #include "../log.h"
+#include "../string.h"
+#include "../cache.h"
+#include "../utils.h"
 
 #include <string>
 #include <sstream>
@@ -16,6 +19,7 @@
 #define PLATFORM_IPH_OUTPUT_MUSICRESOURCE_EXT	".mp3"
 #define PLATFORM_IPH_OUTPUT_SOUND_EXT			".sound"
 #define PLATFORM_IPH_OUTPUT_MUSIC_EXT			".music"
+#define PLATFORM_IPH_OUTPUT_BUTTON_EXT			".button"
 #define PLATFORM_IPH_OUTPUT_MASK_EXT			".bitmask"
 
 #define PLATFORM_IPH_INPUT_FONT_EXT			".tga"
@@ -24,6 +28,7 @@
 #define PLATFORM_IPH_INPUT_SOUND_EXT		".wav" // ".aif"
 #define PLATFORM_IPH_INPUT_MUSIC_EXT		".wav"
 
+#define TAG "[Compiler] "
 
 #ifdef WIN32
 	#define PLATFORM_IPH_COPY_COMMAND			"copy"
@@ -144,8 +149,8 @@ void IphPlatform::Compile(Image *obj)
 	bfs::create_directories(obj->GetOutputPath().parent_path());
 
 	std::ostringstream cmd;
-	cmd << PLATFORM_IPH_COPY_COMMAND << " " << obj->GetInputPath().directory_string();
-	cmd << " " << obj->GetOutputPath().directory_string();
+	cmd << PLATFORM_IPH_COPY_COMMAND << " \"" << obj->GetInputPath().directory_string() << "\"";
+	cmd << " \"" << obj->GetOutputPath().directory_string() << "\"";
 	cmd << " " << PLATFORM_IPH_COPY_OVERWRITE_PARAM << " > copy.log";
 	RUN_COMMAND(cmd);
 
@@ -169,7 +174,8 @@ void IphPlatform::Compile(Font *obj)
 
 	cmd << toolPath.file_string() << " \"";
 	cmd << obj->GetInputPath() << "\"";
-	cmd << " \"" << obj->GetName() << "\" " << obj->GetCharacters();
+	cmd << " \"" << obj->GetName() << "\" " << obj->GetCharacters() << " ";
+	cmd << obj->GetGlyphWidth() << " " << obj->GetGlyphHeight();
 
 	if (obj->IsUsingAtlas())
 	{
@@ -177,16 +183,22 @@ void IphPlatform::Compile(Font *obj)
 	}
 	RUN_COMMAND(cmd);
 
+	// current cache dump
+	pCache->Dump();
+
 	bfs::path fontXML("tmp/font.xml");
 
 	cmd.str("");
 	cmd << e->bfsExeName.string() << " -i " << fontXML << " -p " << this->GetName();
 	RUN_COMMAND(cmd);
 
-	bfs::path fontSprite;
-	fontSprite = obj->GetOutputPath();
+	// updated cache reload
+	pCache->Reset();
+	pCache->Load();
+
+	bfs::path fontSprite = obj->GetOutputPath();
 	fontSprite.replace_extension(".sprite");
-	bfs::remove(fontXML);
+	//bfs::remove(fontXML);
 
 	obj->SetSprite(fontSprite);
 	obj->AddFilePath(fontSprite);
@@ -201,13 +213,49 @@ void IphPlatform::Compile(Font *obj)
 		u32 size = dict->GetExtensionTableSize();
 		if (size)
 		{
-			std::ostringstream extname;
-			extname << "l10n/" << dict->pcGetLanguage() << "/" << obj->GetFilename() << "_ext";
+			//std::ostringstream extname;
+			//extname << "l10n/" << dict->pcGetLanguage() << "/" << obj->GetFilename() << "_ext";
+			//extname << res->GetName() << "_ext";
 
-			//IResource *ext = e->GetResource(extname.str().c_str());
-			IResource *ext = e->GetResource(obj->GetName(), dict->pcGetLanguage());
-			bfs::path sprite = this->ProcessFont(obj, ext, size);
-			obj->AddFilePath(sprite);
+			std::string extname(res->GetName());
+			extname += "_ext";
+			IResource *ext = e->GetResource(extname.c_str(), dict->pcGetLanguage());
+
+			//IResource *ext = e->GetResource(res->GetName(), dict->pcGetLanguage());
+			if (ext)
+			{
+				//std::string x(res->GetFilename());
+				std::ostringstream x;
+				//x << "l10n/" << dict->pcGetLanguage() << "/" << res->GetName() << "_ext.tga";
+				x << res->GetName() << "_ext.tga";
+				bfs::path xx(e->GetOutputPath());
+				xx /= x.str();
+				//pCache->AddFilename(xx.string().c_str());
+				obj->SetExtId(pCache->GetFilenameId(xx.string().c_str()));
+
+				std::ostringstream x2;
+				//x2 << "l10n/" << dict->pcGetLanguage() << "/" << res->GetName() << "_ext.sprite";
+				x2 << res->GetName() << "_ext.sprite";
+				xx = e->GetOutputPath();
+				xx /= x2.str();
+				pCache->AddFilename(xx.string().c_str());
+				obj->SetExtId(pCache->GetFilenameId(xx.string().c_str()));
+
+
+				//bfs::path sprite = this->ProcessFont(obj, ext, size);
+				//obj->AddFilePath(sprite);
+				this->ProcessFont(obj, ext, size);
+				std::ostringstream x3;
+				x3 << "l10n/" << dict->pcGetLanguage() << "/" << res->GetName() << "_ext.sprite";
+				xx = e->GetOutputPath();
+				xx /= x3.str();
+				obj->AddFilePath(xx.string().c_str());
+			}
+			else
+			{
+				//Error(ERROR_UNKNOWN, TAG "Needed language '%s' resource extension table %s for font %s not found.", dict->pcGetLanguage(), extname.c_str(), obj->GetName());
+				//Error(ERROR_UNKNOWN, TAG "Needed language '%s' specific resource for font %s not found.", dict->pcGetLanguage(), obj->GetName());
+			}
 		}
 	}
 }
@@ -223,15 +271,20 @@ bfs::path IphPlatform::ProcessFont(Font *obj, IResource *res, u32 totalChars)
 	toolPath /= PLATFORM_IPH_FONTGEN_COMMAND;
 
 	cmd << toolPath.file_string() << " \"";
-	cmd << res->GetInputPath() << "\"";
-	cmd << " \"" << res->GetName() << "\" " << totalChars;
-	//cmd << " \"" << name << "\" " << totalChars;
+	//cmd << res->GetInputPath() << "\"";
+	const char *lang = res->GetLanguage();
+	cmd << e->GetInputPath(RESOURCE_IMAGE).string() << "/l10n/" << lang << "/" << obj->GetName() << "_ext.tga\" ";
 
+	cmd << " \"l10n/" << lang << "/" << obj->GetName() << "_ext\" " << totalChars << " ";
+	//cmd << " \"" << res->GetName() << "\" " << totalChars;
+	//cmd << " \"" << name << "\" " << totalChars;
+	cmd << obj->GetGlyphWidth() << " " << obj->GetGlyphHeight();
 	if (obj->IsUsingAtlas())
 	{
 		cmd << " \"" << res->GetFilename() << "\" " << img->GetX() << " " << img->GetY();
 	}
 	RUN_COMMAND(cmd);
+
 
 	bfs::path fontXML("tmp/font.xml");
 
@@ -240,9 +293,10 @@ bfs::path IphPlatform::ProcessFont(Font *obj, IResource *res, u32 totalChars)
 	RUN_COMMAND(cmd);
 
 	bfs::path fontSprite;
-	fontSprite = res->GetOutputPath();
+	//fontSprite = res->GetOutputPath();
+	fontSprite = res->GetInputPath();
 	fontSprite.replace_extension(".sprite");
-	bfs::remove(fontXML);
+	//bfs::remove(fontXML);
 
 	return fontSprite;
 }
@@ -341,11 +395,12 @@ bfs::path IphPlatform::GetOutputPath(const IResource *res) const
 		break;
 
 		default:
-			fprintf(stderr, "WARNING: Resource type not known for resource %s.\n", res->GetName());
+			Error(ERROR_EXPORT_RESOURCE_INVALID_TYPE, "WARNING: Resource type not known for resource %s.", res->GetName());
 		break;
 	}
 
 	tmp /= out;
+	pCache->AddFilename(tmp.string().c_str());
 
 	return tmp;
 }
@@ -358,7 +413,7 @@ bfs::path IphPlatform::GetInputPath(const IResource *res) const
 	std::string lang(res->GetLanguage());
 	if (lang != DEFAULT_LANG)
 	{
-		tmp /= lang;
+		tmp /= bfs::path("l10n") / lang;
 	}
 
 	switch (res->GetType())
@@ -404,7 +459,7 @@ bfs::path IphPlatform::GetInputPath(const IResource *res) const
 		break;
 
 		default:
-			fprintf(stderr, "WARNING: Resource type not known for resource %s.\n", res->GetName());
+			Error(ERROR_EXPORT_RESOURCE_INVALID_TYPE, "WARNING: Resource type not known for resource %s.", res->GetName());
 		break;
 	}
 
@@ -444,12 +499,19 @@ bfs::path IphPlatform::GetOutputPath(const IObject *obj) const
 		}
 		break;
 
+		case OBJECT_BUTTON:
+		{
+			out = out + PLATFORM_IPH_OUTPUT_BUTTON_EXT;
+		}
+		break;
+
 		default:
-			fprintf(stderr, "WARNING: Object type %d not known for object %s.\n", obj->GetType(), out.c_str());
+			Error(ERROR_EXPORT_OBJECT_INVALID_TYPE, "WARNING: Object type %d not known for object %s.", obj->GetType(), out.c_str());
 		break;
 	}
 
 	tmp /= out;
+	pCache->AddFilename(tmp.string().c_str());
 
 	return tmp;
 }
@@ -468,8 +530,13 @@ bfs::path IphPlatform::GetInputPath(const IObject *obj) const
 		}
 		break;
 
+		case OBJECT_BUTTON:
+		{
+		}
+		break;
+
 		default:
-			fprintf(stderr, "WARNING: Object type not known for object %s.\n", obj->GetName());
+			Error(ERROR_EXPORT_OBJECT_INVALID_TYPE, "WARNING: Object type not known for object %s.", obj->GetName());
 		break;
 	}
 

@@ -7,10 +7,10 @@ TARGET = bin/$(PROJECT)
 
 # Flags/Compilers
 GCC = g++
-CFLAGS = -Wall -fPIC -g `sdl-config --cflags` $(CDEFS)
 CDEFS = -D LINUX -D SDL -D _DEBUG -D _SECURITY -D POSIX
-LFLAGS = `sdl-config --libs` -L/bin -lSDL_image -lboost_filesystem-mt
-CPPFLAGS = -Weffc++ $(CFLAGS)
+CFLAGS = -Wall -fPIC -g `sdl-config --cflags` $(CDEFS)
+LFLAGS = `sdl-config --libs` -L/bin -lSDL_image -lboost_filesystem-mt -lboost_system-mt
+CPPFLAGS = -Weffc++ $(CFLAGS) -I/opt/local/include
 LIBS =
 
 # targets...
