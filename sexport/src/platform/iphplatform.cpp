@@ -314,12 +314,14 @@ void IphPlatform::Compile(MusicResource *obj)
 	bfs::create_directories(obj->GetOutputPath().parent_path());
 
 	std::ostringstream cmd;
-	cmd << "afconvert -f caff -d LEI16 -c 1 ";
-	cmd << obj->GetInputPath() << " ";
-	cmd << obj->GetOutputPath();
 
-	DebugInfo("CMD: %s\n", cmd.str().c_str());
+	cmd << "afconvert -f caff -d LEI16 -c 1 ";
+	cmd << obj->GetInputPath().string().c_str() << " ";
+	cmd << obj->GetOutputPath().string().c_str();
+
 	RUN_COMMAND(cmd);
+
+	obj->AddFilePath(obj->GetOutputPath().string().c_str());
 }
 
 void IphPlatform::Compile(SoundResource *obj)
@@ -327,12 +329,14 @@ void IphPlatform::Compile(SoundResource *obj)
 	bfs::create_directories(obj->GetOutputPath().parent_path());
 
 	std::ostringstream cmd;
-	cmd << "afconvert -f caff -d LEI16 -c 1 ";
-	cmd << obj->GetInputPath() << " ";
-	cmd << obj->GetOutputPath();
 
-	DebugInfo("CMD: %s\n", cmd.str().c_str());
+	cmd << "afconvert -f caff -d LEI16 -c 1 ";
+	cmd << obj->GetInputPath().string().c_str() << " ";
+	cmd << obj->GetOutputPath().string().c_str();
+
 	RUN_COMMAND(cmd);
+
+	obj->AddFilePath(obj->GetOutputPath().string().c_str());
 }
 
 void IphPlatform::Compile(Button *obj)
