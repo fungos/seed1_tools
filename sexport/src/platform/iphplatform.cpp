@@ -16,7 +16,7 @@
 #define PLATFORM_IPH_OUTPUT_IMG_EXT_COMPRESSED 	".pvrtc"
 #define PLATFORM_IPH_OUTPUT_TSF_IMG_EXT			".tsf"
 #define PLATFORM_IPH_OUTPUT_SOUNDRESOURCE_EXT	".caf"
-#define PLATFORM_IPH_OUTPUT_MUSICRESOURCE_EXT	".mp3"
+#define PLATFORM_IPH_OUTPUT_MUSICRESOURCE_EXT	".m4a"
 #define PLATFORM_IPH_OUTPUT_SOUND_EXT			".sound"
 #define PLATFORM_IPH_OUTPUT_MUSIC_EXT			".music"
 #define PLATFORM_IPH_OUTPUT_BUTTON_EXT			".button"
@@ -315,7 +315,8 @@ void IphPlatform::Compile(MusicResource *obj)
 
 	std::ostringstream cmd;
 
-	cmd << "afconvert -f caff -d LEI16 -c 1 ";
+	//cmd << "afconvert -f caff -d LEI16 -c 1 ";
+	cmd << "afconvert -f mp4f -d aac -b 128000 ";
 	cmd << obj->GetInputPath().string().c_str() << " ";
 	cmd << obj->GetOutputPath().string().c_str();
 
