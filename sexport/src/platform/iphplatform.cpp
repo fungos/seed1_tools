@@ -34,11 +34,13 @@
 	#define PLATFORM_IPH_COPY_COMMAND			"copy"
 	#define PLATFORM_IPH_COPY_OVERWRITE_PARAM	"/Y"
 	#define PLATFORM_IPH_FONTGEN_COMMAND		"fontgen.exe"
+	#define PLATFORM_IPH_TMPDIR			"iph\\"
 #else
 	#ifdef POSIX
 		#define PLATFORM_IPH_COPY_COMMAND			"cp -f "
 		#define PLATFORM_IPH_COPY_OVERWRITE_PARAM	""
 		#define PLATFORM_IPH_FONTGEN_COMMAND		"fontgen"
+		#define PLATFORM_IPH_TMPDIR			"tmp/"
 	#endif
 #endif
 
@@ -79,11 +81,6 @@ void IphPlatform::Compile(IObject *obj)
 			this->Compile(static_cast<const Image *>(obj));
 		break;
 */
-/*
-		case OBJECT_AUDIO:
-			this->Compile(static_cast<const Audio *>(obj));
-		break;
-*/
 		case OBJECT_ANIMATION:
 			this->Compile(static_cast<Sprite *>(obj));
 		break;
@@ -91,17 +88,21 @@ void IphPlatform::Compile(IObject *obj)
 		case OBJECT_FRAME:
 			this->Compile(static_cast<Frame *>(obj));
 		break;
-/*
+
 		case OBJECT_MUSIC:
-			this->Compile(static_cast<Audio *>(obj));
+			this->Compile(static_cast<const Music *>(obj));
 		break;
 
 		case OBJECT_SOUND:
-			this->Compile(static_cast<const Audio *>(obj));
+			this->Compile(static_cast<const Sound *>(obj));
 		break;
-*/
+
 		case OBJECT_FONT:
 			this->Compile(static_cast<const Font *>(obj));
+		break;
+
+		case OBJECT_BUTTON:
+			this->Compile(static_cast<const Button *>(obj));
 		break;
 
 		default:
@@ -124,20 +125,6 @@ void IphPlatform::Compile(Dictionary *obj)
 void IphPlatform::Compile(Sprite *obj)
 {
 	bfs::create_directories(obj->GetOutputPath().parent_path());
-	/*
-	int as = obj->GetSize();
-	for (int a = 0; a < as; a++)
-	{
-		Animation *anim = obj->GetAnimation(a);
-
-		int fs = anim->GetSize();
-		for (int f = 0; f < fs; f++)
-		{
-			Frame *frame = const_cast<Frame*>(anim->GetFrame(f));
-			this->Compile(frame);
-		}
-	}
-	*/
 }
 
 void IphPlatform::Compile(Animation *obj)
@@ -164,7 +151,6 @@ void IphPlatform::Compile(Frame *obj)
 void IphPlatform::Compile(Font *obj)
 {
 	bfs::create_directories(obj->GetOutputPath().parent_path());
-
 	IResource *res = const_cast<IResource *>(obj->GetResource());
 	Image *img = static_cast<Image *>(res);
 
@@ -189,7 +175,7 @@ void IphPlatform::Compile(Font *obj)
 	bfs::path fontXML("tmp/font.xml");
 
 	cmd.str("");
-	cmd << e->bfsExeName.string() << " -i " << fontXML << " -p " << this->GetName();
+	cmd << e->bfsExeName.string() << " -i " << fontXML << " -p " << this->GetName() << " -v ";
 	RUN_COMMAND(cmd);
 
 	// updated cache reload
@@ -303,10 +289,12 @@ bfs::path IphPlatform::ProcessFont(Font *obj, IResource *res, u32 totalChars)
 
 void IphPlatform::Compile(Sound *obj)
 {
+	bfs::create_directories(obj->GetOutputPath().parent_path());
 }
 
 void IphPlatform::Compile(Music *obj)
 {
+	bfs::create_directories(obj->GetOutputPath().parent_path());
 }
 
 void IphPlatform::Compile(MusicResource *obj)
@@ -365,19 +353,32 @@ void IphPlatform::Compile(Mask *obj)
 bfs::path IphPlatform::GetOutputPath(const IResource *res) const
 {
 	std::string out(res->GetFilename());
-	bfs::path tmp = e->GetOutputPath();
-
+	bfs::path tmp = bfs::path(e->GetOutputPath().string().c_str());
 	std::string lang(res->GetLanguage());
 	if (lang != DEFAULT_LANG)
 	{
-		tmp /= lang;
+		tmp /= bfs::path("l10n") / lang;
 	}
 
 	switch (res->GetType())
 	{
 		case RESOURCE_IMAGE:
 		{
-			out = out + PLATFORM_IPH_OUTPUT_IMG_EXT;
+			bfs::path inp(e->GetInputPath(res->GetType()));
+			if (lang != DEFAULT_LANG)
+			{
+				inp /= bfs::path("l10n") / lang;
+			}
+
+			bfs::path f = inp / (out + PLATFORM_IPH_OUTPUT_IMG_EXT);
+			if (bfs::exists(f))
+			{
+				out = out + PLATFORM_IPH_OUTPUT_IMG_EXT;
+			}
+			else
+			{
+				Error(ERROR_FILE_NOT_FOUND, "Output: File %s.png or %s.tga not found at %s", res->GetFilename(), res->GetFilename(), inp.string().c_str());
+			}
 		}
 		break;
 
@@ -387,15 +388,15 @@ bfs::path IphPlatform::GetOutputPath(const IResource *res) const
 		}
 		break;
 
-		case RESOURCE_SOUND:
-		{
-			out = out + PLATFORM_IPH_OUTPUT_SOUNDRESOURCE_EXT;
-		}
-		break;
-
 		case RESOURCE_MUSIC:
 		{
 			out = out + PLATFORM_IPH_OUTPUT_MUSICRESOURCE_EXT;
+		}
+		break;
+
+		case RESOURCE_SOUND:
+		{
+			out = out + PLATFORM_IPH_OUTPUT_SOUNDRESOURCE_EXT;
 		}
 		break;
 
@@ -446,7 +447,7 @@ bfs::path IphPlatform::GetInputPath(const IResource *res) const
 			}
 			else
 			{
-				Error(ERROR_FILE_NOT_FOUND, "Input: Mask file %s.tga not found at %s", res->GetFilename(), tmp.string().c_str());
+				Error(ERROR_FILE_NOT_FOUND, "Input: Mask file %s.tga not found at %s", tmp.string().c_str(), res->GetFilename());
 			}
 		}
 		break;
@@ -482,7 +483,7 @@ bfs::path IphPlatform::GetOutputPath(const IObject *obj) const
 	{
 		case OBJECT_FONT:
 		{
-			out = out + PLATFORM_IPH_OUTPUT_SPRITE_EXT;
+			out = out + PLATFORM_IPH_OUTPUT_FONT_EXT;
 		}
 		break;
 

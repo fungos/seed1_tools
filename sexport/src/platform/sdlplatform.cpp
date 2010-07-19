@@ -457,7 +457,7 @@ bfs::path SdlPlatform::GetInputPath(const IResource *res) const
 			}
 			else
 			{
-				Error(ERROR_FILE_NOT_FOUND, "Input: Mask file %s/%s.tga not found at %s", tmp.string().c_str(), res->GetFilename());
+				Error(ERROR_FILE_NOT_FOUND, "Input: Mask file %s.tga not found at %s", tmp.string().c_str(), res->GetFilename());
 			}
 		}
 		break;

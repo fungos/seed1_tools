@@ -241,6 +241,7 @@ bool Exporter::Process(const char *configfile, const char *xmlfile, const char *
 
 	pCache->AddFilename(dictPath.string().c_str());
 	pCache->Load();
+	fprintf(stdout, "LOAD CACHE!");
 	pStringCache->Load();
 	Log(TAG "Creating assets.");
 	this->CreateStrings(&doc);
