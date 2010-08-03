@@ -17,6 +17,7 @@ enum
 	cn_CN,
 	fr_FR,
 	jp_JP,
+	ru_RU,
 	MaximumLanguage
 };
 

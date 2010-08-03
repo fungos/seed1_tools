@@ -48,6 +48,10 @@ Dictionary::Dictionary(const char *language)
 	{
 		iLang = jp_JP;
 	}
+	else if (!strcasecmp(language, "ru_RU"))
+	{
+		iLang = ru_RU;
+	}
 	else
 	{
 		Error(ERRROR_LANGUAGE_ABBREV_UNKNOWN, "Unknown language code.");
