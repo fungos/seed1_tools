@@ -86,6 +86,18 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 
+	char opath[1024];
+	memset(opath, '\0', 1024);
+	char *var = strstr(outputPath, "$SEEDSDK");
+	if (var)
+	{
+		const char *seedsdkEnv = getenv("SEEDSDK");
+
+		strncpy(opath, outputPath, outputPath - var);
+		strncat(opath, seedsdkEnv, 1023 - strlen(opath));
+		strncat(opath, &var[strlen("$SEEDSDK")], 1023 - strlen(opath));
+	}
+
 	this->bfsOutputPath = outputPath;
 	if (!bfs::is_directory(bfsOutputPath))
 	{
