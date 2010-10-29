@@ -298,9 +298,9 @@ void SdlPlatform::Compile(MusicResource *obj)
 
 	std::ostringstream cmd;
 
-	cmd << this->GetName() << PLATFORM_PATH_SEPARATOR_STR << "sox ";
-	cmd << obj->GetInputPath().string().c_str() << " ";
-	cmd << obj->GetOutputPath().string().c_str();
+	cmd << this->GetName() << PLATFORM_PATH_SEPARATOR_STR << "sox \"";
+	cmd << obj->GetInputPath().string().c_str() << "\" \"";
+	cmd << obj->GetOutputPath().string().c_str() << "\"";
 
 	RUN_COMMAND(cmd);
 
@@ -313,9 +313,9 @@ void SdlPlatform::Compile(SoundResource *obj)
 
 	std::ostringstream cmd;
 
-	cmd << this->GetName() << PLATFORM_PATH_SEPARATOR_STR << "sox ";
-	cmd << obj->GetInputPath().string().c_str() << " ";
-	cmd << obj->GetOutputPath().string().c_str();
+	cmd << this->GetName() << PLATFORM_PATH_SEPARATOR_STR << "sox \"";
+	cmd << obj->GetInputPath().string().c_str() << "\" \"";
+	cmd << obj->GetOutputPath().string().c_str() << "\"";
 
 	RUN_COMMAND(cmd);
 
@@ -333,11 +333,11 @@ void SdlPlatform::Compile(Mask *obj)
 
 	std::ostringstream cmd;
 
-	cmd << this->GetName() << PLATFORM_PATH_SEPARATOR_STR << "maskgen ";
+	cmd << this->GetName() << PLATFORM_PATH_SEPARATOR_STR << "maskgen \"";
 	cmd << obj->GetInputPath().string().c_str();
-	cmd << " ";
+	cmd << "\" \"";
 	cmd << obj->GetOutputPath().string().c_str();
-	cmd << " -p " << this->GetName();
+	cmd << "\" -p " << this->GetName();
 
 	RUN_COMMAND(cmd);
 

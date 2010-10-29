@@ -8,12 +8,24 @@ struct sSpriteConfig
 {
 	u8 headerType; // 0 = numeric; 1 = fileName;
 	u8 imageFormat; // 0 = default; 1 = compressed texture
+
+	sSpriteConfig()
+        : headerType(0)
+        , imageFormat(0)
+    {
+    }
 };
 
 struct sAudioConfig
 {
 	u8 buildMethod; // 0 = AX; 1 = DSPADPCM;
 	u8 headerType;	// 0 = numeric; 1 = filename;
+
+	sAudioConfig()
+        : buildMethod(0)
+        , headerType(0)
+    {
+    }
 };
 
 class Config
@@ -47,7 +59,11 @@ class Config
 
 
 	private:
-		Config() : audioConfig(), spriteConfig() {}
+		Config()
+            : audioConfig()
+            , spriteConfig()
+        {}
+
 		~Config() {}
 
 	private:

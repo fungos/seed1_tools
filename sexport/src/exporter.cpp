@@ -25,6 +25,30 @@ struct Finder
 	bool operator()(IObject *obj) { return !strcmp(obj->GetName(), str); }
 };
 
+char *ReplaceVariable(const char *input, const char *invar)
+{
+    int size = 1024;
+
+    char xmlVar[64];
+    snprintf(xmlVar, 63, "$(%s)", invar);
+
+    char *opath = NULL;
+	char *var = strstr(input, xmlVar);
+	if (var)
+	{
+	    opath = (char *)malloc(sizeof(char) * size);
+        assert(opath != NULL);
+        memset(opath, '\0', size);
+
+		const char *envVar = getenv(invar);
+		strncpy(opath, input, input - var);
+		strncat(opath, envVar, size - 1 - strlen(opath));
+		strncat(opath, &var[strlen(xmlVar)], size - 1 - strlen(opath));
+	}
+
+    return opath;
+}
+
 
 Exporter Exporter::instance;
 
@@ -86,22 +110,16 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 
-	char opath[1024];
-	memset(opath, '\0', 1024);
-	char *var = strstr(outputPath, "$SEEDSDK");
-	if (var)
-	{
-		const char *seedsdkEnv = getenv("SEEDSDK");
+    char *opath = NULL;
+    const char *path = NULL;
 
-		strncpy(opath, outputPath, outputPath - var);
-		strncat(opath, seedsdkEnv, 1023 - strlen(opath));
-		strncat(opath, &var[strlen("$SEEDSDK")], 1023 - strlen(opath));
-	}
-
-	this->bfsOutputPath = outputPath;
+    opath = ReplaceVariable(outputPath, "SEEDSDK");
+    path = (opath) ? opath : outputPath;
+    this->bfsOutputPath = path;
+    free(opath);
 	if (!bfs::is_directory(bfsOutputPath))
 	{
-		Log(TAG "Invalid Output path.");
+		Log(TAG "Invalid Output path: %s.", bfsOutputPath.string().c_str());
 		return false;
 	}
 
@@ -128,10 +146,14 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 	}
 	pPlatform->SetHeight(atoi(imageScreenHeight));
 
-	this->mapInputPath[RESOURCE_IMAGE] = bfs::path(inputSpecificPath);
+    char *ipath = NULL;
+    ipath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+    path = (ipath) ? ipath : inputSpecificPath;
+	this->mapInputPath[RESOURCE_IMAGE] = bfs::path(path);
+	free(ipath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_IMAGE]))
 	{
-		Log(TAG "Invalid Image Input path.");
+		Log(TAG "Invalid Image Input path %s.", mapInputPath[RESOURCE_IMAGE].string().c_str());
 		return false;
 	}
 
@@ -142,10 +164,14 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 
-	this->mapInputPath[RESOURCE_SOUND] = bfs::path(inputSpecificPath);
+    char *spath = NULL;
+    spath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+    path = (spath) ? spath : inputSpecificPath;
+	this->mapInputPath[RESOURCE_SOUND] = bfs::path(path);
+	free(spath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_SOUND]))
 	{
-		Log(TAG "Invalid Sound Input path.");
+		Log(TAG "Invalid Sound Input path: %s.", mapInputPath[RESOURCE_SOUND].string().c_str());
 		return false;
 	}
 
@@ -156,13 +182,18 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 
-	this->mapInputPath[RESOURCE_MUSIC] = bfs::path(inputSpecificPath);
+    char *mpath = NULL;
+    mpath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+    path = (mpath) ? mpath : inputSpecificPath;
+	this->mapInputPath[RESOURCE_MUSIC] = bfs::path(path);
+	free(mpath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_MUSIC]))
 	{
-		Log(TAG "Invalid Music Input path.");
+		Log(TAG "Invalid Music Input path: %s.", mapInputPath[RESOURCE_MUSIC].string().c_str());
 		return false;
 	}
 
+/*
 	const char *headerType = (*platformNode)("image")["header-type"];
 	if (!headerType)
 	{
@@ -177,7 +208,7 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		cfg->SetImageFormat("default");
 	}
 	cfg->SetImageFormat(imageFormat);
-
+*/
 /*
 	const char *tmpAudioBuildMethod = (*platformNode)("sound")["build-method"];
 	if (!tmpAudioBuildMethod)
@@ -187,7 +218,7 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 	}
 	cfg->SetAudioBuildMethod(tmpAudioBuildMethod);
 */
-
+/*
 	headerType = (*platformNode)("sound")["header-type"];
 	if (!headerType)
 	{
@@ -195,7 +226,7 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 	cfg->SetAudioHeaderType(headerType);
-
+*/
 	return true;
 }
 
@@ -263,6 +294,7 @@ bool Exporter::Process(const char *configfile, const char *xmlfile, const char *
 
 	this->CompileStrings();
 	this->CompileResources();
+	Log(TAG "Compiling objects... wait.");
 	this->CompileObjects();
 
 	// Create Output files
@@ -1343,7 +1375,7 @@ void Exporter::CompileResources()
 
 	for (; it != end; ++it)
 	{
-		Log(TAG "Language: %s", (*it).first);
+		Log(TAG "Compiling resources for language: %s. Wait...", (*it).first);
 		ResourceMap mapResources = (*it).second;
 
 		ResourceMapIterator itr = mapResources.begin();
