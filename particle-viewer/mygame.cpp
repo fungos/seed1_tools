@@ -76,23 +76,28 @@ BOOL MyGame::Initialize()
 	cEmitter.SetSprite(SPT_PARTICLE);
 	cEmitter.SetPriority(10);
 	cEmitter.SetPosition(0.5f, 0.5f);
+	cEmitter.SetParticlesBuffer(&cParticles[0], 500);
 	cEmitter.Stop();
 	cScene.Add(&cEmitter);
 	pParticleManager->Add(&cEmitter);
 
 	pInput->AddKeyboardListener(this);
 	pInput->AddPointerListener(this);
+	pSystem->AddListener(this);
 
 	return TRUE;
 }
 
-BOOL MyGame::Update()
+BOOL MyGame::Update(f32 dt)
 {
 	return TRUE;
 }
 
 BOOL MyGame::Shutdown()
 {
+	cEmitter.Unload();
+	fntFont.Unload();
+	sptLogo.Unload();
 	return IGameApp::Shutdown();
 }
 
@@ -166,3 +171,7 @@ void MyGame::OnInputPointerMove(const EventInputPointer *ev)
 	}
 }
 
+void MyGame::OnSystemShutdown(const EventSystem *ev)
+{
+	pSystem->Shutdown();
+}
