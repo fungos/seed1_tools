@@ -2,6 +2,7 @@
 #include "platform.h"
 
 #include <algorithm>
+#include <stdio.h>
 
 Cache Cache::instance;
 

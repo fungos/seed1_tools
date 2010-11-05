@@ -22,6 +22,7 @@ const Package &Package::operator=(const Package &p) const
 Package::Package(Group *g)
 	: pGroup(NULL)
 	, vPackageEntry()
+	, vPackageFile()
 	, bfsPath()
 {
 	if (!g)

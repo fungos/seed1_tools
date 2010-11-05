@@ -1,6 +1,8 @@
 #include <sstream>
 #include <math.h>
 
+#include "xml/tinyxml.h"
+
 #include "platform.h"
 #include "exporter.h"
 #include "utils.h"
@@ -27,18 +29,18 @@ struct Finder
 
 char *ReplaceVariable(const char *input, const char *invar)
 {
-    int size = 1024;
+	int size = 1024;
 
-    char xmlVar[64];
-    snprintf(xmlVar, 63, "$(%s)", invar);
-
-    char *opath = NULL;
-	char *var = strstr(input, xmlVar);
+	char xmlVar[64];
+	snprintf(xmlVar, 63, "$(%s)", invar);
+	
+	char *opath = NULL;
+	const char *var = strstr(input, xmlVar);
 	if (var)
 	{
 	    opath = (char *)malloc(sizeof(char) * size);
-        assert(opath != NULL);
-        memset(opath, '\0', size);
+		assert(opath != NULL);
+		memset(opath, '\0', size);
 
 		const char *envVar = getenv(invar);
 		strncpy(opath, input, input - var);
@@ -46,7 +48,7 @@ char *ReplaceVariable(const char *input, const char *invar)
 		strncat(opath, &var[strlen(xmlVar)], size - 1 - strlen(opath));
 	}
 
-    return opath;
+	return opath;
 }
 
 
@@ -90,18 +92,18 @@ void Exporter::Shutdown()
 	this->bInitialized = false;
 }
 
-bool Exporter::Setup(TiXmlDocument doc, const char *platform)
+bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 {
 	TiXmlNode *platformNode = NULL;
 
 	if (!strcasecmp(platform, "wii"))
-		platformNode = &doc("sexport")("wii");
+		platformNode = &(*doc)("sexport")("wii");
 	else if (!strcasecmp(platform, "nds"))
-		platformNode = &doc("sexport")("nds");
+		platformNode = &(*doc)("sexport")("nds");
 	else if (!strcasecmp(platform, "iph"))
-		platformNode = &doc("sexport")("iph");
+		platformNode = &(*doc)("sexport")("iph");
 	else if (!strcasecmp(platform, "sdl"))
-		platformNode = &doc("sexport")("sdl");
+		platformNode = &(*doc)("sexport")("sdl");
 
 	const char *outputPath = (*platformNode)("output")["path"];
 	if (!outputPath)
@@ -110,13 +112,13 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 
-    char *opath = NULL;
-    const char *path = NULL;
+	char *opath = NULL;
+	const char *path = NULL;
 
-    opath = ReplaceVariable(outputPath, "SEEDSDK");
-    path = (opath) ? opath : outputPath;
-    this->bfsOutputPath = path;
-    free(opath);
+	opath = ReplaceVariable(outputPath, "SEEDSDK");
+	path = (opath) ? opath : outputPath;
+	this->bfsOutputPath = path;
+	free(opath);
 	if (!bfs::is_directory(bfsOutputPath))
 	{
 		Log(TAG "Invalid Output path: %s.", bfsOutputPath.string().c_str());
@@ -146,9 +148,9 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 	}
 	pPlatform->SetHeight(atoi(imageScreenHeight));
 
-    char *ipath = NULL;
-    ipath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
-    path = (ipath) ? ipath : inputSpecificPath;
+	char *ipath = NULL;
+	ipath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+	path = (ipath) ? ipath : inputSpecificPath;
 	this->mapInputPath[RESOURCE_IMAGE] = bfs::path(path);
 	free(ipath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_IMAGE]))
@@ -164,9 +166,9 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 
-    char *spath = NULL;
-    spath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
-    path = (spath) ? spath : inputSpecificPath;
+	char *spath = NULL;
+	spath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+	path = (spath) ? spath : inputSpecificPath;
 	this->mapInputPath[RESOURCE_SOUND] = bfs::path(path);
 	free(spath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_SOUND]))
@@ -182,9 +184,9 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 
-    char *mpath = NULL;
-    mpath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
-    path = (mpath) ? mpath : inputSpecificPath;
+	char *mpath = NULL;
+	mpath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+	path = (mpath) ? mpath : inputSpecificPath;
 	this->mapInputPath[RESOURCE_MUSIC] = bfs::path(path);
 	free(mpath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_MUSIC]))
@@ -254,7 +256,7 @@ bool Exporter::Process(const char *configfile, const char *xmlfile, const char *
 		Error(ERROR_EXPORT_CONFIG_OPENING_ERROR, TAG "TinyXML: Error opening config file: config.xml.");
 	}
 
-	if (!Setup(config, platformString))
+	if (!this->Setup(&config, platformString))
 	{
 		Error(ERROR_EXPORT_CONFIG_PARAM, TAG "Error reading configuration file - check your parameters.");
 	}
