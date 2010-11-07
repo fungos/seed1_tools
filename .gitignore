@@ -1,1 +1,4 @@
 *.o
+sexport/bin/sexporter
+maskgen/bin/maskgen
+fontgen/bin/fontgen
