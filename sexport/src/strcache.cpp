@@ -1,4 +1,6 @@
-#include "StrCache.h"
+#include "strcache.h"
+
+#include <stdio.h>
 
 StringCache StringCache::instance;
 

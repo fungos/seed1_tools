@@ -9,7 +9,6 @@
 #include <map>
 
 #include "config.h"
-#include "xml/tinyxml.h"
 #include "string.h"
 #include "iobject.h"
 #include "iresource.h"
@@ -49,6 +48,9 @@ typedef PackageVector::iterator	PackageVectorIterator;
 typedef std::map<int, bfs::path> InputPathMap;
 typedef InputPathMap::iterator	InputPathMapIterator;
 
+class TiXmlNode;
+class TiXmlDocument;
+
 class Exporter
 {
 	friend class Audio;
@@ -63,7 +65,7 @@ class Exporter
 		Exporter();
 		~Exporter();
 
-		bool Setup(TiXmlDocument doc, const char *platform);
+		bool Setup(TiXmlDocument *doc, const char *platform);
 
 	private:
 		bool bInitialized;
