@@ -73,6 +73,7 @@ class Exporter
 		bool bPackages;
 		bool bCompression;
 		bool bPackageResources;
+		bool bUnified;
 
 		u8	iAlignment;
 
@@ -150,7 +151,7 @@ class Exporter
 		void WriteFileList();
 		void WriteStringList();
 
-		bool Process(const char *configfile, const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources);
+		bool Process(const char *configfile, const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources, const bool unified);
 
 		bool CreateOutputPath();
 		bool IsModified(TiXmlNode *node, eResourceType type, const char *outputName);
@@ -185,6 +186,11 @@ class Exporter
 		{
 			return bPackageResources;
 		}
+
+        inline bool IsUnified() const
+        {
+            return bUnified;
+        }
 
 		static Exporter instance;
 };

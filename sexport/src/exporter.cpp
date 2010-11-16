@@ -33,7 +33,7 @@ char *ReplaceVariable(const char *input, const char *invar)
 
 	char xmlVar[64];
 	snprintf(xmlVar, 63, "$(%s)", invar);
-	
+
 	char *opath = NULL;
 	const char *var = strstr(input, xmlVar);
 	if (var)
@@ -232,8 +232,9 @@ bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 	return true;
 }
 
-bool Exporter::Process(const char *configfile, const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources)
+bool Exporter::Process(const char *configfile, const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources, const bool unified)
 {
+	this->bUnified	= unified;
 	this->bRebuild 		= rebuild;
 	this->bPackages 	= packages;
 	this->bCompression 	= compression;
@@ -1315,31 +1316,42 @@ void Exporter::CreateObjects(TiXmlDocument *doc)
 			break;
 		}
 
+		Group *g = NULL;
 		// multiple groups here
-
-		const char *groupName = (*object)["group"];
-		if (groupName)
+		if (this->IsUnified())
 		{
-			Group *g = pGroupManager->Get(groupName);
+			g = pGroupManager->Get("data");
 			if (!g)
 			{
-				g = new Group(groupName);
+				g = new Group("data");
 				pGroupManager->Add(g);
 			}
 			g->AddObject(obj);
-
-			// packing .sprite and .audio only
-//#if COMPILE_RESOURCE == 1
-			if (e->IsPackageResourcesEnabled())
+		}
+		else
+		{
+			const char *groupName = (*object)["group"];
+			if (groupName)
 			{
-				ResourceMapIterator it = obj->GetFirstResource();
-				for (; it != obj->GetLastResource(); ++it)
+				g = pGroupManager->Get(groupName);
+				if (!g)
 				{
-					IResource *res = ((*it).second);
-					g->AddResource(res);
+					g = new Group(groupName);
+					pGroupManager->Add(g);
 				}
+				g->AddObject(obj);
 			}
-//#endif
+		}
+
+		// packing .sprite and .audio only
+		if (g && e->IsPackageResourcesEnabled())
+		{
+			ResourceMapIterator it = obj->GetFirstResource();
+			for (; it != obj->GetLastResource(); ++it)
+			{
+				IResource *res = ((*it).second);
+				g->AddResource(res);
+			}
 		}
 
 	END_ITERATE_XML_NODES2(object, (*doc)("root")("objects")("object"))

@@ -19,6 +19,7 @@ void EnablePackages(const char *value, void *data);
 void SetAlignment(const char *value, void *data);
 void EnableCompression(const char *value, void *data);
 void EnablePackageResources(const char *value, void *data);
+void EnablePackageUnified(const char *value, void *data);
 void RebuildDirectoryTree(const char *value, void *data);
 void EnableVerboseMode(const char *value, void *data);
 void EnableQuietMode(const char *value, void *data);
@@ -33,6 +34,7 @@ int main(int argc, const char **argv)
 	bool packages = false;
 	bool compression = false;
 	bool resources = false;
+	bool unified = false;
 	bool dirs = false;
 	u8	 alignment = ALIGN_32;
 
@@ -51,6 +53,7 @@ int main(int argc, const char **argv)
 	parser->Add("v", "verbose", true, false, false, EnableVerboseMode, &gVerbose);
 	parser->Add("q", "quiet", true, false, false, EnableQuietMode, &gQuiet);
 	parser->Add("f", "config", true, false, true, SetConfigFile, &configfile);
+	parser->Add("u", "unify", true, false, false, EnablePackageUnified, &unified);
 
 	fprintf(stdout, "Seed Exporter (c) Danny Angelo Carminati Grein 2008\n");
 	if (!parser->Parse(argc, argv, true))
@@ -60,18 +63,20 @@ int main(int argc, const char **argv)
 		fprintf(stdout, "\t\t-f, --config\tUse this config file as config.xml\n");
 		fprintf(stdout, "\t\t-r, --rebuild\tRebuild all files.\n");
 		fprintf(stdout, "\t\t-k, --packages\tCreate group packages.\n");
+		fprintf(stdout, "\t\t-d, --add_resources\tAdd resources to the package files.\n");
+		fprintf(stdout, "\t\t-u, --unify\tUnify packages in one output only.");
 		fprintf(stdout, "\t\t-a [value], --alignment [value]\tOutput data alignment.\n");
 		fprintf(stdout, "\t\t-c, --compress\tEnable output data compression.\n");
-		fprintf(stdout, "\t\t-t,--tree\tBuild directory structure only (not implemented!)\n");
-		fprintf(stdout, "\t\t-v,--verbose\tVerbose mode.\n");
-		fprintf(stdout, "\t\t-q,--quiet\tQuiet mode.\n");
+		fprintf(stdout, "\t\t-t, --tree\tBuild directory structure only (not implemented!)\n");
+		fprintf(stdout, "\t\t-v, --verbose\tVerbose mode.\n");
+		fprintf(stdout, "\t\t-q, --quiet\tQuiet mode.\n");
 		fprintf(stdout, "\n");
 
 		return EXIT_FAILURE;
 	}
 
 	e->bfsExeName = bfs::path(argv[0]);
-	e->Process(configfile, xmlfile, platform, rebuild, packages, alignment, compression, resources);
+	e->Process(configfile, xmlfile, platform, rebuild, packages, alignment, compression, resources, unified);
 
 	return EXIT_SUCCESS;
 }
@@ -134,6 +139,11 @@ void EnablePackages(const char *value, void *data)
 }
 
 void EnablePackageResources(const char *value, void *data)
+{
+	*static_cast<bool*>(data) = true;
+}
+
+void EnablePackageUnified(const char *value, void *data)
 {
 	*static_cast<bool*>(data) = true;
 }
