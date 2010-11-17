@@ -18,6 +18,7 @@
 #define PLATFORM_SDL_OUTPUT_MUSIC_EXT				".music"
 #define PLATFORM_SDL_OUTPUT_BUTTON_EXT				".button"
 #define PLATFORM_SDL_OUTPUT_MASK_EXT				".bitmask"
+#define PLATFORM_SDL_OUTPUT_MAP_EXT					".map"
 
 #define PLATFORM_SDL_INPUT_FONT_EXT					".tga"
 #define PLATFORM_SDL_INPUT_SOUND_EXT				".wav"
@@ -518,6 +519,12 @@ bfs::path SdlPlatform::GetOutputPath(const IObject *obj) const
 		case OBJECT_BUTTON:
 		{
 			out = out + PLATFORM_SDL_OUTPUT_BUTTON_EXT;
+		}
+		break;
+
+		case OBJECT_MAP:
+		{
+			out = out + PLATFORM_SDL_OUTPUT_MAP_EXT;
 		}
 		break;
 

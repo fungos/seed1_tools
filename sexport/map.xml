@@ -1,0 +1,13 @@
+<root>
+	<strings/>
+	<resources/>
+	<objects>
+		<object type="map2d" name="teste" tile_width="32" tile_height="32" width="2" height="2">
+			<layer name="Ground" opacity="1.00" visible="true" type="tiled">0,1,30,10</layer>
+			<layer name="Collision" opacity="1.00" visible="true" type="object">
+				<object name="object_0001" type="type_0001" x="11.531250" y="5.468750" width="12.000000" height="9.031250"/>
+			</layer>
+		</object>
+	</objects>
+</root>
+ 

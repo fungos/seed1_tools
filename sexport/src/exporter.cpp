@@ -38,14 +38,22 @@ char *ReplaceVariable(const char *input, const char *invar)
 	const char *var = strstr(input, xmlVar);
 	if (var)
 	{
-	    opath = (char *)malloc(sizeof(char) * size);
+		opath = (char *)malloc(sizeof(char) * size);
 		assert(opath != NULL);
 		memset(opath, '\0', size);
 
 		const char *envVar = getenv(invar);
-		strncpy(opath, input, input - var);
-		strncat(opath, envVar, size - 1 - strlen(opath));
-		strncat(opath, &var[strlen(xmlVar)], size - 1 - strlen(opath));
+
+		if (envVar)
+		{
+			strncpy(opath, input, input - var);
+			strncat(opath, envVar, size - 1 - strlen(opath));
+			strncat(opath, &var[strlen(xmlVar)], size - 1 - strlen(opath));
+		}
+		else
+		{
+			Log("Environment variable '%s' not found!", invar);
+		}
 	}
 
 	return opath;
@@ -61,6 +69,7 @@ Exporter::Exporter()
 	, bPackages(false)
 	, bCompression(false)
 	, bPackageResources(false)
+	, bUnified(false)
 	, iAlignment(0)
 	, mapResourcesLang()
 	, mapDictionaries()
@@ -342,6 +351,8 @@ eObjectType Exporter::GetObjectType(const char *str)
 		return OBJECT_FONT;
 	else if (strcasecmp(str, "button") == 0)
 		return OBJECT_BUTTON;
+	else if (strcasecmp(str, "map2d") == 0)
+		return OBJECT_MAP;
 
 	return OBJECT_NONE;
 }
@@ -1262,6 +1273,106 @@ IObject *Exporter::CreateObjectMusic(TiXmlNode *object)
 	return music;
 }
 
+void Exporter::CreateMapLayers(Map2D *map, TiXmlNode *node)
+{
+	u32 layeridx = 0;
+	BEGIN_ITERATE_XML_NODES2(object, (*node)("layer"))
+
+		const char *name = (*object)["name"];
+		if (!name)
+		{
+			Error(ERROR_EXPORT_LAYER_MISSING_ATTRIB, TAG "A layer has no NAME.");
+		}
+
+		f32 opacity = 0;
+		bool visibility = true;
+		eLayerType type = LayerTypeTiled;
+
+		const char *tmp = (*object)["opacity"];
+		if (tmp)
+			opacity = atof(tmp);
+
+		tmp = (*object)["visible"];
+		if (tmp)
+			visibility = (strcasecmp(tmp, "true") == 0);
+
+		tmp = (*object)["type"];
+		if (tmp)
+			type = (strcasecmp(tmp, "tiled") == 0) ? LayerTypeTiled :
+					(strcasecmp(tmp, "object") == 0) ? LayerTypeObject : LayerTypeTileless;
+
+		switch (type)
+		{
+			case LayerTypeTiled:
+			break;
+
+			case LayerTypeTileless:
+			break;
+
+			case LayerTypeObject:
+			break;
+		}
+/*
+		Animation *anim = new Animation(name, frame, loop, animated, animidx++);
+		anim->SetX(x);
+		anim->SetY(y);
+		anim->SetWidth(w);
+		anim->SetHeight(h);
+
+		spt->SetRebuild(build);
+		spt->Add(anim);
+		this->CreateFrames(anim, object);
+
+		ResourceMapIterator it = anim->GetFirstResource();
+		for (; it != anim->GetLastResource(); ++it)
+		{
+			IResource *res = ((*it).second);
+			spt->AddResource(res);
+		}
+*/
+	END_ITERATE_XML_NODES2(object, (*node)("layer"))
+}
+
+IObject *Exporter::CreateObjectMap(TiXmlNode *object)
+{
+	const char *name = (*object)["name"];
+	if (!name)
+	{
+		Error(ERROR_EXPORT_MAP_MISSING_ATTRIB, TAG "Map has no NAME.");
+	}
+
+	Map2D *map = new Map2D(name);
+
+	u32 tw = 0;
+	u32 th = 0;
+	u32 w = 0;
+	u32 h = 0;
+
+	const char *tmp = (*object)["width"];
+	if (tmp)
+		w = atoi(tmp);
+
+	tmp = (*object)["height"];
+	if (tmp)
+		h = atoi(tmp);
+
+	tmp = (*object)["tile_width"];
+	if (tmp)
+		tw = atoi(tmp);
+
+	tmp = (*object)["tile_height"];
+	if (tmp)
+		th = atoi(tmp);
+
+	map->SetSize(w, h);
+	map->SetTileSize(tw, th);
+
+	this->CreateMapLayers(map, object);
+	vecObjects.push_back(map);
+
+	return map;
+}
+
 void Exporter::CreateObjects(TiXmlDocument *doc)
 {
 	// Create Objects
@@ -1308,6 +1419,12 @@ void Exporter::CreateObjects(TiXmlDocument *doc)
 			case OBJECT_SOUND:
 			{
 				obj = this->CreateObjectSound(object);
+			}
+			break;
+
+			case OBJECT_MAP:
+			{
+				obj = this->CreateObjectMap(object);
 			}
 			break;
 

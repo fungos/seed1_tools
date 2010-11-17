@@ -41,7 +41,7 @@ int main(int argc, const char **argv)
 	memset(configfile, '\0', 1024);
 	memcpy(configfile, "config.xml", strlen("config.xml"));
 
-	CmdLineParser *parser = new CmdLineParser(11);
+	CmdLineParser *parser = new CmdLineParser(12);
 	parser->Add("i", "input", false, false, true, SetXmlFile, xmlfile);
 	parser->Add("p", "platform", false, false, true, SetPlatformString, platform);
 	parser->Add("r", "rebuild", true, false, false, Rebuild, &rebuild);
