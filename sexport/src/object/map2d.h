@@ -75,15 +75,61 @@ struct LayerObjectObjectHeader
 
 class Exporter;
 
+class MapObject : public IObject
+{
+	private:
+		MapObject(const MapObject &);
+		bool operator=(const MapObject &);
+
+		char *pType;
+		f32 fX;
+		f32 fY;
+		f32 fW;
+		f32 fH;
+
+	public:
+		MapObject(const char *name);
+		virtual ~MapObject();
+
+		void SetType(const char *type);
+		void SetPosition(f32 x, f32 y);
+		void SetSize(f32 w, f32 h);
+
+		virtual void Write(FILE *fp, Exporter *e);
+};
+
 class IMapLayer : public IObject
 {
 	private:
 		IMapLayer(const IMapLayer &);
 		bool operator=(const IMapLayer &);
 
+		bool bVisibility;
+		f32 fOpacity;
+
 	public:
 		IMapLayer(const char *name);
 		virtual ~IMapLayer();
+
+		void SetVisibility(bool b)
+		{
+			bVisibility = b;
+		}
+
+		bool GetVisibility() const
+		{
+			return bVisibility;
+		}
+
+		void SetOpacity(f32 opacity)
+		{
+			fOpacity = opacity;
+		}
+
+		f32 GetOpacity() const
+		{
+			return fOpacity;
+		}
 };
 
 class MapLayerObject : public IMapLayer
@@ -92,9 +138,17 @@ class MapLayerObject : public IMapLayer
 		MapLayerObject(const MapLayerObject &);
 		bool operator=(const MapLayerObject &);
 
+		typedef std::vector<MapObject *> VectorObjects;
+		typedef VectorObjects::iterator VectorObjectsIterator;
+		VectorObjects vObjects;
+
 	public:
 		MapLayerObject(const char *name);
 		virtual ~MapLayerObject();
+
+		void Add(MapObject *obj);
+
+		virtual void Write(FILE *fp, Exporter *e);
 };
 
 class MapLayerTiled : public IMapLayer
@@ -103,9 +157,15 @@ class MapLayerTiled : public IMapLayer
 		MapLayerTiled(const MapLayerTiled &);
 		bool operator=(const MapLayerTiled &);
 
+		std::vector<int> vTiles;
+
 	public:
 		MapLayerTiled(const char *name);
 		virtual ~MapLayerTiled();
+
+		void CreateTiles(const char *text);
+
+		virtual void Write(FILE *fp, Exporter *e);
 };
 
 class Map2D : public IObject

@@ -1275,7 +1275,6 @@ IObject *Exporter::CreateObjectMusic(TiXmlNode *object)
 
 void Exporter::CreateMapLayers(Map2D *map, TiXmlNode *node)
 {
-	u32 layeridx = 0;
 	BEGIN_ITERATE_XML_NODES2(object, (*node)("layer"))
 
 		const char *name = (*object)["name"];
@@ -1301,35 +1300,82 @@ void Exporter::CreateMapLayers(Map2D *map, TiXmlNode *node)
 			type = (strcasecmp(tmp, "tiled") == 0) ? LayerTypeTiled :
 					(strcasecmp(tmp, "object") == 0) ? LayerTypeObject : LayerTypeTileless;
 
+		IMapLayer *layer = NULL;
 		switch (type)
 		{
 			case LayerTypeTiled:
+			{
+				MapLayerTiled *l = new MapLayerTiled(name);
+
+				const char *text = object->ToElement()->GetText();
+				l->CreateTiles(text);
+
+				layer = l;
+			}
 			break;
 
 			case LayerTypeTileless:
+			{
+			}
 			break;
 
 			case LayerTypeObject:
+			{
+				MapLayerObject *l = new MapLayerObject(name);
+
+				BEGIN_ITERATE_XML_NODES2(item, (*object)("object"))
+					const char *objname = (*item)["name"];
+					if (!objname)
+					{
+						Error(ERROR_EXPORT_LAYER_MISSING_ATTRIB, TAG "An object from a layer type object has no NAME.");
+					}
+
+					const char *objtype = (*item)["type"];
+					if (!objtype)
+					{
+						Error(ERROR_EXPORT_LAYER_MISSING_ATTRIB, TAG "An object from a layer type object has no TYPE.");
+					}
+
+					f32 x = 0;
+					f32 y = 0;
+					f32 w = 0;
+					f32 h = 0;
+
+					const char *tmp = (*item)["x"];
+					if (tmp)
+						x = atof(tmp);
+
+					tmp = (*item)["y"];
+					if (tmp)
+						y = atof(tmp);
+
+					tmp = (*item)["w"];
+					if (tmp)
+						w = atof(tmp);
+
+					tmp = (*item)["h"];
+					if (tmp)
+						h = atof(tmp);
+
+					MapObject *obj = new MapObject(objname);
+					obj->SetType(objtype);
+					obj->SetPosition(x, y);
+					obj->SetSize(w, h);
+					l->Add(obj);
+
+				END_ITERATE_XML_NODES2(item, (*node)("object"))
+				layer = l;
+			}
+			break;
+
+			default:
 			break;
 		}
-/*
-		Animation *anim = new Animation(name, frame, loop, animated, animidx++);
-		anim->SetX(x);
-		anim->SetY(y);
-		anim->SetWidth(w);
-		anim->SetHeight(h);
 
-		spt->SetRebuild(build);
-		spt->Add(anim);
-		this->CreateFrames(anim, object);
+		layer->SetOpacity(opacity);
+		layer->SetVisibility(visibility);
+		map->Add(layer);
 
-		ResourceMapIterator it = anim->GetFirstResource();
-		for (; it != anim->GetLastResource(); ++it)
-		{
-			IResource *res = ((*it).second);
-			spt->AddResource(res);
-		}
-*/
 	END_ITERATE_XML_NODES2(object, (*node)("layer"))
 }
 

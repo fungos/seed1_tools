@@ -12,7 +12,7 @@
 				<Option object_output="bin\obj\Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-i assets_global.xml -p sdl -c -k -d" />
+				<Option parameters="-i map.xml -p sdl -v" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
