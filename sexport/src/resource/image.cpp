@@ -24,6 +24,8 @@ Image::Image(const char *name, const char *lang)
 	, iY(0)
 	, iWidth(0)
 	, iHeight(0)
+	, iScreenWidth(0)
+	, iScreenHeight(0)
 	, tsfHeader()
 {
 	if (!name)

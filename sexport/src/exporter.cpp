@@ -296,7 +296,7 @@ bool Exporter::Process(const char *configfile, const char *xmlfile, const char *
 
 	pCache->AddFilename(dictPath.string().c_str());
 	pCache->Load();
-	fprintf(stdout, "LOAD CACHE!");
+	//fprintf(stdout, "LOAD CACHE!");
 	pStringCache->Load();
 	Log(TAG "Creating assets.");
 	this->CreateStrings(&doc);
@@ -1349,11 +1349,11 @@ void Exporter::CreateMapLayers(Map2D *map, TiXmlNode *node)
 					if (tmp)
 						y = atof(tmp);
 
-					tmp = (*item)["w"];
+					tmp = (*item)["width"];
 					if (tmp)
 						w = atof(tmp);
 
-					tmp = (*item)["h"];
+					tmp = (*item)["height"];
 					if (tmp)
 						h = atof(tmp);
 
@@ -1412,6 +1412,7 @@ IObject *Exporter::CreateObjectMap(TiXmlNode *object)
 
 	map->SetSize(w, h);
 	map->SetTileSize(tw, th);
+	map->SetRebuild(true);
 
 	this->CreateMapLayers(map, object);
 	vecObjects.push_back(map);
@@ -1801,6 +1802,18 @@ void Exporter::WriteHeaderFile(const char *xmlfile)
 				fprintf(fp, "#define BTN_%s\t\t_F(%d)\n", s, fileId);
 				fprintf(fp, "#define BTN_%s_ID\t\t%d\n", s, fileId);
 				fprintf(fp, "#define BTN_ID_%s\t\t%d\n", s, btn->GetId());
+
+				free(s);
+			}
+			break;
+
+			case OBJECT_MAP:
+			{
+				char *s = to_upper(get_filename(obj->GetName()));
+
+				bfs::path relativePath = pFileSystem->GetRelativePath(obj->GetOutputPath(), e->GetOutputPath());
+				fprintf(fp, "#define MAP_%s\t\t_F(%d)\n", s, fileId);
+				fprintf(fp, "#define MAP_%s_ID\t\t%d\n", s, fileId);
 
 				free(s);
 			}

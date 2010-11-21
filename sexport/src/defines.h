@@ -28,6 +28,12 @@
 	#define INVALID_PATH_SEPARATOR	'\\'
 #endif
 
+#define VECTOR_POD_DEF(type) typedef std::vector<type> type##Vector; \
+							 typedef type##Vector::iterator type##Iterator;
+
+#define VECTOR_PTR_DEF(type) typedef std::vector<type *> type##Vector; \
+							 typedef type##Vector::iterator type##Iterator;
+
 #define GAME_PATH_SEPARATOR 	'/'
 #define GAME_PATH_SEPARATOR_STR "/"
 

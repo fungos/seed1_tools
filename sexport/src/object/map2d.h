@@ -4,22 +4,20 @@
 #include "../defines.h"
 #include "../iobject.h"
 
-#define LayerVector std::vector<IMapLayer *>
-#define LayerIterator LayerVector::iterator
-#define LayerObjectVector std::vector<LayerObject *>
-#define LayerObjectIterator LayerObjectVector::iterator
+class IMapLayer;
+class MapObject;
+
+typedef u32 Tile;
+
+VECTOR_POD_DEF(Tile);
+VECTOR_PTR_DEF(IMapLayer);
+VECTOR_PTR_DEF(MapObject);
 
 #define MAP_MAGIC		0x0050414d
 #define MAP_VERSION		0x00000001
 
 #define LAY_MAGIC		0x0059414c
 #define LAY_VERSION		0x00000001
-
-#define LTD_MAGIC		0x0044544c
-#define LTD_VERSION		0x00000001
-
-#define LBJ_MAGIC		0x004a424c
-#define LBJ_VERSION		0x00000001
 
 enum eMapType
 {
@@ -35,7 +33,7 @@ enum eLayerType
 	LayerTypeMax,
 };
 
-struct MapObjectHeader
+struct MapHeader
 {
 	ObjectHeader block;
 	u32 iType;
@@ -46,9 +44,8 @@ struct MapObjectHeader
 	u32 iLayerCount;
 };
 
-struct LayerObjectHeader
+struct LayerHeader
 {
-	ObjectHeader block;
 	u32 iType;
 	u32 iNameId;
 	u32 iVisible;
@@ -56,21 +53,14 @@ struct LayerObjectHeader
 	u32 iDataIndex;
 };
 
-struct LayerTiledObjectHeader
+struct LayerObjectHeader
 {
-	ObjectHeader block;
-	// tiles id = map.width * map.height * sizeof(u32)
-};
-
-struct LayerObjectObjectHeader
-{
-	ObjectHeader block;
 	u32 iNameId;
 	u32 iTypeId;
-	u32 iPosX;
-	u32 iPosY;
-	u32 iWidth;
-	u32 iHeight;
+	f32 fPosX;
+	f32 fPosY;
+	f32 fWidth;
+	f32 fHeight;
 };
 
 class Exporter;
@@ -104,12 +94,18 @@ class IMapLayer : public IObject
 		IMapLayer(const IMapLayer &);
 		bool operator=(const IMapLayer &);
 
+	protected:
+		eLayerType nType;
 		bool bVisibility;
 		f32 fOpacity;
+		u32 iDataIndex;
 
 	public:
 		IMapLayer(const char *name);
 		virtual ~IMapLayer();
+
+		virtual void Write(FILE *fp, Exporter *e);
+		virtual void WriteData(FILE *fp, Exporter *e) = 0;
 
 		void SetVisibility(bool b)
 		{
@@ -130,6 +126,16 @@ class IMapLayer : public IObject
 		{
 			return fOpacity;
 		}
+
+		void SetDataIndex(u32 idx)
+		{
+			iDataIndex = idx;
+		}
+
+		u32 GetDataIndex() const
+		{
+			return iDataIndex;
+		}
 };
 
 class MapLayerObject : public IMapLayer
@@ -138,9 +144,7 @@ class MapLayerObject : public IMapLayer
 		MapLayerObject(const MapLayerObject &);
 		bool operator=(const MapLayerObject &);
 
-		typedef std::vector<MapObject *> VectorObjects;
-		typedef VectorObjects::iterator VectorObjectsIterator;
-		VectorObjects vObjects;
+		MapObjectVector vObjects;
 
 	public:
 		MapLayerObject(const char *name);
@@ -148,7 +152,7 @@ class MapLayerObject : public IMapLayer
 
 		void Add(MapObject *obj);
 
-		virtual void Write(FILE *fp, Exporter *e);
+		virtual void WriteData(FILE *fp, Exporter *e);
 };
 
 class MapLayerTiled : public IMapLayer
@@ -157,7 +161,7 @@ class MapLayerTiled : public IMapLayer
 		MapLayerTiled(const MapLayerTiled &);
 		bool operator=(const MapLayerTiled &);
 
-		std::vector<int> vTiles;
+		TileVector vTiles;
 
 	public:
 		MapLayerTiled(const char *name);
@@ -165,7 +169,7 @@ class MapLayerTiled : public IMapLayer
 
 		void CreateTiles(const char *text);
 
-		virtual void Write(FILE *fp, Exporter *e);
+		virtual void WriteData(FILE *fp, Exporter *e);
 };
 
 class Map2D : public IObject
@@ -174,7 +178,7 @@ class Map2D : public IObject
 		Map2D(const Map2D &);
 		bool operator=(const Map2D &);
 
-		LayerVector layers;
+		IMapLayerVector vLayers;
 		u32 iTileWidth;
 		u32 iTileHeight;
 		u32 iWidth;
