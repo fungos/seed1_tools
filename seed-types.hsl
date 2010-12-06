@@ -17,6 +17,7 @@
  * Revision History:
  *  2009/06/04 - Danny - Initial test
  *  2009/12/22 - Danny - FileId support added. Reviewed some structures.
+ *  2010/11/22 - Danny - Added support to Map/Layer objects.
  */
  
 #pragma displayname("Seed Asset") ;
@@ -163,6 +164,27 @@ struct ButtonObjectHeader
 	u32		label_id;
 	u32		sprite_file_id; //const char *sprite;
 	u32		mask_file_id; //const char *mask;
+} ;
+
+struct LayerHeader
+{
+	u32 type;
+	u32 name_id;
+	u32 visible;
+	f32 opacity;
+	u32 data_index;
+} ;
+
+struct MapHeader
+{
+	struct ObjectHeader block;
+	u32 type;
+	u32 width;
+	u32 height;
+	u32 tile_width;
+	u32 tile_height;
+	u32 layer_count;
+	struct LayerHeader layers[layer_count];
 } ;
 
 struct PackageEntry
