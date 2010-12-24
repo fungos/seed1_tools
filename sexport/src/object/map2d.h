@@ -51,6 +51,9 @@ struct LayerHeader
 	u32 iVisible;
 	f32 fOpacity;
 	u32 iDataIndex;
+	// layerdata
+		// series of tilesId for tiled layer;
+		// u32 for amount of object, then n objects for metadata layer;
 };
 
 struct LayerObjectHeader

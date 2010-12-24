@@ -126,6 +126,9 @@ void MapLayerObject::WriteData(FILE *fp, Exporter *e)
 	MapObjectIterator it;
 	MapObjectIterator end;
 
+	u32 amount = pPlatform->Swap32(vObjects.size());
+	fwrite(&amount, sizeof(amount), 1, fp);
+
 	// Write Objects
 	it = vObjects.begin();
 	end = vObjects.end();
