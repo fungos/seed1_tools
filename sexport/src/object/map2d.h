@@ -60,6 +60,7 @@ struct LayerObjectHeader
 {
 	u32 iNameId;
 	u32 iTypeId;
+	u32 iPropertiesId;
 	f32 fPosX;
 	f32 fPosY;
 	f32 fWidth;
@@ -75,6 +76,7 @@ class MapObject : public IObject
 		bool operator=(const MapObject &);
 
 		char *pType;
+		char *pProps;
 		f32 fX;
 		f32 fY;
 		f32 fW;
@@ -85,6 +87,7 @@ class MapObject : public IObject
 		virtual ~MapObject();
 
 		void SetType(const char *type);
+		void SetProperties(const char *props);
 		void SetPosition(f32 x, f32 y);
 		void SetSize(f32 w, f32 h);
 

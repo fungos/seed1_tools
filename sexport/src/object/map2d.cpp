@@ -12,6 +12,7 @@
 
 MapObject::MapObject(const char *name)
 	: pType(NULL)
+	, pProps(NULL)
 	, fX(0.0f)
 	, fY(0.0f)
 	, fW(0.0f)
@@ -37,6 +38,11 @@ MapObject::~MapObject()
 		free(pType);
 
 	pType = NULL;
+
+	if (pProps)
+		free(pProps);
+
+	pProps = NULL;
 }
 
 void MapObject::Write(FILE *fp, Exporter *e)
@@ -44,6 +50,7 @@ void MapObject::Write(FILE *fp, Exporter *e)
 	LayerObjectHeader hdr;
 	hdr.iNameId = pPlatform->Swap32(pStringCache->GetStringId(pName));
 	hdr.iTypeId = pPlatform->Swap32(pStringCache->GetStringId(pType));
+	hdr.iPropertiesId = pPlatform->Swap32(pStringCache->GetStringId(pProps));
 	hdr.fPosX = pPlatform->Swapf32(fX);
 	hdr.fPosY = pPlatform->Swapf32(fY);
 	hdr.fWidth = pPlatform->Swapf32(fW);
@@ -57,6 +64,15 @@ void MapObject::SetType(const char *type)
 	{
 		pStringCache->AddString(type);
 		pType = strdup(type);
+	}
+}
+
+void MapObject::SetProperties(const char *props)
+{
+	if (props)
+	{
+		pStringCache->AddString(props);
+		pProps = strdup(props);
 	}
 }
 

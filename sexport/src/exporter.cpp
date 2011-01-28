@@ -1336,6 +1336,8 @@ void Exporter::CreateMapLayers(Map2D *map, TiXmlNode *node)
 						Error(ERROR_EXPORT_LAYER_MISSING_ATTRIB, TAG "An object from a layer type object has no TYPE.");
 					}
 
+					const char *objprops = (*item)["properties"];
+
 					f32 x = 0;
 					f32 y = 0;
 					f32 w = 0;
@@ -1359,6 +1361,8 @@ void Exporter::CreateMapLayers(Map2D *map, TiXmlNode *node)
 
 					MapObject *obj = new MapObject(objname);
 					obj->SetType(objtype);
+					if (objprops)
+						obj->SetProperties(objprops);
 					obj->SetPosition(x, y);
 					obj->SetSize(w, h);
 					l->Add(obj);
