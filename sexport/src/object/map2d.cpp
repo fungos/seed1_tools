@@ -50,7 +50,10 @@ void MapObject::Write(FILE *fp, Exporter *e)
 	LayerObjectHeader hdr;
 	hdr.iNameId = pPlatform->Swap32(pStringCache->GetStringId(pName));
 	hdr.iTypeId = pPlatform->Swap32(pStringCache->GetStringId(pType));
-	hdr.iPropertiesId = pPlatform->Swap32(pStringCache->GetStringId(pProps));
+	if (pProps)
+		hdr.iPropertiesId = pPlatform->Swap32(pStringCache->GetStringId(pProps));
+	else
+		hdr.iPropertiesId = 0xffffffff;
 	hdr.fPosX = pPlatform->Swapf32(fX);
 	hdr.fPosY = pPlatform->Swapf32(fY);
 	hdr.fWidth = pPlatform->Swapf32(fW);

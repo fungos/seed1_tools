@@ -1298,7 +1298,7 @@ void Exporter::CreateMapLayers(Map2D *map, TiXmlNode *node)
 		tmp = (*object)["type"];
 		if (tmp)
 			type = (strcasecmp(tmp, "tiled") == 0) ? LayerTypeTiled :
-					(strcasecmp(tmp, "object") == 0) ? LayerTypeObject : LayerTypeTileless;
+				(strcasecmp(tmp, "object") == 0) ? LayerTypeObject : LayerTypeTileless;
 
 		IMapLayer *layer = NULL;
 		switch (type)
