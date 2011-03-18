@@ -485,11 +485,11 @@ IResource *Exporter::CreateResourceImage(TiXmlNode *object)
 
 	tmp = (*object)["res_width"];
 	if (tmp)
-		rh = atoi(tmp);
+		rw = atoi(tmp);
 
 	tmp = (*object)["res_height"];
 	if (tmp)
-		rw = atoi(tmp);
+		rh = atoi(tmp);
 
 	img->SetX(x);
 	img->SetY(y);
