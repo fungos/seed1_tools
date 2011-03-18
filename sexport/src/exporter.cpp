@@ -1,6 +1,8 @@
 #include <sstream>
 #include <math.h>
 
+#include "xml/tinyxml.h"
+
 #include "platform.h"
 #include "exporter.h"
 #include "utils.h"
@@ -24,6 +26,30 @@ struct Finder
 	Finder(const char *s) : str(s) {}
 	bool operator()(IObject *obj) { return !strcmp(obj->GetName(), str); }
 };
+
+char *ReplaceVariable(const char *input, const char *invar)
+{
+	int size = 1024;
+
+	char xmlVar[64];
+	snprintf(xmlVar, 63, "$(%s)", invar);
+
+	char *opath = NULL;
+	const char *var = strstr(input, xmlVar);
+	if (var)
+	{
+	    opath = (char *)malloc(sizeof(char) * size);
+		assert(opath != NULL);
+		memset(opath, '\0', size);
+
+		const char *envVar = getenv(invar);
+		strncpy(opath, input, input - var);
+		strncat(opath, envVar, size - 1 - strlen(opath));
+		strncat(opath, &var[strlen(xmlVar)], size - 1 - strlen(opath));
+	}
+
+	return opath;
+}
 
 
 Exporter Exporter::instance;
@@ -66,18 +92,18 @@ void Exporter::Shutdown()
 	this->bInitialized = false;
 }
 
-bool Exporter::Setup(TiXmlDocument doc, const char *platform)
+bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 {
 	TiXmlNode *platformNode = NULL;
 
 	if (!strcasecmp(platform, "wii"))
-		platformNode = &doc("sexport")("wii");
+		platformNode = &(*doc)("sexport")("wii");
 	else if (!strcasecmp(platform, "nds"))
-		platformNode = &doc("sexport")("nds");
+		platformNode = &(*doc)("sexport")("nds");
 	else if (!strcasecmp(platform, "iph"))
-		platformNode = &doc("sexport")("iph");
+		platformNode = &(*doc)("sexport")("iph");
 	else if (!strcasecmp(platform, "sdl"))
-		platformNode = &doc("sexport")("sdl");
+		platformNode = &(*doc)("sexport")("sdl");
 
 	const char *outputPath = (*platformNode)("output")["path"];
 	if (!outputPath)
@@ -86,10 +112,16 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 
-	this->bfsOutputPath = outputPath;
+	char *opath = NULL;
+	const char *path = NULL;
+
+	opath = ReplaceVariable(outputPath, "SEEDSDK");
+	path = (opath) ? opath : outputPath;
+	this->bfsOutputPath = path;
+	free(opath);
 	if (!bfs::is_directory(bfsOutputPath))
 	{
-		Log(TAG "Invalid Output path.");
+		Log(TAG "Invalid Output path: %s.", bfsOutputPath.string().c_str());
 		return false;
 	}
 
@@ -116,10 +148,14 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 	}
 	pPlatform->SetHeight(atoi(imageScreenHeight));
 
-	this->mapInputPath[RESOURCE_IMAGE] = bfs::path(inputSpecificPath);
+	char *ipath = NULL;
+	ipath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+	path = (ipath) ? ipath : inputSpecificPath;
+	this->mapInputPath[RESOURCE_IMAGE] = bfs::path(path);
+	free(ipath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_IMAGE]))
 	{
-		Log(TAG "Invalid Image Input path.");
+		Log(TAG "Invalid Image Input path %s.", mapInputPath[RESOURCE_IMAGE].string().c_str());
 		return false;
 	}
 
@@ -130,10 +166,14 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 
-	this->mapInputPath[RESOURCE_SOUND] = bfs::path(inputSpecificPath);
+	char *spath = NULL;
+	spath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+	path = (spath) ? spath : inputSpecificPath;
+	this->mapInputPath[RESOURCE_SOUND] = bfs::path(path);
+	free(spath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_SOUND]))
 	{
-		Log(TAG "Invalid Sound Input path.");
+		Log(TAG "Invalid Sound Input path: %s.", mapInputPath[RESOURCE_SOUND].string().c_str());
 		return false;
 	}
 
@@ -144,13 +184,18 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 
-	this->mapInputPath[RESOURCE_MUSIC] = bfs::path(inputSpecificPath);
+	char *mpath = NULL;
+	mpath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+	path = (mpath) ? mpath : inputSpecificPath;
+	this->mapInputPath[RESOURCE_MUSIC] = bfs::path(path);
+	free(mpath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_MUSIC]))
 	{
-		Log(TAG "Invalid Music Input path.");
+		Log(TAG "Invalid Music Input path: %s.", mapInputPath[RESOURCE_MUSIC].string().c_str());
 		return false;
 	}
 
+/*
 	const char *headerType = (*platformNode)("image")["header-type"];
 	if (!headerType)
 	{
@@ -165,7 +210,7 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		cfg->SetImageFormat("default");
 	}
 	cfg->SetImageFormat(imageFormat);
-
+*/
 /*
 	const char *tmpAudioBuildMethod = (*platformNode)("sound")["build-method"];
 	if (!tmpAudioBuildMethod)
@@ -175,7 +220,7 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 	}
 	cfg->SetAudioBuildMethod(tmpAudioBuildMethod);
 */
-
+/*
 	headerType = (*platformNode)("sound")["header-type"];
 	if (!headerType)
 	{
@@ -183,12 +228,13 @@ bool Exporter::Setup(TiXmlDocument doc, const char *platform)
 		return false;
 	}
 	cfg->SetAudioHeaderType(headerType);
-
+*/
 	return true;
 }
 
-bool Exporter::Process(const char *configfile, const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources)
+bool Exporter::Process(const char *configfile, const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources, const bool unified)
 {
+	this->bUnified	= unified;
 	this->bRebuild 		= rebuild;
 	this->bPackages 	= packages;
 	this->bCompression 	= compression;
@@ -211,7 +257,7 @@ bool Exporter::Process(const char *configfile, const char *xmlfile, const char *
 		Error(ERROR_EXPORT_CONFIG_OPENING_ERROR, TAG "TinyXML: Error opening config file: config.xml.");
 	}
 
-	if (!Setup(config, platformString))
+	if (!this->Setup(&config, platformString))
 	{
 		Error(ERROR_EXPORT_CONFIG_PARAM, TAG "Error reading configuration file - check your parameters.");
 	}
@@ -251,6 +297,7 @@ bool Exporter::Process(const char *configfile, const char *xmlfile, const char *
 
 	this->CompileStrings();
 	this->CompileResources();
+	Log(TAG "Compiling objects... wait.");
 	this->CompileObjects();
 
 	// Create Output files
@@ -1269,31 +1316,42 @@ void Exporter::CreateObjects(TiXmlDocument *doc)
 			break;
 		}
 
+		Group *g = NULL;
 		// multiple groups here
-
-		const char *groupName = (*object)["group"];
-		if (groupName)
+		if (this->IsUnified())
 		{
-			Group *g = pGroupManager->Get(groupName);
+			g = pGroupManager->Get("data");
 			if (!g)
 			{
-				g = new Group(groupName);
+				g = new Group("data");
 				pGroupManager->Add(g);
 			}
 			g->AddObject(obj);
-
-			// packing .sprite and .audio only
-//#if COMPILE_RESOURCE == 1
-			if (e->IsPackageResourcesEnabled())
+		}
+		else
+		{
+			const char *groupName = (*object)["group"];
+			if (groupName)
 			{
-				ResourceMapIterator it = obj->GetFirstResource();
-				for (; it != obj->GetLastResource(); ++it)
+				g = pGroupManager->Get(groupName);
+				if (!g)
 				{
-					IResource *res = ((*it).second);
-					g->AddResource(res);
+					g = new Group(groupName);
+					pGroupManager->Add(g);
 				}
+				g->AddObject(obj);
 			}
-//#endif
+		}
+
+		// packing .sprite and .audio only
+		if (g && e->IsPackageResourcesEnabled())
+		{
+			ResourceMapIterator it = obj->GetFirstResource();
+			for (; it != obj->GetLastResource(); ++it)
+			{
+				IResource *res = ((*it).second);
+				g->AddResource(res);
+			}
 		}
 
 	END_ITERATE_XML_NODES2(object, (*doc)("root")("objects")("object"))
@@ -1331,7 +1389,7 @@ void Exporter::CompileResources()
 
 	for (; it != end; ++it)
 	{
-		Log(TAG "Language: %s", (*it).first);
+		Log(TAG "Compiling resources for language: %s. Wait...", (*it).first);
 		ResourceMap mapResources = (*it).second;
 
 		ResourceMapIterator itr = mapResources.begin();

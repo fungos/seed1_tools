@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="particle-viewer"
 	ProjectGUID="{93075348-E351-4FC4-A7E7-26240F1B00B0}"
 	RootNamespace="dra_w32"
@@ -29,7 +29,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Copying Seed.dll to SDL workdir"
-				CommandLine="copy %SEEDSDK%\seed\bin\debug\dynamic\vs8\Seed.dll %SEEDSDK%\seedtools\particle-viewer\workdir"
+				CommandLine="copy &quot;%SEEDSDK%\seed\bin\debug\dynamic\vs8\Seed.dll&quot; &quot;%SEEDSDK%\seedtools\particle-viewer\workdir&quot;"
 				Outputs="."
 			/>
 			<Tool
@@ -111,7 +111,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Copying Seed.dll to SDL workdir"
-				CommandLine="copy %SEEDSDK%\seed\bin\release\dynamic\vs8\Seed.dll %SEEDSDK%\seedtools\particle-viewer\workdir"
+				CommandLine="copy &quot;%SEEDSDK%\seed\bin\release\dynamic\vs8\Seed.dll&quot; &quot;%SEEDSDK%\seedtools\particle-viewer\workdir&quot;"
 				Outputs="."
 			/>
 			<Tool

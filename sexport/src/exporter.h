@@ -9,7 +9,6 @@
 #include <map>
 
 #include "config.h"
-#include "xml/tinyxml.h"
 #include "string.h"
 #include "iobject.h"
 #include "iresource.h"
@@ -49,6 +48,9 @@ typedef PackageVector::iterator	PackageVectorIterator;
 typedef std::map<int, bfs::path> InputPathMap;
 typedef InputPathMap::iterator	InputPathMapIterator;
 
+class TiXmlNode;
+class TiXmlDocument;
+
 class Exporter
 {
 	friend class Audio;
@@ -63,7 +65,7 @@ class Exporter
 		Exporter();
 		~Exporter();
 
-		bool Setup(TiXmlDocument doc, const char *platform);
+		bool Setup(TiXmlDocument *doc, const char *platform);
 
 	private:
 		bool bInitialized;
@@ -71,6 +73,7 @@ class Exporter
 		bool bPackages;
 		bool bCompression;
 		bool bPackageResources;
+		bool bUnified;
 
 		u8	iAlignment;
 
@@ -148,7 +151,7 @@ class Exporter
 		void WriteFileList();
 		void WriteStringList();
 
-		bool Process(const char *configfile, const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources);
+		bool Process(const char *configfile, const char *xmlfile, const char *platformString, const bool rebuild, const bool packages, const u8 alignment, const bool compression, const bool add_resources, const bool unified);
 
 		bool CreateOutputPath();
 		bool IsModified(TiXmlNode *node, eResourceType type, const char *outputName);
@@ -183,6 +186,11 @@ class Exporter
 		{
 			return bPackageResources;
 		}
+
+        inline bool IsUnified() const
+        {
+            return bUnified;
+        }
 
 		static Exporter instance;
 };

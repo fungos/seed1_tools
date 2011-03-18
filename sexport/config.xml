@@ -1,20 +1,20 @@
 <sexport>
 	<wii>
-		<output path='C:\Techfront\SDK\Tools\sexport\data\output' />
-		<image input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' res_width='800' res_height='600' />
-		<music input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
-		<sound input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
+		<output path='$(SEEDSDK)\seedtools\sexport\data\output' />
+		<image input='$(SEEDSDK)\seedtools\sexport\data\input' res_width='800' res_height='600' />
+		<music input='$(SEEDSDK)\seedtools\sexport\data\input' />
+		<sound input='$(SEEDSDK)\seedtools\sexport\data\input' />
 	</wii>
 	<iph>
-		<output path='C:\Techfront\SDK\Tools\sexport\data\output' />
-		<image input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' res_width='640' res_height='480' />
-		<music input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
-		<sound input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
+		<output path='$(SEEDSDK)\seedtools\sexport\data\output' />
+		<image input='$(SEEDSDK)\seedtools\sexport\data\input' res_width='640' res_height='480' />
+		<music input='$(SEEDSDK)\seedtools\sexport\data\input' />
+		<sound input='$(SEEDSDK)\seedtools\sexport\data\input' />
 	</iph>
 	<sdl>
-		<output path='C:\Techfront\SDK\Tools\sexport\data\output' />
-		<image input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' res_width='800' res_height='600' />
-		<music input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
-		<sound input='C:\Techfront\SDK\Tools\sexport\data\input' header-type='string' />
+		<output path='$(SEEDSDK)\seedtools\sexport\data\output' />
+		<image input='$(SEEDSDK)\seedtools\sexport\data\input' res_width='800' res_height='600' />
+		<music input='$(SEEDSDK)\seedtools\sexport\data\input' />
+		<sound input='$(SEEDSDK)\seedtools\sexport\data\input' />
 	</sdl>
 </sexport>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioUserFile
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	ShowAllFiles="false"
 	>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
+			Name="Debug LGPL|Win32"
 			>
 			<DebugSettings
 				Command="$(TargetPath)"
@@ -34,11 +34,11 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
+			Name="Release LPGL|Win32"
 			>
 			<DebugSettings
 				Command="$(TargetPath)"
-				WorkingDirectory=""
+				WorkingDirectory="$(SEEDSDK)\seedtools\particle-viewer\workdir"
 				CommandArguments=""
 				Attach="false"
 				DebuggerType="3"
@@ -50,7 +50,7 @@
 				SQLDebugging=""
 				Environment=""
 				EnvironmentMerge="true"
-				DebuggerFlavor=""
+				DebuggerFlavor="0"
 				MPIRunCommand=""
 				MPIRunArguments=""
 				MPIRunWorkingDirectory=""

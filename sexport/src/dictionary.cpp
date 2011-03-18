@@ -212,7 +212,7 @@ void Dictionary::Process()
 				}
 			}
 
-			if (glyph > iLastChar)
+			if ((u32)glyph > iLastChar)
 				iLastChar = glyph;
 
 			iCounter++;

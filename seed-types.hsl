@@ -98,7 +98,7 @@ struct ImageObjectHeader
 
 struct FrameObjectHeader
 {
-	struct ObjectHeader block;
+	//struct ObjectHeader block;
 	u32 index;
 	u32 time;
 	u32 x;
@@ -114,7 +114,6 @@ struct FrameObjectHeader
 
 struct AnimationObjectHeader
 {
-	struct ObjectHeader block;
 	u32 index;
 	u32 frame_amount;
 	u32 flags;

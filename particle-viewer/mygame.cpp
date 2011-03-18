@@ -17,9 +17,6 @@ const char *table[] = {
 	"psi/particle9.psi"
 };
 
-ResourceManager glMyResources("mine");
-
-
 MyGame::MyGame()
 	: bFollow(FALSE)
 {
@@ -37,7 +34,7 @@ MyGame::~MyGame()
 
 void MyGame::Setup(int argc, char **argv)
 {
-	pFileSystem->SetWorkDirectory("");
+	pFileSystem->SetWorkDirectory(L"");
 }
 
 BOOL MyGame::Initialize()
@@ -54,7 +51,7 @@ BOOL MyGame::Initialize()
 	pSceneManager->Add(&cScene);
 	/* ------- Rendering Initialization ------- */
 
-	sptLogo.Load(SPT_BG, &glMyResources);
+	sptLogo.Load(SPT_BG);
 	sptLogo.SetPosition(0.0f, 0.0f);
 	sptLogo.SetVisible(TRUE);
 	sptLogo.GetTexture()->SetFilter(Seed::TextureFilterTypeMin, Seed::TextureFilterNearest);
@@ -66,7 +63,7 @@ BOOL MyGame::Initialize()
 	glStringPool.OverRunReport();
 	glStringPool.PrintSnapshot();
 
-	fntFont.Load(FNT_FONT, &glMyResources);
+	fntFont.Load(FNT_FONT);
 	fntFont.SetFilter(Seed::TextureFilterTypeMin, Seed::TextureFilterNearest);
 	fntFont.SetFilter(Seed::TextureFilterTypeMag, Seed::TextureFilterNearest);
 	lblPos.SetFont(&fntFont);
@@ -75,27 +72,32 @@ BOOL MyGame::Initialize()
 	pGuiManager->Add(&lblPos);
 	cScene.Add(&lblPos);
 
-	cEmitter.Load(table[0], &glMyResources);
+	cEmitter.Load(table[0]);
 	cEmitter.SetSprite(SPT_PARTICLE);
 	cEmitter.SetPriority(10);
 	cEmitter.SetPosition(0.5f, 0.5f);
+	cEmitter.SetParticlesBuffer(&cParticles[0], 500);
 	cEmitter.Stop();
 	cScene.Add(&cEmitter);
 	pParticleManager->Add(&cEmitter);
 
 	pInput->AddKeyboardListener(this);
 	pInput->AddPointerListener(this);
+	pSystem->AddListener(this);
 
 	return TRUE;
 }
 
-BOOL MyGame::Update()
+BOOL MyGame::Update(f32 dt)
 {
 	return TRUE;
 }
 
 BOOL MyGame::Shutdown()
 {
+	cEmitter.Unload();
+	fntFont.Unload();
+	sptLogo.Unload();
 	return IGameApp::Shutdown();
 }
 
@@ -114,9 +116,9 @@ void MyGame::OnInputKeyboardRelease(const EventInputKeyboard *ev)
 		if (v >= 0 && v < 9)
 		{
 			cEmitter.Unload();
-			cEmitter.Load(table[v], &glMyResources);
+			cEmitter.Load(table[v]);
 			cEmitter.SetSprite(SPT_PARTICLE);
-			cEmitter.Play();	
+			cEmitter.Play();
 		}
 	}
 	else
@@ -169,3 +171,7 @@ void MyGame::OnInputPointerMove(const EventInputPointer *ev)
 	}
 }
 
+void MyGame::OnSystemShutdown(const EventSystem *ev)
+{
+	pSystem->Shutdown();
+}

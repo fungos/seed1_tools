@@ -17,7 +17,7 @@ using namespace Seed;
 #define VIDEO_MODE
 #endif
 
-class MyGame : public IGameApp, public IEventInputKeyboardListener, public IEventInputPointerListener
+class MyGame : public IGameApp, public IEventInputKeyboardListener, public IEventInputPointerListener, public IEventSystemListener
 {
 	public:
 		MyGame();
@@ -25,7 +25,7 @@ class MyGame : public IGameApp, public IEventInputKeyboardListener, public IEven
 
 		virtual void Setup(int argc, char **argv);
 		virtual BOOL Initialize();
-		virtual BOOL Update();
+		virtual BOOL Update(f32 dt);
 		virtual BOOL Reset();
 		virtual BOOL Shutdown();
 	
@@ -36,6 +36,9 @@ class MyGame : public IGameApp, public IEventInputKeyboardListener, public IEven
 		virtual void OnInputPointerPress(const EventInputPointer *ev);
 		virtual void OnInputPointerRelease(const EventInputPointer *ev);
 		virtual void OnInputPointerMove(const EventInputPointer *ev);
+
+		// IEventSystemListener
+		virtual void OnSystemShutdown(const EventSystem *ev);
 
 	private:
 		SEED_DISABLE_COPY(MyGame);
@@ -50,6 +53,7 @@ class MyGame : public IGameApp, public IEventInputKeyboardListener, public IEven
 		String		strPos;
 
 		ParticleEmitter cEmitter;
+		Particle	cParticles[500];
 		BOOL		bFollow;
 		BOOL		bLinear;
 };

@@ -81,9 +81,8 @@ void Font::Write(FILE *fp, Exporter *e)
 	//fo.language = pPlatform->Swap32(language);
 
 	fwrite(&fo, sizeof(FontObjectHeader), 1, fp);
-	fprintf(stdout, "ID: %d File: %s\n", pCache->GetFilenameId(this->cSprite.string().c_str()), this->cSprite.string().c_str());
-
-	fprintf(stdout, "WRITE FONT\n\n\n\n");
+	//debug- verbose?
+	//fprintf(stdout, "ID: %d File: %s\n", pCache->GetFilenameId(this->cSprite.string().c_str()), this->cSprite.string().c_str());
 
 	// by filename
 	//fprintf(fp, "%s", pFileSystem->GetRelativePath(this->cSprite, e->GetOutputPath()).string().c_str());
