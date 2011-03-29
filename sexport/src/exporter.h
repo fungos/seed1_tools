@@ -15,6 +15,7 @@
 #include "object/sprite.h"
 #include "object/font.h"
 #include "object/button.h"
+#include "object/map2d.h"
 #include "resource/image.h"
 #include "resource/music.h"
 #include "resource/sound.h"
@@ -97,6 +98,7 @@ class Exporter
 
 		void CreateFrames(Animation *anim, TiXmlNode *node);
 		void CreateAnimations(Sprite *spt, TiXmlNode *node);
+		void CreateMapLayers(Map2D *map, TiXmlNode *node);
 
 		s32 GetStringId(const char *str);
 		const StringVector &GetStringVector() const
@@ -124,6 +126,7 @@ class Exporter
 		IObject *CreateObjectButton(TiXmlNode *node);
 		IObject *CreateObjectMusic(TiXmlNode *node);
 		IObject *CreateObjectSound(TiXmlNode *node);
+		IObject *CreateObjectMap(TiXmlNode *node);
 		void CreateObjects(TiXmlDocument *doc);
 		void CompileObjects();
 		void WriteObjects();
@@ -187,10 +190,10 @@ class Exporter
 			return bPackageResources;
 		}
 
-        inline bool IsUnified() const
-        {
-            return bUnified;
-        }
+		inline bool IsUnified() const
+		{
+			return bUnified;
+		}
 
 		static Exporter instance;
 };

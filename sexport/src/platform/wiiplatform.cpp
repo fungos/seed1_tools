@@ -18,6 +18,7 @@
 #define PLATFORM_WII_OUTPUT_SOUND_EXT			".sound"
 #define PLATFORM_WII_OUTPUT_MUSIC_EXT			".music"
 #define PLATFORM_WII_OUTPUT_MASK_EXT			".bitmask"
+#define PLATFORM_WII_OUTPUT_MAP_EXT					".map"
 
 #define PLATFORM_WII_INPUT_IMG_EXT			".tga"
 #define PLATFORM_WII_INPUT_SOUND_EXT		".aif"
@@ -786,7 +787,7 @@ bfs::path WiiPlatform::GetInputPath(const IResource *res) const
 			}
 			else
 			{
-				Error(ERROR_FILE_NOT_FOUND, "Input: Mask file %s/%s.tga not found at %s", tmp.string().c_str(), res->GetFilename());
+				Error(ERROR_FILE_NOT_FOUND, "Input: Mask file %s.tga not found at %s", tmp.string().c_str(), res->GetFilename());
 			}
 		}
 		break;
@@ -826,9 +827,9 @@ bfs::path WiiPlatform::GetOutputPath(const IObject *obj) const
 		}
 		break;
 
-		case OBJECT_BUTTON:
+		case OBJECT_SOUND:
 		{
-			out = out + PLATFORM_WII_OUTPUT_BUTTON_EXT;
+			out = out + PLATFORM_WII_OUTPUT_SOUND_EXT;
 		}
 		break;
 
@@ -838,20 +839,26 @@ bfs::path WiiPlatform::GetOutputPath(const IObject *obj) const
 		}
 		break;
 
-		case OBJECT_SOUND:
-		{
-			out = out + PLATFORM_WII_OUTPUT_SOUND_EXT;
-		}
-		break;
-
 		case OBJECT_SPRITE:
 		{
 			out = out + PLATFORM_WII_OUTPUT_SPRITE_EXT;
 		}
 		break;
 
+		case OBJECT_BUTTON:
+		{
+			out = out + PLATFORM_WII_OUTPUT_BUTTON_EXT;
+		}
+		break;
+
+		case OBJECT_MAP:
+		{
+			out = out + PLATFORM_WII_OUTPUT_MAP_EXT;
+		}
+		break;
+
 		default:
-			Error(ERROR_EXPORT_OBJECT_INVALID_TYPE, "WARNING: Object type not known for object %s.", obj->GetName());
+			Error(ERROR_EXPORT_OBJECT_INVALID_TYPE, "WARNING: Object type %d not known for object %s.", obj->GetType(), out.c_str());
 		break;
 	}
 
@@ -871,7 +878,7 @@ bfs::path WiiPlatform::GetInputPath(const IObject *obj) const
 		case OBJECT_FONT:
 		{
 			tmp = e->GetInputPath(RESOURCE_IMAGE);
-			inp = inp + PLATFORM_WII_INPUT_IMG_EXT;
+			inp = inp + PLATFORM_WII_INPUT_IMG_EXT; // PLATFORM_WII_INPUT_FONT_EXT ??????
 		}
 		break;
 

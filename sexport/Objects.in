@@ -12,6 +12,7 @@ OBJECTS = ./src/args.o \
 ./src/object/button.o \
 ./src/object/font.o \
 ./src/object/sprite.o \
+./src/object/map2d.o \
 ./src/package.o \
 ./src/platform/iphplatform.o \
 ./src/platform/sdlplatform.o \

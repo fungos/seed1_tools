@@ -28,6 +28,12 @@
 	#define INVALID_PATH_SEPARATOR	'\\'
 #endif
 
+#define VECTOR_POD_DEF(type) typedef std::vector<type> type##Vector; \
+							 typedef type##Vector::iterator type##Iterator;
+
+#define VECTOR_PTR_DEF(type) typedef std::vector<type *> type##Vector; \
+							 typedef type##Vector::iterator type##Iterator;
+
 #define GAME_PATH_SEPARATOR 	'/'
 #define GAME_PATH_SEPARATOR_STR "/"
 
@@ -199,10 +205,13 @@ enum ExitCodes
 	ERROR_EXPORT_BUTTON_MISSING_ATTRIB			= 170,
 	ERROR_EXPORT_BUTTON_SPRITE_NOT_FOUND		= 171,
 	ERROR_EXPORT_STRING_MISSING_ATTRIB			= 172,
+	// Map Object Related
+	ERROR_EXPORT_MAP_MISSING_ATTRIB				= 200,
+	ERROR_EXPORT_LAYER_MISSING_ATTRIB			= 210,
 	// Generic Objects
-	ERROR_EXPORT_OBJECT_NOT_FOUND				= 200,
-	ERROR_EXPORT_OBJECT_MISSING_TYPE			= 201,
-	ERROR_EXPORT_OBJECT_INVALID_TYPE			= 202,
+	ERROR_EXPORT_OBJECT_NOT_FOUND				= 400,
+	ERROR_EXPORT_OBJECT_MISSING_TYPE			= 401,
+	ERROR_EXPORT_OBJECT_INVALID_TYPE			= 402,
 	// Instancing / constructor
 	ERROR_CREATING_OBJECT						= 500,
 	// File related

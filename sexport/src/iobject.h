@@ -22,6 +22,8 @@ enum eObjectType
 	OBJECT_SOUND 		= 0x40,
 	OBJECT_FONT 		= 0x80,
 	OBJECT_BUTTON 		= 0x100,
+
+	OBJECT_MAP			= 0x1000,
 };
 
 

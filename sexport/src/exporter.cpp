@@ -38,14 +38,22 @@ char *ReplaceVariable(const char *input, const char *invar)
 	const char *var = strstr(input, xmlVar);
 	if (var)
 	{
-	    opath = (char *)malloc(sizeof(char) * size);
+		opath = (char *)malloc(sizeof(char) * size);
 		assert(opath != NULL);
 		memset(opath, '\0', size);
 
 		const char *envVar = getenv(invar);
-		strncpy(opath, input, input - var);
-		strncat(opath, envVar, size - 1 - strlen(opath));
-		strncat(opath, &var[strlen(xmlVar)], size - 1 - strlen(opath));
+
+		if (envVar)
+		{
+			strncpy(opath, input, input - var);
+			strncat(opath, envVar, size - 1 - strlen(opath));
+			strncat(opath, &var[strlen(xmlVar)], size - 1 - strlen(opath));
+		}
+		else
+		{
+			Log("Environment variable '%s' not found!", invar);
+		}
 	}
 
 	return opath;
@@ -61,6 +69,7 @@ Exporter::Exporter()
 	, bPackages(false)
 	, bCompression(false)
 	, bPackageResources(false)
+	, bUnified(false)
 	, iAlignment(0)
 	, mapResourcesLang()
 	, mapDictionaries()
@@ -287,7 +296,7 @@ bool Exporter::Process(const char *configfile, const char *xmlfile, const char *
 
 	pCache->AddFilename(dictPath.string().c_str());
 	pCache->Load();
-	fprintf(stdout, "LOAD CACHE!");
+	//fprintf(stdout, "LOAD CACHE!");
 	pStringCache->Load();
 	Log(TAG "Creating assets.");
 	this->CreateStrings(&doc);
@@ -342,6 +351,8 @@ eObjectType Exporter::GetObjectType(const char *str)
 		return OBJECT_FONT;
 	else if (strcasecmp(str, "button") == 0)
 		return OBJECT_BUTTON;
+	else if (strcasecmp(str, "map2d") == 0)
+		return OBJECT_MAP;
 
 	return OBJECT_NONE;
 }
@@ -1262,6 +1273,157 @@ IObject *Exporter::CreateObjectMusic(TiXmlNode *object)
 	return music;
 }
 
+void Exporter::CreateMapLayers(Map2D *map, TiXmlNode *node)
+{
+	BEGIN_ITERATE_XML_NODES2(object, (*node)("layer"))
+
+		const char *name = (*object)["name"];
+		if (!name)
+		{
+			Error(ERROR_EXPORT_LAYER_MISSING_ATTRIB, TAG "A layer has no NAME.");
+		}
+
+		f32 opacity = 0;
+		bool visibility = true;
+		eLayerType type = LayerTypeTiled;
+
+		const char *tmp = (*object)["opacity"];
+		if (tmp)
+			opacity = atof(tmp);
+
+		tmp = (*object)["visible"];
+		if (tmp)
+			visibility = (strcasecmp(tmp, "true") == 0);
+
+		tmp = (*object)["type"];
+		if (tmp)
+			type = (strcasecmp(tmp, "tiled") == 0) ? LayerTypeTiled :
+				(strcasecmp(tmp, "object") == 0) ? LayerTypeObject : LayerTypeTileless;
+
+		IMapLayer *layer = NULL;
+		switch (type)
+		{
+			case LayerTypeTiled:
+			{
+				MapLayerTiled *l = new MapLayerTiled(name);
+
+				const char *text = object->ToElement()->GetText();
+				l->CreateTiles(text);
+
+				layer = l;
+			}
+			break;
+
+			case LayerTypeTileless:
+			{
+			}
+			break;
+
+			case LayerTypeObject:
+			{
+				MapLayerObject *l = new MapLayerObject(name);
+
+				BEGIN_ITERATE_XML_NODES2(item, (*object)("object"))
+					const char *objname = (*item)["name"];
+					if (!objname)
+					{
+						Error(ERROR_EXPORT_LAYER_MISSING_ATTRIB, TAG "An object from a layer type object has no NAME.");
+					}
+
+					const char *objtype = (*item)["type"];
+					if (!objtype)
+					{
+						Error(ERROR_EXPORT_LAYER_MISSING_ATTRIB, TAG "An object from a layer type object has no TYPE.");
+					}
+
+					const char *objprops = (*item)["properties"];
+
+					f32 x = 0;
+					f32 y = 0;
+					f32 w = 0;
+					f32 h = 0;
+
+					const char *tmp = (*item)["x"];
+					if (tmp)
+						x = atof(tmp);
+
+					tmp = (*item)["y"];
+					if (tmp)
+						y = atof(tmp);
+
+					tmp = (*item)["width"];
+					if (tmp)
+						w = atof(tmp);
+
+					tmp = (*item)["height"];
+					if (tmp)
+						h = atof(tmp);
+
+					MapObject *obj = new MapObject(objname);
+					obj->SetType(objtype);
+					if (objprops)
+						obj->SetProperties(objprops);
+					obj->SetPosition(x, y);
+					obj->SetSize(w, h);
+					l->Add(obj);
+
+				END_ITERATE_XML_NODES2(item, (*node)("object"))
+				layer = l;
+			}
+			break;
+
+			default:
+			break;
+		}
+
+		layer->SetOpacity(opacity);
+		layer->SetVisibility(visibility);
+		map->Add(layer);
+
+	END_ITERATE_XML_NODES2(object, (*node)("layer"))
+}
+
+IObject *Exporter::CreateObjectMap(TiXmlNode *object)
+{
+	const char *name = (*object)["name"];
+	if (!name)
+	{
+		Error(ERROR_EXPORT_MAP_MISSING_ATTRIB, TAG "Map has no NAME.");
+	}
+
+	Map2D *map = new Map2D(name);
+
+	u32 tw = 0;
+	u32 th = 0;
+	u32 w = 0;
+	u32 h = 0;
+
+	const char *tmp = (*object)["width"];
+	if (tmp)
+		w = atoi(tmp);
+
+	tmp = (*object)["height"];
+	if (tmp)
+		h = atoi(tmp);
+
+	tmp = (*object)["tile_width"];
+	if (tmp)
+		tw = atoi(tmp);
+
+	tmp = (*object)["tile_height"];
+	if (tmp)
+		th = atoi(tmp);
+
+	map->SetSize(w, h);
+	map->SetTileSize(tw, th);
+	map->SetRebuild(true);
+
+	this->CreateMapLayers(map, object);
+	vecObjects.push_back(map);
+
+	return map;
+}
+
 void Exporter::CreateObjects(TiXmlDocument *doc)
 {
 	// Create Objects
@@ -1308,6 +1470,12 @@ void Exporter::CreateObjects(TiXmlDocument *doc)
 			case OBJECT_SOUND:
 			{
 				obj = this->CreateObjectSound(object);
+			}
+			break;
+
+			case OBJECT_MAP:
+			{
+				obj = this->CreateObjectMap(object);
 			}
 			break;
 
@@ -1638,6 +1806,18 @@ void Exporter::WriteHeaderFile(const char *xmlfile)
 				fprintf(fp, "#define BTN_%s\t\t_F(%d)\n", s, fileId);
 				fprintf(fp, "#define BTN_%s_ID\t\t%d\n", s, fileId);
 				fprintf(fp, "#define BTN_ID_%s\t\t%d\n", s, btn->GetId());
+
+				free(s);
+			}
+			break;
+
+			case OBJECT_MAP:
+			{
+				char *s = to_upper(get_filename(obj->GetName()));
+
+				bfs::path relativePath = pFileSystem->GetRelativePath(obj->GetOutputPath(), e->GetOutputPath());
+				fprintf(fp, "#define MAP_%s\t\t_F(%d)\n", s, fileId);
+				fprintf(fp, "#define MAP_%s_ID\t\t%d\n", s, fileId);
 
 				free(s);
 			}

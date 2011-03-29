@@ -21,6 +21,7 @@
 #define PLATFORM_IPH_OUTPUT_MUSIC_EXT			".music"
 #define PLATFORM_IPH_OUTPUT_BUTTON_EXT			".button"
 #define PLATFORM_IPH_OUTPUT_MASK_EXT			".bitmask"
+#define PLATFORM_IPH_OUTPUT_MAP_EXT					".map"
 
 #define PLATFORM_IPH_INPUT_FONT_EXT			".tga"
 #define PLATFORM_IPH_INPUT_IMG_EXT			".png"
@@ -508,6 +509,12 @@ bfs::path IphPlatform::GetOutputPath(const IObject *obj) const
 		case OBJECT_BUTTON:
 		{
 			out = out + PLATFORM_IPH_OUTPUT_BUTTON_EXT;
+		}
+		break;
+
+		case OBJECT_MAP:
+		{
+			out = out + PLATFORM_IPH_OUTPUT_MAP_EXT;
 		}
 		break;
 
