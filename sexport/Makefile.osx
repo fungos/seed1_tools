@@ -1,0 +1,35 @@
+PROJECT=sexporter.osx
+
+include Objects.in
+
+TARGET = bin/$(PROJECT)
+
+# Flags/Compilers
+GCC = g++
+CDEFS = -D LINUX -D SDL -D _DEBUG -D _SECURITY -D POSIX -D BOOST_FILESYSTEM_VERSION=2
+CFLAGS = -Wall -arch i386 -fPIC -g `sdl-config --cflags` $(CDEFS)
+LFLAGS = -arch i386 `sdl-config --libs` -L/bin -L/opt/local/lib
+CPPFLAGS = -Weffc++  $(CFLAGS) -I/opt/local/include
+LIBS = -lSDLmain -lSDL_image -lboost_filesystem-mt -lboost_system-mt
+
+# targets...
+
+all:	$(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(GCC) -o $(TARGET) $(OBJECTS) $(LFLAGS) $(LIBS)
+
+
+valgrind:
+	valgrind --leak-check=full $(TARGET)
+
+run:
+	$(TARGET)
+
+test:
+	cd tests ; ./run.sh ; cd ..
+#
+# Cleanup
+#
+clean:
+	rm -f $(OBJECTS) $(TARGET) *~ src/*~ core src/inet/*~ src/inet/enet/*~ src/gui/*~ src/sdl/*~
