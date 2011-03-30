@@ -46,7 +46,7 @@ const char *StringCache::GetStringById(u32 id)
 
 void StringCache::Dump()
 {
-	FILE *fp = fopen("StringCache.txt", "wt+");
+	FILE *fp = fopen("stringcache.txt", "wt+");
 	s32 s = (s32)pStringCache->Size();
 	for (s32 i = 0; i < s; i++)
 	{
@@ -61,7 +61,7 @@ void StringCache::Load()
 	if (!this->bRebuild)
 	{
 		char entry[1024];
-		FILE *fp = fopen("StringCache.txt", "rt");
+		FILE *fp = fopen("stringcache.txt", "rt");
 		if (fp)
 		{
 			while (!feof(fp))

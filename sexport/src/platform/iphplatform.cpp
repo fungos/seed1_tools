@@ -139,7 +139,7 @@ void IphPlatform::Compile(Image *obj)
 	std::ostringstream cmd;
 	cmd << PLATFORM_IPH_COPY_COMMAND << " \"" << obj->GetInputPath().directory_string() << "\"";
 	cmd << " \"" << obj->GetOutputPath().directory_string() << "\"";
-	cmd << " " << PLATFORM_IPH_COPY_OVERWRITE_PARAM << " > copy.log";
+	cmd << " " << PLATFORM_IPH_COPY_OVERWRITE_PARAM;
 	RUN_COMMAND(cmd);
 
 	DebugInfo("IMAGE: %s\n", cmd.str().c_str());
