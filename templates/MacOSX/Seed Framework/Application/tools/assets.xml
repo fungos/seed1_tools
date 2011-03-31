@@ -1,0 +1,14 @@
+<root>
+	<strings>
+	</strings>
+	<resources>
+		<resource type='image' filename='seed_logo' name='seed_logo' />
+	</resources>
+	<objects>
+		<object type='sprite' name='seed_logo' group='template'>
+			<animation name='default'>
+				<frame resource='seed_logo' />
+			</animation>
+		</object>
+	</objects>
+</root>

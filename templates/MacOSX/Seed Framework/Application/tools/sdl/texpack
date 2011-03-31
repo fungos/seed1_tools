@@ -1,0 +1,14 @@
+#!/bin/bash
+
+BIT64=`uname -m`
+PLATFORM=`uname`
+
+if [ "$PLATFORM" == 'Linux' ]; then
+	if [ "$BIT64" == 'x86_64' ]; then
+		$0.lin64 "$@"
+	else
+		$0.lin "$@"
+	fi
+else
+	$0.osx "$@"
+fi
