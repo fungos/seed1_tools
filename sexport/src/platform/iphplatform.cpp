@@ -378,7 +378,7 @@ bfs::path IphPlatform::GetOutputPath(const IResource *res) const
 			}
 			else
 			{
-				Error(ERROR_FILE_NOT_FOUND, "Output: File %s.png or %s.tga not found at %s", res->GetFilename(), res->GetFilename(), inp.string().c_str());
+				Error(ERROR_FILE_NOT_FOUND, "Output: File %s.png not found at %s trying (%s)", res->GetFilename(), inp.string().c_str(), f.string().c_str());
 			}
 		}
 		break;

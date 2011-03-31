@@ -124,8 +124,10 @@ bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 	char *opath = NULL;
 	const char *path = NULL;
 
-	opath = ReplaceVariable(outputPath, "SEEDSDK");
+	opath = ReplaceVariable(outputPath, "PROJECT");
+	if (!opath) opath = ReplaceVariable(outputPath, "SEEDSDK");
 	path = (opath) ? opath : outputPath;
+	
 	this->bfsOutputPath = path;
 	free(opath);
 	if (!bfs::is_directory(bfsOutputPath))
@@ -158,8 +160,10 @@ bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 	pPlatform->SetHeight(atoi(imageScreenHeight));
 
 	char *ipath = NULL;
-	ipath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+	ipath = ReplaceVariable(inputSpecificPath, "PROJECT");
+	if (!ipath) ipath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
 	path = (ipath) ? ipath : inputSpecificPath;
+	
 	this->mapInputPath[RESOURCE_IMAGE] = bfs::path(path);
 	free(ipath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_IMAGE]))
@@ -176,8 +180,10 @@ bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 	}
 
 	char *spath = NULL;
-	spath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+	spath = ReplaceVariable(inputSpecificPath, "PROJECT");
+	if (!spath) spath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
 	path = (spath) ? spath : inputSpecificPath;
+	
 	this->mapInputPath[RESOURCE_SOUND] = bfs::path(path);
 	free(spath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_SOUND]))
@@ -194,8 +200,10 @@ bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 	}
 
 	char *mpath = NULL;
-	mpath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
+	mpath = ReplaceVariable(inputSpecificPath, "PROJECT");
+	if (!mpath) mpath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
 	path = (mpath) ? mpath : inputSpecificPath;
+	
 	this->mapInputPath[RESOURCE_MUSIC] = bfs::path(path);
 	free(mpath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_MUSIC]))

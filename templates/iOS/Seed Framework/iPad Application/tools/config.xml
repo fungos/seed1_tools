@@ -1,0 +1,20 @@
+<sexport>
+	<wii>
+		<output path="$(PROJECT)/workdir/data" />
+		<image input="$(PROJECT)/assets" res_height="600" res_width="800" />
+		<music input="$(PROJECT)/assets" />
+		<sound input="$(PROJECT)/assets" />
+	</wii>
+	<iph>
+		<output path="$(PROJECT)/workdir/data" />
+		<image input="$(PROJECT)/assets" res_height="768" res_width="1024" />
+		<music input="$(PROJECT)/assets" />
+		<sound input="$(PROJECT)/assets" />
+	</iph>
+	<sdl>
+		<output path="$(PROJECT)/workdir/data" />
+		<image input="$(PROJECT)/assets" res_height="600" res_width="800" />
+		<music input="$(PROJECT)/assets" />
+		<sound input="$(PROJECT)/assets" />
+	</sdl>
+</sexport>
