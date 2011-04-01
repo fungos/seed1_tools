@@ -6,8 +6,22 @@ SEEDSDK_PATH="/media/d/SDK"
 MYID=`id -u`
 
 TOOL_PKG="aptitude"
-TOOL_GCC="gcc"
+TOOL_GCC="g++"
 TOOL_GIT="git"
+
+PACKAGES_GCC="gcc"
+PACKAGES_GIT="git"
+PACKAGES_SDL="libsdl-dev libsdl-image1.2-dev"
+
+PROG_SDL=$(cat <<EOF
+#include <SDL/SDL.h>
+
+int main(int argc, char **argv)
+{
+	SDL_Init(0);
+	return 1;
+}
+EOF)
 
 echo "Welcome to the Seed Framework $PLATFORM_NAME installer!"
 
@@ -15,23 +29,25 @@ echo "Welcome to the Seed Framework $PLATFORM_NAME installer!"
 #	echo "Not root."
 #fi
 
-function InstallPackage()
+function InstallPackages()
 {
-	echo "- Trying to install $1 package, please enter the root password if needed."
-	sudo $TOOL_APT install $1
+	echo "- Trying to install $* package(s), please enter the root password if needed."
+	sudo $TOOL_PKG install $*
 }
 
 function CheckTools()
 {
 	echo "1. Checking tools..."
-	type -P $TOOL_PKG &>/dev/null || { echo "$TOOL_PKG not found, is your distro supported? Please make a contribution and update this script!"; exit 1; }
-	type -P $TOOL_GCC &>/dev/null || { echo "$TOOL_GCC not found."; InstallPackage gcc; } 
-	type -P $TOOL_GIT &>/dev/null || { echo "$TOOL_GIT not found."; InstallPackage git; }
+	type -P $TOOL_PKG &> /dev/null || { echo "$TOOL_PKG not found, is your distro supported? Please make a contribution and update this script!"; exit 1; }
+	type -P $TOOL_GCC &> /dev/null || { echo "$TOOL_GCC not found."; InstallPackages $PACKAGES_GCC; } 
+	type -P $TOOL_GIT &> /dev/null || { echo "$TOOL_GIT not found."; InstallPackages $PACKAGES_GIT; }
 }
 
 function CheckDependency()
 {
 	echo "2. Checking dependency..."
+	echo $PROG_SDL > /tmp/sftest.cpp
+	$TOOL_GCC `sdl-config --cflags` /tmp/sftest.cpp -o a.out `sdl-config --libs` &> /dev/null || { echo "SDL Library not found!"; InstallPackages $PACKAGES_SDL; }
 }
 
 function InstallDependency()
