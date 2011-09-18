@@ -127,6 +127,7 @@ enum ePlatformCode
 	PLATFORM_CODE_MAC,
 	PLATFORM_CODE_NIX,
 	PLATFORM_CODE_PSP,
+	PLATFORM_CODE_PS3,
 };
 
 struct ObjectHeader
