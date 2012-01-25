@@ -137,8 +137,8 @@ void IphPlatform::Compile(Image *obj)
 	bfs::create_directories(obj->GetOutputPath().parent_path());
 
 	std::ostringstream cmd;
-	cmd << PLATFORM_IPH_COPY_COMMAND << " \"" << obj->GetInputPath().directory_string() << "\"";
-	cmd << " \"" << obj->GetOutputPath().directory_string() << "\"";
+	cmd << PLATFORM_IPH_COPY_COMMAND << " \"" << obj->GetInputPath().string() << "\""; // directory_string
+	cmd << " \"" << obj->GetOutputPath().string() << "\""; // directory_string
 	cmd << " " << PLATFORM_IPH_COPY_OVERWRITE_PARAM;
 	RUN_COMMAND(cmd);
 
@@ -159,7 +159,7 @@ void IphPlatform::Compile(Font *obj)
 	bfs::path toolPath(this->GetName());
 	toolPath /= PLATFORM_IPH_FONTGEN_COMMAND;
 
-	cmd << toolPath.file_string() << " \"";
+	cmd << toolPath.string() << " \""; // file_string
 	cmd << obj->GetInputPath() << "\"";
 	cmd << " \"" << obj->GetName() << "\" " << obj->GetCharacters() << " ";
 	cmd << obj->GetGlyphWidth() << " " << obj->GetGlyphHeight();
@@ -257,7 +257,7 @@ bfs::path IphPlatform::ProcessFont(Font *obj, IResource *res, u32 totalChars)
 	bfs::path toolPath(this->GetName());
 	toolPath /= PLATFORM_IPH_FONTGEN_COMMAND;
 
-	cmd << toolPath.file_string() << " \"";
+	cmd << toolPath.string() << " \""; // file_string
 	//cmd << res->GetInputPath() << "\"";
 	const char *lang = res->GetLanguage();
 	cmd << e->GetInputPath(RESOURCE_IMAGE).string() << "/l10n/" << lang << "/" << obj->GetName() << "_ext.tga\" ";

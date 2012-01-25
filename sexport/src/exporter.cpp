@@ -283,10 +283,10 @@ bool Exporter::Process(const char *configfile, const char *xmlfile, const char *
 	InputPathMapIterator it = mapInputPath.begin();
 	InputPathMapIterator end = mapInputPath.end();
 	for (; it != end; ++it)
-		fprintf(stdout, "\t%s\n", ((*it).second).directory_string().c_str());
+		fprintf(stdout, "\t%s\n", ((*it).second).string().c_str()); // directory_string
 	this->mapInputPath[RESOURCE_MASK] = this->mapInputPath[RESOURCE_IMAGE]; // So it wont be show at startup
 
-	fprintf(stdout, "Output: %s\n", bfsOutputPath.directory_string().c_str());
+	fprintf(stdout, "Output: %s\n", bfsOutputPath.string().c_str()); // directory_string
 
 	TiXmlDocument doc(xmlfile);
 	doc.LoadFile();

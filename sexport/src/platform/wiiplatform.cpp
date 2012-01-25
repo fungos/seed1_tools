@@ -235,8 +235,8 @@ void WiiPlatform::Compile(Sprite *obj)
 		bfs::path inputTPL(foo.str());
 
 		cmd.str("");
-		//cmd << (wiiToolsPath / LZFTOOL).file_string() << " \"";
-		cmd << (wiiToolsPath / COMPRESSTOOL).file_string() << " \"";
+		//cmd << (wiiToolsPath / LZFTOOL).string() << " \""; // file_string
+		cmd << (wiiToolsPath / COMPRESSTOOL).string() << " \""; // file_string
 		cmd << foo.str();
 		cmd << "\" -o \"" << pathNewExtension << "\"";
 
@@ -281,7 +281,7 @@ void WiiPlatform::Compile(Image *obj)
 		output /= outStr;
 
 		std::ostringstream cmd;
-		cmd << tsfconv.file_string() << " -i " << "\"" << input << "\"";
+		cmd << tsfconv.string() << " -i " << "\"" << input << "\""; // file_string
 		cmd << " -o " << "\"" << output << "\"";
 		cmd << " -w " << tsfHeader.width << " -h " << tsfHeader.height << " -f " << tsfHeader.frames;
 		cmd << " -g " << tsfHeader.globalFrameTime;
@@ -308,7 +308,7 @@ void WiiPlatform::Compile(Image *obj)
 		tmp /= "tmp.tcs";
 
 		std::ostringstream cmd;
-		cmd << (wiiToolsPath / TEXCONV).file_string() << " " << tmp << " ";
+		cmd << (wiiToolsPath / TEXCONV).string() << " " << tmp << " "; // file_string
 		cmd << "\"" << obj->GetOutputPath() << "\"";
 
 		char script[256];
@@ -333,7 +333,7 @@ void WiiPlatform::Compile(Image *obj)
 			pathNewExtension.replace_extension(".lzf");
 
 			cmd.str("");
-			cmd << (wiiToolsPath / LZFTOOL).file_string() << " \"" << obj->GetOutputPath() << "\" \"" << pathNewExtension << "\"";
+			cmd << (wiiToolsPath / LZFTOOL).string() << " \"" << obj->GetOutputPath() << "\" \"" << pathNewExtension << "\""; // file_string
 
 			DebugInfo("CMD: %s\n", cmd.str().c_str());
 			cmdRetCode = system(cmd.str().c_str());
@@ -396,8 +396,8 @@ void WiiPlatform::Compile(MusicResource *obj)
 		musicLOutPath = e->GetOutputPath() / (musicL + std::string(".adpcm"));
 
 		std::ostringstream cmd;
-		//cmd << dspadpcm.file_string() << " -e -v ";
-		cmd << (wiiToolPath / DSPADPCM).file_string() << " -e -v ";
+		//cmd << dspadpcm.string() << " -e -v "; // file_string
+		cmd << (wiiToolPath / DSPADPCM).string() << " -e -v "; // file_string
 		cmd << "\"" << musicLInpPath << "\"" << " ";
 		cmd << musicLOutPath;
 
@@ -436,8 +436,8 @@ void WiiPlatform::Compile(MusicResource *obj)
 		musicROutPath = e->GetOutputPath() / (musicR + std::string(".adpcm"));
 
 		std::ostringstream cmd;
-		//cmd << dspadpcm.file_string() << " -e -v ";
-		cmd << (wiiToolPath / DSPADPCM).file_string() << " -e -v ";
+		//cmd << dspadpcm.string() << " -e -v "; // file_string
+		cmd << (wiiToolPath / DSPADPCM).string() << " -e -v "; // file_string
 		cmd << "\"" << musicRInpPath << "\"" << " ";
 		cmd << musicROutPath;
 
@@ -449,7 +449,7 @@ void WiiPlatform::Compile(MusicResource *obj)
 		bfs::path pathNewExtension = musicLOutPath;
 		pathNewExtension.replace_extension(".lzf");
 		cmd.str("");
-		cmd << (wiiToolPath / LZFTOOL).file_string() << " \"" << musicLOutPath << "\" \"" << pathNewExtension << "\"";
+		cmd << (wiiToolPath / LZFTOOL).string() << " \"" << musicLOutPath << "\" \"" << pathNewExtension << "\""; // file_string
 
 		DebugInfo("CMD: %s\n", cmd.str().c_str());
 		cmdRetCode = system(cmd.str().c_str());
@@ -462,7 +462,7 @@ void WiiPlatform::Compile(MusicResource *obj)
 		pathNewExtension = musicROutPath;
 		pathNewExtension.replace_extension(".lzf");
 		cmd.str("");
-		cmd << (wiiToolPath / LZFTOOL).file_string() << " \"" << musicROutPath << "\" \"" << pathNewExtension << "\"";
+		cmd << (wiiToolPath / LZFTOOL).string() << " \"" << musicROutPath << "\" \"" << pathNewExtension << "\""; // file_string
 
 		DebugInfo("CMD: %s\n", cmd.str().c_str());
 		cmdRetCode = system(cmd.str().c_str());
@@ -485,8 +485,8 @@ void WiiPlatform::Compile(SoundResource *obj)
 	bfs::path wiiToolPath(this->GetName());
 
 	std::ostringstream cmd;
-	//cmd << dspadpcm.file_string() << " -e -v " << "\"" << obj->GetInputPath() << "\"";
-	cmd << (wiiToolPath / DSPADPCM).file_string() << " -e -v " << "\"" << obj->GetInputPath() << "\"";
+	//cmd << dspadpcm.string() << " -e -v " << "\"" << obj->GetInputPath() << "\""; // file_string
+	cmd << (wiiToolPath / DSPADPCM).string() << " -e -v " << "\"" << obj->GetInputPath() << "\""; // file_string
 	cmd << " " << "\"" << obj->GetOutputPath() << "\"";
 	RUN_COMMAND(cmd);
 
@@ -495,7 +495,7 @@ void WiiPlatform::Compile(SoundResource *obj)
 		bfs::path pathNewExtension = obj->GetOutputPath();
 		pathNewExtension.replace_extension(".lzf");
 		cmd.str("");
-		cmd << (wiiToolPath / LZFTOOL).file_string() << " \"" << obj->GetOutputPath() << "\" \"" << pathNewExtension << "\"";
+		cmd << (wiiToolPath / LZFTOOL).string() << " \"" << obj->GetOutputPath() << "\" \"" << pathNewExtension << "\""; // file_string
 
 		DebugInfo("CMD: %s\n", cmd.str().c_str());
 		cmdRetCode = system(cmd.str().c_str());
@@ -517,7 +517,7 @@ void WiiPlatform::Compile(Font *obj)
 	bfs::path toolPath(this->GetName());
 	toolPath /= PLATFORM_WII_FONTGEN_COMMAND;
 
-	cmd << toolPath.file_string() << " \"";
+	cmd << toolPath.string() << " \""; // file_string
 	cmd << obj->GetInputPath() << "\"";
 	cmd << " \"" << obj->GetName() << "\" " << obj->GetCharacters();
 
@@ -553,7 +553,7 @@ void WiiPlatform::Compile(Font *obj)
 		bfs::path pathNewExtension = obj->GetOutputPath();
 		pathNewExtension.replace_extension(".lzf");
 		cmd.str("");
-		cmd << (wiiToolPath / LZFTOOL).file_string() << " \"" << obj->GetOutputPath() << "\" \"" << pathNewExtension << "\"";
+		cmd << (wiiToolPath / LZFTOOL).string() << " \"" << obj->GetOutputPath() << "\" \"" << pathNewExtension << "\""; // file_string
 
 		DebugInfo("CMD: %s\n", cmd.str().c_str());
 		cmdRetCode = system(cmd.str().c_str());
@@ -571,7 +571,7 @@ void WiiPlatform::Compile(Font *obj)
 		pathNewExtension.replace_extension(".lzf");
 
 		cmd.str("");
-		cmd << (wiiToolPath / LZFTOOL).file_string() << " \"" << fontSprite << "\" \"" << pathNewExtension << "\"";
+		cmd << (wiiToolPath / LZFTOOL).string() << " \"" << fontSprite << "\" \"" << pathNewExtension << "\""; // file_string
 
 		DebugInfo("CMD: %s\n", cmd.str().c_str());
 		cmdRetCode = system(cmd.str().c_str());
@@ -643,7 +643,7 @@ bfs::path WiiPlatform::ProcessFont(Font *obj, IResource *res, u32 totalChars)
 	bfs::path toolPath(this->GetName());
 	toolPath /= PLATFORM_WII_FONTGEN_COMMAND;
 
-	cmd << toolPath.file_string() << " \"";
+	cmd << toolPath.string() << " \""; // file_string
 	cmd << res->GetInputPath() << "\"";
 
 	const char *lang = res->GetLanguage();
