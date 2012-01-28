@@ -9,8 +9,8 @@ TARGET = bin/$(PROJECT)
 GCC = g++
 CDEFS = -D LINUX -D SDL -D _DEBUG -D _SECURITY -D POSIX
 CFLAGS = -Wall -fPIC -g `sdl-config --cflags` $(CDEFS)
-LFLAGS = `sdl-config --libs` -L/bin
-CPPFLAGS = -Weffc++ $(CFLAGS) -I/opt/local/include
+LFLAGS = `sdl-config --libs` -L/bin -Lboost/osx
+CPPFLAGS = -Weffc++ $(CFLAGS) -I/opt/local/include -I../../boost_1_48_0
 LIBS = -lSDL_image -lboost_filesystem-mt -lboost_system-mt
 
 # targets...
