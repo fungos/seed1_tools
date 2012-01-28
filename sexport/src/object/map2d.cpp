@@ -10,6 +10,95 @@
 
 #define TAG "[Sprite] "
 
+MapSpriteEntity::MapSpriteEntity(const char *name)
+	: fX(0.0f)
+	, fY(0.0f)
+	, fAngle(0.0f)
+	, fScale(0.0f)
+	, nBlendType(BlendNone)
+	, pxColor(0)
+	, bCollidable(FALSE)
+	, pSprite(NULL)
+{
+	if (!name)
+	{
+		Error(ERROR_CREATING_OBJECT, TAG "Map Sprite Entity without name.\n");
+	}
+
+	pStringCache->AddString(name);
+	pName = strdup(name);
+}
+
+MapSpriteEntity::~MapSpriteEntity()
+{
+	if (pName)
+		free(pName);
+
+	pName = NULL;
+}
+
+void MapSpriteEntity::Write(FILE *fp, Exporter *e)
+{
+	LayerSpriteEntityHeader hdr;
+	hdr.iNameId = pPlatform->Swap32(pStringCache->GetStringId(pName));
+	hdr.fPosX = pPlatform->Swapf32(fX);
+	hdr.fPosY = pPlatform->Swapf32(fY);
+	hdr.fAngle = pPlatform->Swapf32(fAngle);
+	hdr.fScale = pPlatform->Swapf32(fScale);
+	hdr.iBlendType = pPlatform->Swap32(nBlendType);
+	hdr.iColor = pPlatform->Swap32(pxColor);
+	hdr.iCollidable = pPlatform->Swap32(bCollidable);
+	hdr.iSpriteFileId = pPlatform->Swap32(0xffffffff);
+
+	if (pSprite)
+	{
+		std::string sfile(e->GetOutputPath().string());
+		sfile += "/";
+		sfile += pSprite;
+		sfile += ".sprite";
+
+		const char *file = sfile.c_str();
+		u32 fid = pCache->GetFilenameId(file);
+
+		//fwrite(sprite, strlen(sprite), 1, fp);
+		//fwrite(".sprite", strlen(".sprite")+1, 1, fp);
+		hdr.iSpriteFileId = pPlatform->Swap32(fid);
+	}
+
+	fwrite(&hdr, sizeof(LayerSpriteEntityHeader), 1, fp);
+}
+
+void MapSpriteEntity::SetPosition(f32 x, f32 y)
+{
+	fX = x;
+	fY = y;
+}
+
+void MapSpriteEntity::SetScale(f32 scale)
+{
+	fScale = scale;
+}
+
+void MapSpriteEntity::SetAngle(f32 ang)
+{
+	fAngle = ang;
+}
+
+void MapSpriteEntity::SetBlendType(eBlendType type)
+{
+	nBlendType = type;
+}
+
+void MapSpriteEntity::SetPixelColor(u8 r, u8 g, u8 b, u8 a)
+{
+	pxColor = (r << 24) | (g << 16) | (b << 8) | (a);
+}
+
+void MapSpriteEntity::SetCollidable(BOOL b)
+{
+	bCollidable = b;
+}
+
 MapObject::MapObject(const char *name)
 	: pType(NULL)
 	, pProps(NULL)
@@ -200,6 +289,43 @@ void MapLayerTiled::WriteData(FILE *fp, Exporter *e)
 		fwrite(&data, sizeof(u32), 1, fp);
 	}
 }
+
+
+MapLayerMosaic::MapLayerMosaic(const char *name)
+	: IMapLayer(name)
+	, vSprites()
+{
+	nType = LayerTypeMosaic;
+}
+
+MapLayerMosaic::~MapLayerMosaic()
+{
+	vSprites.clear();
+}
+
+void MapLayerMosaic::Add(MapSpriteEntity *obj)
+{
+	vSprites.push_back(obj);
+}
+
+void MapLayerMosaic::WriteData(FILE *fp, Exporter *e)
+{
+	MapSpriteEntityIterator it;
+	MapSpriteEntityIterator end;
+
+	u32 amount = pPlatform->Swap32(vSprites.size());
+	fwrite(&amount, sizeof(amount), 1, fp);
+
+	// Write Objects
+	it = vSprites.begin();
+	end = vSprites.end();
+	for (; it != end; ++it)
+	{
+		MapSpriteEntity *obj = (*it);
+		obj->Write(fp, e);
+	}
+}
+
 
 Map2D::Map2D(const char *name)
 	: vLayers()

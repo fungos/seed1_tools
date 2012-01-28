@@ -1,11 +1,23 @@
 <root>
 	<strings/>
-	<resources/>
+	<resources>
+		<resource type='image' filename='tree' name='tree' />
+	</resources>
 	<objects>
+		<object type='sprite' name='tree'>
+			<animation name='default'>
+				<frame name='tree' resource='tree' />
+			</animation>
+		</object>
 		<object type="map2d" name="teste" tile_width="32" tile_height="32" width="2" height="2">
 			<layer name="Ground" opacity="1.00" visible="true" type="tiled">0,1,30,10</layer>
 			<layer name="Collision" opacity="1.00" visible="true" type="object">
 				<object name="object_0001" type="type_0001" x="11.531250" y="5.468750" width="12.000000" height="9.031250"/>
+			</layer>
+			<layer name="Background 1" opacity="1.00" visible="true" type="mosaic">
+				<entity name="tree_0001" sprite="tree" x="50" y="100" angle="45" scale="2" blending="" collision="0" r="255" g="0" b="255" a="127" />
+				<entity name="tree_0002" sprite="tree" x="100" y="120" angle="0" scale="1" blending="" collision="0" r="255" g="0" b="255" a="127" />
+				<entity name="tree_0003" sprite="tree" x="150" y="140" angle="9" scale="0.5" blending="" collision="0" r="255" g="0" b="255" a="127" />
 			</layer>
 		</object>
 	</objects>

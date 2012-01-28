@@ -6,12 +6,14 @@
 
 class IMapLayer;
 class MapObject;
+class MapSpriteEntity;
 
 typedef u32 Tile;
 
 VECTOR_POD_DEF(Tile);
 VECTOR_PTR_DEF(IMapLayer);
 VECTOR_PTR_DEF(MapObject);
+VECTOR_PTR_DEF(MapSpriteEntity);
 
 #define MAP_MAGIC		0x0050414d
 #define MAP_VERSION		0x00000001
@@ -29,8 +31,14 @@ enum eLayerType
 {
 	LayerTypeTiled,
 	LayerTypeObject,
-	LayerTypeTileless,
-	LayerTypeMax,
+	LayerTypeMosaic,
+	LayerTypeMax
+};
+
+enum eBlendType
+{
+	BlendNone,
+	BlendMultiply
 };
 
 struct MapHeader
@@ -54,6 +62,7 @@ struct LayerHeader
 	// layerdata
 		// series of tilesId for tiled layer;
 		// u32 for amount of object, then n objects for metadata layer;
+		// u32 for amount of sprites, then n objects for sprite entities layer;
 };
 
 struct LayerObjectHeader
@@ -67,7 +76,54 @@ struct LayerObjectHeader
 	f32 fHeight;
 };
 
+struct LayerSpriteEntityHeader
+{
+	u32 iNameId;
+	f32 fPosX;
+	f32 fPosY;
+	f32 fAngle;
+	f32 fScale;
+	u32 iBlendType;
+	u32 iColor;
+	u32 iCollidable;
+	u32	iSpriteFileId;
+};
+
 class Exporter;
+
+class MapSpriteEntity : public IObject
+{
+	private:
+		MapSpriteEntity(const MapSpriteEntity &);
+		bool operator=(const MapSpriteEntity &);
+
+		f32 fX;
+		f32 fY;
+		f32 fAngle;
+		f32 fScale;
+		eBlendType nBlendType;
+		PIXEL pxColor;
+		BOOL bCollidable;
+		const char *pSprite;
+
+	public:
+		MapSpriteEntity(const char *name);
+		virtual ~MapSpriteEntity();
+
+		inline void SetSprite(const char *f)
+		{
+			this->pSprite = f;
+		}
+
+		void SetAngle(f32 angle);
+		void SetPosition(f32 x, f32 y);
+		void SetScale(f32 scale);
+		void SetBlendType(eBlendType type);
+		void SetPixelColor(u8 r, u8 g, u8 b, u8 a);
+		void SetCollidable(BOOL b);
+
+		virtual void Write(FILE *fp, Exporter *e);
+};
 
 class MapObject : public IObject
 {
@@ -174,6 +230,23 @@ class MapLayerTiled : public IMapLayer
 		virtual ~MapLayerTiled();
 
 		void CreateTiles(const char *text);
+
+		virtual void WriteData(FILE *fp, Exporter *e);
+};
+
+class MapLayerMosaic : public IMapLayer
+{
+	private:
+		MapLayerMosaic(const MapLayerMosaic &);
+		bool operator=(const MapLayerMosaic &);
+
+		MapSpriteEntityVector vSprites;
+
+	public:
+		MapLayerMosaic(const char *name);
+		virtual ~MapLayerMosaic();
+
+		void Add(MapSpriteEntity *obj);
 
 		virtual void WriteData(FILE *fp, Exporter *e);
 };

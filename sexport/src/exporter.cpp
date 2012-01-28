@@ -127,7 +127,7 @@ bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 	opath = ReplaceVariable(outputPath, "PROJECT");
 	if (!opath) opath = ReplaceVariable(outputPath, "SEEDSDK");
 	path = (opath) ? opath : outputPath;
-	
+
 	this->bfsOutputPath = path;
 	free(opath);
 	if (!bfs::is_directory(bfsOutputPath))
@@ -163,7 +163,7 @@ bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 	ipath = ReplaceVariable(inputSpecificPath, "PROJECT");
 	if (!ipath) ipath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
 	path = (ipath) ? ipath : inputSpecificPath;
-	
+
 	this->mapInputPath[RESOURCE_IMAGE] = bfs::path(path);
 	free(ipath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_IMAGE]))
@@ -183,7 +183,7 @@ bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 	spath = ReplaceVariable(inputSpecificPath, "PROJECT");
 	if (!spath) spath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
 	path = (spath) ? spath : inputSpecificPath;
-	
+
 	this->mapInputPath[RESOURCE_SOUND] = bfs::path(path);
 	free(spath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_SOUND]))
@@ -203,7 +203,7 @@ bool Exporter::Setup(TiXmlDocument *doc, const char *platform)
 	mpath = ReplaceVariable(inputSpecificPath, "PROJECT");
 	if (!mpath) mpath = ReplaceVariable(inputSpecificPath, "SEEDSDK");
 	path = (mpath) ? mpath : inputSpecificPath;
-	
+
 	this->mapInputPath[RESOURCE_MUSIC] = bfs::path(path);
 	free(mpath);
 	if (!bfs::is_directory(mapInputPath[RESOURCE_MUSIC]))
@@ -1306,7 +1306,7 @@ void Exporter::CreateMapLayers(Map2D *map, TiXmlNode *node)
 		tmp = (*object)["type"];
 		if (tmp)
 			type = (strcasecmp(tmp, "tiled") == 0) ? LayerTypeTiled :
-				(strcasecmp(tmp, "object") == 0) ? LayerTypeObject : LayerTypeTileless;
+				(strcasecmp(tmp, "object") == 0) ? LayerTypeObject : LayerTypeMosaic; // "mosaic"
 
 		IMapLayer *layer = NULL;
 		switch (type)
@@ -1322,8 +1322,85 @@ void Exporter::CreateMapLayers(Map2D *map, TiXmlNode *node)
 			}
 			break;
 
-			case LayerTypeTileless:
+			case LayerTypeMosaic:
 			{
+				MapLayerMosaic *l = new MapLayerMosaic(name);
+
+				BEGIN_ITERATE_XML_NODES2(item, (*object)("entity"))
+					const char *objname = (*item)["name"];
+					if (!objname)
+					{
+						Error(ERROR_EXPORT_LAYER_MISSING_ATTRIB, TAG "An entity from a layer type mosaic has no NAME.");
+					}
+
+					f32 x = 0.0f;
+					f32 y = 0.0f;
+					f32 ang = 0.0f;
+					f32 scale = 0.0f;
+					u32 collide = 0;
+//					u32 blend = 0;
+					u8 r = 0;
+					u8 g = 0;
+					u8 b = 0;
+					u8 a = 0;
+					const char *sprite = NULL;
+
+					const char *tmp = (*item)["x"];
+					if (tmp)
+						x = atof(tmp);
+
+					tmp = (*item)["y"];
+					if (tmp)
+						y = atof(tmp);
+
+					tmp = (*item)["angle"];
+					if (tmp)
+						ang = atof(tmp);
+
+					tmp = (*item)["scale"];
+					if (tmp)
+						scale = atof(tmp);
+
+					tmp = (*item)["collision"];
+					if (tmp)
+						collide = atoi(tmp);
+/*
+					tmp = (*item)["blending"];
+					if (tmp)
+						blend = atoi(tmp);
+*/
+					tmp = (*item)["r"];
+					if (tmp)
+						r = (u8)atoi(tmp);
+
+					tmp = (*item)["g"];
+					if (tmp)
+						g = (u8)atoi(tmp);
+
+					tmp = (*item)["b"];
+					if (tmp)
+						b = (u8)atoi(tmp);
+
+					tmp = (*item)["a"];
+					if (tmp)
+						a = (u8)atoi(tmp);
+
+					tmp = (*item)["sprite"];
+					if (tmp)
+						sprite = tmp;
+
+					MapSpriteEntity *obj = new MapSpriteEntity(objname);
+					obj->SetPosition(x, y);
+					obj->SetAngle(ang);
+					obj->SetScale(scale);
+					obj->SetCollidable(collide);
+					obj->SetPixelColor(r, g, b, a);
+					obj->SetSprite(sprite);
+					l->Add(obj);
+
+				END_ITERATE_XML_NODES2(item, (*node)("entity"))
+
+				layer = l;
 			}
 			break;
 

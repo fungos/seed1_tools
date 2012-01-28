@@ -91,19 +91,19 @@ void IphPlatform::Compile(IObject *obj)
 		break;
 
 		case OBJECT_MUSIC:
-			this->Compile(static_cast<const Music *>(obj));
+			this->Compile(static_cast<Music *>(obj));
 		break;
 
 		case OBJECT_SOUND:
-			this->Compile(static_cast<const Sound *>(obj));
+			this->Compile(static_cast<Sound *>(obj));
 		break;
 
 		case OBJECT_FONT:
-			this->Compile(static_cast<const Font *>(obj));
+			this->Compile(static_cast<Font *>(obj));
 		break;
 
 		case OBJECT_BUTTON:
-			this->Compile(static_cast<const Button *>(obj));
+			this->Compile(static_cast<Button *>(obj));
 		break;
 
 		default:

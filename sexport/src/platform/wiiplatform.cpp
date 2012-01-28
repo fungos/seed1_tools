@@ -48,15 +48,15 @@ void WiiPlatform::Compile(IResource *obj)
 	switch (obj->GetType())
 	{
 		case RESOURCE_IMAGE:
-			this->Compile(static_cast<const Image *>(obj));
+			this->Compile(static_cast<Image *>(obj));
 		break;
 
 		case RESOURCE_MUSIC:
-			this->Compile(static_cast<const MusicResource *>(obj));
+			this->Compile(static_cast<MusicResource *>(obj));
 		break;
 
 		case RESOURCE_SOUND:
-			this->Compile(static_cast<const SoundResource *>(obj));
+			this->Compile(static_cast<SoundResource *>(obj));
 		break;
 
 		case RESOURCE_MASK:
@@ -106,7 +106,7 @@ void WiiPlatform::Compile(IObject *obj)
 		break;
 
 		case OBJECT_BUTTON:
-			this->Compile(static_cast<const Button *>(obj));
+			this->Compile(static_cast<Button *>(obj));
 		break;
 
 		default:

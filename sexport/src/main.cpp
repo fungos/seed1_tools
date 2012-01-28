@@ -64,7 +64,7 @@ int main(int argc, const char **argv)
 		fprintf(stdout, "\t\t-r, --rebuild\tRebuild all files.\n");
 		fprintf(stdout, "\t\t-k, --packages\tCreate group packages.\n");
 		fprintf(stdout, "\t\t-d, --add_resources\tAdd resources to the package files.\n");
-		fprintf(stdout, "\t\t-u, --unify\tUnify packages in one output only.");
+		fprintf(stdout, "\t\t-u, --unify\tUnify packages in one output only.\n");
 		fprintf(stdout, "\t\t-a [value], --alignment [value]\tOutput data alignment.\n");
 		fprintf(stdout, "\t\t-c, --compress\tEnable output data compression.\n");
 		fprintf(stdout, "\t\t-t, --tree\tBuild directory structure only (not implemented!)\n");
